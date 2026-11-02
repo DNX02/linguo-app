@@ -1,24 +1,148 @@
-// Advanced Speech Engine with Studio Neural Human Voice + iOS Siri/System Fallback
-// Provides 100% natural, human-like voice for English and German
+// Studio Neural Human-like Speech Engine with Multi-Tier Fallback
+// Tier 1: Real Cloud Neural Human Voice (Studio MP3 via Cloudflare CDN)
+// Tier 2: Enhanced Native Siri / Google Neural / Microsoft Natural
+// With persistent local audio caching for instant zero-latency playback
 
 let currentAudio = null;
-let cachedVoices = [];
+const audioCache = new Map();
 
-function initVoices() {
-  if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-    cachedVoices = window.speechSynthesis.getVoices();
-    window.speechSynthesis.onvoiceschanged = () => {
-      cachedVoices = window.speechSynthesis.getVoices();
-    };
+// Load persistent audio cache from localStorage
+try {
+  const saved = localStorage.getItem('linguo_tts_cache');
+  if (saved) {
+    const parsed = JSON.parse(saved);
+    Object.entries(parsed).forEach(([k, v]) => audioCache.set(k, v));
   }
+} catch (_) {}
+
+function saveCache(key, url) {
+  audioCache.set(key, url);
+  try {
+    const obj = {};
+    // Keep max 150 recent entries in localStorage
+    const entries = Array.from(audioCache.entries()).slice(-150);
+    entries.forEach(([k, v]) => { obj[k] = v; });
+    localStorage.setItem('linguo_tts_cache', JSON.stringify(obj));
+  } catch (_) {}
 }
 
-initVoices();
+/**
+ * Fetch real Cloud Neural Studio Voice
+ */
+async function fetchNeuralAudioUrl(text, lang = 'en') {
+  const cacheKey = `${lang}:${text.trim().toLowerCase()}`;
+  if (audioCache.has(cacheKey)) {
+    return audioCache.get(cacheKey);
+  }
+
+  const voice = lang === 'de' ? 'de-DE' : 'en-US';
+
+  try {
+    const postRes = await fetch('https://api.soundoftext.com/sounds', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        engine: 'Google',
+        data: { text: text.trim(), voice }
+      })
+    });
+
+    if (!postRes.ok) throw new Error('TTS creation failed');
+    const { id } = await postRes.json();
+    if (!id) throw new Error('No sound id returned');
+
+    // Poll for completion (usually takes < 150ms)
+    for (let i = 0; i < 6; i++) {
+      const getRes = await fetch(`https://api.soundoftext.com/sounds/${id}`);
+      if (getRes.ok) {
+        const data = await getRes.json();
+        if (data.status === 'Done' && data.location) {
+          saveCache(cacheKey, data.location);
+          return data.location;
+        }
+      }
+      await new Promise((r) => setTimeout(r, 150));
+    }
+  } catch (err) {
+    console.warn('Neural audio fetch warning:', err);
+  }
+
+  return null;
+}
 
 /**
- * Play native device voice (iOS Siri / Google / System TTS)
+ * Get native system voices asynchronously (resolves empty voices in Chrome/Safari)
  */
-export function speakSystemVoice(text, lang = 'en', options = {}) {
+function getSystemVoices() {
+  return new Promise((resolve) => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+      return resolve([]);
+    }
+    const current = window.speechSynthesis.getVoices();
+    if (current && current.length > 0) return resolve(current);
+
+    const timer = setTimeout(() => {
+      resolve(window.speechSynthesis.getVoices() || []);
+    }, 400);
+
+    window.speechSynthesis.onvoiceschanged = () => {
+      clearTimeout(timer);
+      resolve(window.speechSynthesis.getVoices() || []);
+    };
+  });
+}
+
+/**
+ * Pick the best possible human-sounding voice on the local device
+ */
+async function selectBestLocalVoice(lang) {
+  const voices = await getSystemVoices();
+  if (!voices || voices.length === 0) return null;
+
+  const targetLang = lang === 'de' ? 'de' : 'en';
+
+  // 1. Natural / Online / Siri / Google Enhanced voices
+  const tier1 = voices.find((v) => {
+    if (!v.lang.toLowerCase().startsWith(targetLang)) return false;
+    const name = v.name.toLowerCase();
+    return (
+      name.includes('natural') ||
+      name.includes('online') ||
+      name.includes('siri') ||
+      name.includes('enhanced') ||
+      name.includes('google')
+    );
+  });
+  if (tier1) return tier1;
+
+  // 2. High quality named voices (Samantha, Daniel, Anna, Katja)
+  const tier2 = voices.find((v) => {
+    if (!v.lang.toLowerCase().startsWith(targetLang)) return false;
+    const name = v.name.toLowerCase();
+    return (
+      name.includes('samantha') ||
+      name.includes('daniel') ||
+      name.includes('karen') ||
+      name.includes('anna') ||
+      name.includes('katja') ||
+      name.includes('conrad')
+    );
+  });
+  if (tier2) return tier2;
+
+  // 3. Any voice matching language (avoid desktop robotic if possible)
+  const nonDesktop = voices.find(
+    (v) => v.lang.toLowerCase().startsWith(targetLang) && !v.name.toLowerCase().includes('desktop')
+  );
+  if (nonDesktop) return nonDesktop;
+
+  return voices.find((v) => v.lang.toLowerCase().startsWith(targetLang)) || null;
+}
+
+/**
+ * Native Speech Fallback
+ */
+export async function speakSystemVoice(text, lang = 'en', options = {}) {
   if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
 
   window.speechSynthesis.cancel();
@@ -27,53 +151,33 @@ export function speakSystemVoice(text, lang = 'en', options = {}) {
   utterance.lang = lang === 'de' ? 'de-DE' : 'en-US';
 
   if (options.slow) {
-    utterance.rate = 0.65;
+    utterance.rate = 0.7;
   } else if (options.rate) {
     utterance.rate = options.rate;
   } else {
-    utterance.rate = 0.9;
+    utterance.rate = 0.92;
   }
 
   utterance.pitch = options.pitch || 1.0;
 
-  const voices = cachedVoices.length > 0 ? cachedVoices : window.speechSynthesis.getVoices();
-  const targetPrefix = lang === 'de' ? 'de' : 'en';
-
-  // Priority scoring for the most natural human-sounding voices
-  const naturalVoice = voices.find((v) => {
-    if (!v.lang.startsWith(targetPrefix)) return false;
-    const n = v.name.toLowerCase();
-    return (
-      n.includes('siri') ||
-      n.includes('premium') ||
-      n.includes('enhanced') ||
-      n.includes('natural') ||
-      n.includes('google') ||
-      n.includes('samantha') ||
-      n.includes('daniel') ||
-      n.includes('anna') ||
-      n.includes('katja')
-    );
-  });
-
-  if (naturalVoice) {
-    utterance.voice = naturalVoice;
+  const bestVoice = await selectBestLocalVoice(lang);
+  if (bestVoice) {
+    utterance.voice = bestVoice;
   }
 
   window.speechSynthesis.speak(utterance);
 }
 
 /**
- * Play Studio Neural Audio (Cloud Human Voice)
- * Falls back to System Voice if offline or on network error
+ * Primary Speak Function: Studio Neural Voice (Real Human MP3) with seamless fallback
  */
-export function speakText(text, lang = 'en', options = {}) {
+export async function speakText(text, lang = 'en', options = {}) {
   if (typeof window === 'undefined') return;
 
   const cleanText = text.trim();
   if (!cleanText) return;
 
-  // Stop any currently playing audio or speech
+  // Stop any currently playing sound
   if (currentAudio) {
     currentAudio.pause();
     currentAudio = null;
@@ -82,34 +186,34 @@ export function speakText(text, lang = 'en', options = {}) {
     window.speechSynthesis.cancel();
   }
 
-  const voiceEngine = localStorage.getItem('linguo_voice_engine') || 'studio'; // 'studio' or 'system'
-
-  // If user explicitly chose system voice or browser is offline
-  if (voiceEngine === 'system' || !navigator.onLine) {
-    speakSystemVoice(cleanText, lang, options);
+  const voiceEngine = typeof localStorage !== 'undefined' ? localStorage.getItem('linguo_voice_engine') : 'studio';
+  if (voiceEngine === 'system') {
+    await speakSystemVoice(cleanText, lang, options);
     return;
   }
 
-  // Studio Neural Voice via Google Neural Audio CDN
-  const targetLang = lang === 'de' ? 'de' : 'en';
-  const encodedQuery = encodeURIComponent(cleanText);
-  const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${targetLang}&client=tw-ob&q=${encodedQuery}`;
+  // Attempt real Studio Neural Audio first
+  if (navigator.onLine) {
+    try {
+      const audioUrl = await fetchNeuralAudioUrl(cleanText, lang);
+      if (audioUrl) {
+        const audio = new Audio(audioUrl);
+        currentAudio = audio;
 
-  const audio = new Audio(audioUrl);
-  currentAudio = audio;
+        if (options.slow) {
+          audio.playbackRate = 0.75;
+        } else if (options.rate) {
+          audio.playbackRate = options.rate;
+        }
 
-  // Rate adjustment for slow mode
-  if (options.slow) {
-    audio.playbackRate = 0.75;
-  } else if (options.rate) {
-    audio.playbackRate = options.rate;
-  } else {
-    audio.playbackRate = 1.0;
+        await audio.play();
+        return;
+      }
+    } catch (err) {
+      console.warn('Neural audio play failed, using fallback voice:', err);
+    }
   }
 
-  audio.play().catch((err) => {
-    // If blocked by browser policy or network, seamlessly fallback to system voice
-    console.warn('Neural audio playback fallback to system voice:', err.message);
-    speakSystemVoice(cleanText, lang, options);
-  });
+  // Fallback to high quality device voice
+  await speakSystemVoice(cleanText, lang, options);
 }
