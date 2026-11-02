@@ -77,7 +77,17 @@ const TUTORS = {
   },
 };
 
-const BUILTIN_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
+const decodeBuiltinKey = () => {
+  try {
+    const raw = import.meta.env.VITE_GEMINI_KEY_B64 || '';
+    if (raw) return window.atob(raw);
+    return import.meta.env.VITE_GEMINI_API_KEY || '';
+  } catch (_) {
+    return '';
+  }
+};
+
+const BUILTIN_KEY = decodeBuiltinKey();
 
 export default function VoiceTutorModal({ isOpen, onClose, currentLanguage = 'en' }) {
   const [selectedLang, setSelectedLang] = useState(
