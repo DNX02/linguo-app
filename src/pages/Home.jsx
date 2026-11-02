@@ -16,6 +16,12 @@ import WordManagerModal from '../components/WordManagerModal';
 import DictionaryModal from '../components/DictionaryModal';
 import MatchGameModal from '../components/MatchGameModal';
 import ShareAchievementModal from '../components/ShareAchievementModal';
+import DialoguesModal from '../components/DialoguesModal';
+import IrregularVerbsModal from '../components/IrregularVerbsModal';
+import SentenceBuilderModal from '../components/SentenceBuilderModal';
+import PronunciationModal from '../components/PronunciationModal';
+import { speakText } from '../utils/speech';
+import { haptics } from '../utils/haptics';
 import './Home.css';
 
 const MOTIVATIONAL_PHRASES = [
@@ -57,6 +63,10 @@ export default function Home() {
   const [isDictOpen, setIsDictOpen] = useState(false);
   const [isMatchOpen, setIsMatchOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
+  const [isDialoguesOpen, setIsDialoguesOpen] = useState(false);
+  const [isIrregularOpen, setIsIrregularOpen] = useState(false);
+  const [isSentenceOpen, setIsSentenceOpen] = useState(false);
+  const [isPronounceOpen, setIsPronounceOpen] = useState(false);
 
   const isMountedRef = useRef(true);
 
@@ -201,6 +211,14 @@ export default function Home() {
 
   const goalPercent = Math.min(100, Math.round((todayReviewed / dailyGoal) * 100));
 
+  // Word of the Day calculation (deterministic per day)
+  const dayOfYear = Math.floor(
+    (new Date() - new Date(new Date().getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24)
+  );
+  const langWords = wordsData.filter((w) => w.language === language);
+  const wordOfTheDay =
+    langWords.length > 0 ? langWords[dayOfYear % langWords.length] : wordsData[0];
+
   if (loading) {
     return (
       <div className="home-loading">
@@ -290,6 +308,35 @@ export default function Home() {
         )}
       </section>
 
+      {/* Word of the Day (Слово дня) */}
+      {wordOfTheDay && (
+        <section className="home-wotd-card">
+          <div className="home-wotd-top">
+            <span className="home-wotd-tag">✨ Слово дня</span>
+            <span className="home-wotd-badge">{wordOfTheDay.level || 'A1'} • {language === 'en' ? '🇬🇧' : '🇩🇪'}</span>
+          </div>
+          <div className="home-wotd-body">
+            <div>
+              <h2 className="home-wotd-word">{wordOfTheDay.word}</h2>
+              {wordOfTheDay.transcription && (
+                <div className="home-wotd-trans">[{wordOfTheDay.transcription}]</div>
+              )}
+              <div className="home-wotd-meaning">{wordOfTheDay.translation}</div>
+            </div>
+            <button
+              className="home-wotd-audio-btn"
+              title="Послушать произношение"
+              onClick={() => {
+                speakText(wordOfTheDay.word, wordOfTheDay.language);
+                haptics.light();
+              }}
+            >
+              🔊
+            </button>
+          </div>
+        </section>
+      )}
+
       {/* Primary Study Card */}
       <section className="home-review-card" onClick={() => navigate('/flashcards')}>
         <div className="home-review-left">
@@ -371,6 +418,38 @@ export default function Home() {
 
       {/* Quick Feature Actions */}
       <section className="home-quick-actions">
+        <button className="home-action-card highlight" onClick={() => setIsDialoguesOpen(true)}>
+          <span className="home-action-icon">💬</span>
+          <div className="home-action-text">
+            <strong>Диалоги (AI)</strong>
+            <small>Живая речь и роли</small>
+          </div>
+        </button>
+
+        <button className="home-action-card" onClick={() => setIsIrregularOpen(true)}>
+          <span className="home-action-icon">⚡</span>
+          <div className="home-action-text">
+            <strong>Глаголы</strong>
+            <small>3 формы и тест</small>
+          </div>
+        </button>
+
+        <button className="home-action-card" onClick={() => setIsSentenceOpen(true)}>
+          <span className="home-action-icon">🧩</span>
+          <div className="home-action-text">
+            <strong>Собери фразу</strong>
+            <small>Конструктор слов</small>
+          </div>
+        </button>
+
+        <button className="home-action-card" onClick={() => setIsPronounceOpen(true)}>
+          <span className="home-action-icon">🎙️</span>
+          <div className="home-action-text">
+            <strong>Произношение</strong>
+            <small>Оценка с микрофоном</small>
+          </div>
+        </button>
+
         <button className="home-action-card highlight" onClick={() => setIsDictOpen(true)}>
           <span className="home-action-icon">📖</span>
           <div className="home-action-text">
@@ -471,6 +550,30 @@ export default function Home() {
           totalXP: rank.currentXP,
           language,
         }}
+      />
+
+      <DialoguesModal
+        isOpen={isDialoguesOpen}
+        onClose={() => setIsDialoguesOpen(false)}
+        currentLanguage={language}
+      />
+
+      <IrregularVerbsModal
+        isOpen={isIrregularOpen}
+        onClose={() => setIsIrregularOpen(false)}
+        language={language}
+      />
+
+      <SentenceBuilderModal
+        isOpen={isSentenceOpen}
+        onClose={() => setIsSentenceOpen(false)}
+        currentLanguage={language}
+      />
+
+      <PronunciationModal
+        isOpen={isPronounceOpen}
+        onClose={() => setIsPronounceOpen(false)}
+        currentLanguage={language}
       />
     </div>
   );

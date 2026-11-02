@@ -10,6 +10,7 @@ import {
 import { calculateNextReview } from '../utils/spaced-repetition';
 import { speakText } from '../utils/speech';
 import { sounds } from '../utils/soundEffects';
+import { haptics } from '../utils/haptics';
 import { gamification } from '../utils/gamification';
 import { api } from '../utils/api';
 import './Flashcards.css';
@@ -31,6 +32,11 @@ export default function Flashcards() {
   const [animating, setAnimating] = useState(false);
   const [slideDir, setSlideDir] = useState('');
   const [starredIds, setStarredIds] = useState([]);
+
+  // Tinder Swipe Gesture state
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const pointerStartRef = useRef(null);
 
   const isMounted = useRef(true);
 
@@ -66,11 +72,63 @@ export default function Flashcards() {
   const handleFlip = () => {
     if (!flipped && !animating) {
       setFlipped(true);
+      haptics.light();
       const card = cards[currentIndex];
       if (card) {
         speakText(card.word, card.language);
       }
     }
+  };
+
+  // Tinder-style Touch/Pointer Swipe Physics
+  const handlePointerDown = (e) => {
+    if (animating) return;
+    pointerStartRef.current = { x: e.clientX, y: e.clientY };
+    setIsDragging(true);
+  };
+
+  const handlePointerMove = (e) => {
+    if (!isDragging || !pointerStartRef.current || animating) return;
+    const dx = e.clientX - pointerStartRef.current.x;
+    const dy = e.clientY - pointerStartRef.current.y;
+    setDragOffset({ x: dx, y: dy });
+  };
+
+  const handlePointerUp = (e) => {
+    if (!isDragging || !pointerStartRef.current) return;
+    const dx = e.clientX - pointerStartRef.current.x;
+    const dy = e.clientY - pointerStartRef.current.y;
+    setIsDragging(false);
+    pointerStartRef.current = null;
+
+    // Detect tap vs drag
+    if (Math.abs(dx) < 12 && Math.abs(dy) < 12) {
+      handleFlip();
+      setDragOffset({ x: 0, y: 0 });
+      return;
+    }
+
+    // Threshold for swipe: 90px
+    if (dx > 90) {
+      // Swipe Right -> Know it!
+      haptics.success();
+      setDragOffset({ x: 400, y: dy });
+      handleQuality(5);
+    } else if (dx < -90) {
+      // Swipe Left -> Repeat!
+      haptics.error();
+      setDragOffset({ x: -400, y: dy });
+      handleQuality(1);
+    } else {
+      // Reset card back to center
+      setDragOffset({ x: 0, y: 0 });
+    }
+  };
+
+  const handlePointerCancel = () => {
+    setIsDragging(false);
+    pointerStartRef.current = null;
+    setDragOffset({ x: 0, y: 0 });
   };
 
   const handleToggleStar = (e) => {
@@ -223,13 +281,40 @@ export default function Flashcards() {
         />
       </div>
 
-      {/* Flashcard with 3D Flip */}
+      {/* Flashcard with 3D Flip & Tinder Swipe */}
       <div
-        className={`fc-card-container ${slideDir}`}
-        onClick={handleFlip}
+        className={`fc-card-container ${slideDir} ${isDragging ? 'is-dragging' : ''}`}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerCancel}
+        style={{
+          transform: isDragging
+            ? `translate3d(${dragOffset.x}px, ${dragOffset.y * 0.3}px, 0) rotate(${dragOffset.x * 0.08}deg)`
+            : undefined,
+          touchAction: 'pan-y',
+        }}
         role="button"
         tabIndex={0}
       >
+        {/* Swipe Stamp Indicators */}
+        {isDragging && dragOffset.x > 35 && (
+          <div
+            className="fc-swipe-stamp know animate-pop"
+            style={{ opacity: Math.min(1, (dragOffset.x - 25) / 60) }}
+          >
+            ЗНАЮ ✓
+          </div>
+        )}
+        {isDragging && dragOffset.x < -35 && (
+          <div
+            className="fc-swipe-stamp repeat animate-pop"
+            style={{ opacity: Math.min(1, (-dragOffset.x - 25) / 60) }}
+          >
+            ПОВТОРИТЬ ✕
+          </div>
+        )}
+
         <div className={`fc-card-inner ${flipped ? 'is-flipped' : ''}`}>
           {/* Front */}
           <div className="fc-card-face fc-card-front">

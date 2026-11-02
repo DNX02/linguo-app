@@ -11,6 +11,23 @@
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
     <link rel="icon" type="image/png" href="/favicon.ico" />
     <title>Linguo — Учи языки</title>
+    <script>
+      // Self-healing cache buster: clears stale caches & unregisters legacy workers
+      const LINGUO_VER = '2.2.0';
+      if (localStorage.getItem('linguo_app_ver') !== LINGUO_VER) {
+        localStorage.setItem('linguo_app_ver', LINGUO_VER);
+        if ('caches' in window) {
+          caches.keys().then((names) => {
+            names.forEach((name) => caches.delete(name));
+          });
+        }
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then((regs) => {
+            regs.forEach((r) => r.unregister());
+          });
+        }
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

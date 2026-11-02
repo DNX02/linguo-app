@@ -93,6 +93,44 @@
   transition: transform 0.25s, opacity 0.25s;
   user-select: none;
   -webkit-user-select: none;
+  position: relative;
+  touch-action: pan-y;
+}
+
+.fc-card-container.is-dragging {
+  transition: none;
+  cursor: grabbing;
+}
+
+/* Swipe Stamp Badges */
+.fc-swipe-stamp {
+  position: absolute;
+  top: 24px;
+  z-index: 50;
+  padding: 8px 18px;
+  border-radius: 12px;
+  font-size: 1.15rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  pointer-events: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.fc-swipe-stamp.know {
+  right: 24px;
+  color: #22c55e;
+  border: 3px solid #22c55e;
+  background: rgba(34, 197, 94, 0.25);
+  transform: rotate(12deg);
+}
+
+.fc-swipe-stamp.repeat {
+  left: 24px;
+  color: #ef4444;
+  border: 3px solid #ef4444;
+  background: rgba(239, 68, 68, 0.25);
+  transform: rotate(-12deg);
 }
 
 .fc-card-container.slide-out {
