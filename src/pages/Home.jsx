@@ -21,6 +21,9 @@ import IrregularVerbsModal from '../components/IrregularVerbsModal';
 import SentenceBuilderModal from '../components/SentenceBuilderModal';
 import PronunciationModal from '../components/PronunciationModal';
 import VoiceTutorModal from '../components/VoiceTutorModal';
+import StoriesModal from '../components/StoriesModal';
+import WordBattleModal from '../components/WordBattleModal';
+import HandsFreeModal from '../components/HandsFreeModal';
 import { speakText } from '../utils/speech';
 import { haptics } from '../utils/haptics';
 import './Home.css';
@@ -69,6 +72,9 @@ export default function Home() {
   const [isSentenceOpen, setIsSentenceOpen] = useState(false);
   const [isPronounceOpen, setIsPronounceOpen] = useState(false);
   const [isTutorOpen, setIsTutorOpen] = useState(false);
+  const [isStoriesOpen, setIsStoriesOpen] = useState(false);
+  const [isBattleOpen, setIsBattleOpen] = useState(false);
+  const [isHandsFreeOpen, setIsHandsFreeOpen] = useState(false);
 
   const isMountedRef = useRef(true);
 
@@ -397,7 +403,7 @@ export default function Home() {
         <div className="home-selector-group">
           <div className="home-group-header">
             <h3>🌐 Язык изучения</h3>
-            <span className="home-badge-info">Английский & Немецкий</span>
+            <span className="home-badge-info">4 языка</span>
           </div>
           <div className="home-toggle-row">
             <button
@@ -411,6 +417,18 @@ export default function Home() {
               onClick={() => handleLanguageChange('de')}
             >
               🇩🇪 Deutsch
+            </button>
+            <button
+              className={`home-toggle-btn ${language === 'fr' ? 'active' : ''}`}
+              onClick={() => handleLanguageChange('fr')}
+            >
+              🇫🇷 Français
+            </button>
+            <button
+              className={`home-toggle-btn ${language === 'es' ? 'active' : ''}`}
+              onClick={() => handleLanguageChange('es')}
+            >
+              🇪🇸 Español
             </button>
           </div>
         </div>
@@ -436,6 +454,30 @@ export default function Home() {
 
       {/* Quick Feature Actions */}
       <section className="home-quick-actions">
+        <button className="home-action-card highlight" onClick={() => setIsStoriesOpen(true)}>
+          <span className="home-action-icon">📖</span>
+          <div className="home-action-text">
+            <strong>Истории (Stories)</strong>
+            <small>Аудио-спектакли и диалоги</small>
+          </div>
+        </button>
+
+        <button className="home-action-card speed-game" onClick={() => setIsBattleOpen(true)}>
+          <span className="home-action-icon">⚔️</span>
+          <div className="home-action-text">
+            <strong>Спид-батл 1-на-1</strong>
+            <small>Дуэль против Duo Bot</small>
+          </div>
+        </button>
+
+        <button className="home-action-card" onClick={() => setIsHandsFreeOpen(true)}>
+          <span className="home-action-icon">🚗</span>
+          <div className="home-action-text">
+            <strong>За рулём (Audio)</strong>
+            <small>Hands-free аудиотренажёр</small>
+          </div>
+        </button>
+
         <button className="home-action-card highlight" onClick={() => setIsDialoguesOpen(true)}>
           <span className="home-action-icon">💬</span>
           <div className="home-action-text">
@@ -597,6 +639,23 @@ export default function Home() {
       <VoiceTutorModal
         isOpen={isTutorOpen}
         onClose={() => setIsTutorOpen(false)}
+        currentLanguage={language}
+      />
+
+      <StoriesModal
+        isOpen={isStoriesOpen}
+        onClose={() => setIsStoriesOpen(false)}
+      />
+
+      <WordBattleModal
+        isOpen={isBattleOpen}
+        onClose={() => setIsBattleOpen(false)}
+        currentLanguage={language}
+      />
+
+      <HandsFreeModal
+        isOpen={isHandsFreeOpen}
+        onClose={() => setIsHandsFreeOpen(false)}
         currentLanguage={language}
       />
     </div>

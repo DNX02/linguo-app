@@ -35,7 +35,10 @@ async function fetchNeuralAudioUrl(text, lang = 'en') {
     return audioCache.get(cacheKey);
   }
 
-  const voice = lang === 'de' ? 'de-DE' : 'en-US';
+  let voice = 'en-US';
+  if (lang === 'de') voice = 'de-DE';
+  else if (lang === 'fr') voice = 'fr-FR';
+  else if (lang === 'es') voice = 'es-ES';
 
   try {
     const postRes = await fetch('https://api.soundoftext.com/sounds', {
@@ -99,7 +102,10 @@ async function selectBestLocalVoice(lang) {
   const voices = await getSystemVoices();
   if (!voices || voices.length === 0) return null;
 
-  const targetLang = lang === 'de' ? 'de' : 'en';
+  let targetLang = 'en';
+  if (lang === 'de') targetLang = 'de';
+  else if (lang === 'fr') targetLang = 'fr';
+  else if (lang === 'es') targetLang = 'es';
 
   // 1. Natural / Online / Siri / Google Enhanced voices
   const tier1 = voices.find((v) => {
@@ -148,7 +154,11 @@ export async function speakSystemVoice(text, lang = 'en', options = {}) {
   window.speechSynthesis.cancel();
 
   const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = lang === 'de' ? 'de-DE' : 'en-US';
+  let utterLang = 'en-US';
+  if (lang === 'de') utterLang = 'de-DE';
+  else if (lang === 'fr') utterLang = 'fr-FR';
+  else if (lang === 'es') utterLang = 'es-ES';
+  utterance.lang = utterLang;
 
   if (options.slow) {
     utterance.rate = 0.7;

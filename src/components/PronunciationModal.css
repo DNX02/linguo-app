@@ -1,9 +1,9 @@
 .pronounce-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12,20 +12,20 @@
 }
 
 .pronounce-modal {
-  background: #141724;
+  background: #111422;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 24px;
+  border-radius: 26px;
   width: 100%;
   max-width: 520px;
-  max-height: 90vh;
+  max-height: 92vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
+  overflow-y: auto;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.8), 0 0 30px rgba(79, 70, 229, 0.15);
 }
 
 .pronounce-header {
-  padding: 1.25rem 1.5rem;
+  padding: 1.2rem 1.4rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -35,13 +35,13 @@
 .pronounce-header h3 {
   margin: 0;
   font-size: 1.2rem;
-  font-weight: 700;
+  font-weight: 800;
   color: #fff;
 }
 
 .pronounce-sub {
   margin: 0.2rem 0 0;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: #94a3b8;
 }
 
@@ -58,39 +58,150 @@
   justify-content: center;
 }
 
+/* Language Selection Tabs */
+.pronounce-lang-tabs {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem 1.4rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.2);
+  overflow-x: auto;
+}
+
+.pronounce-lang-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.pronounce-lang-btn.active {
+  background: rgba(99, 102, 241, 0.25);
+  border-color: #6366f1;
+  color: #fff;
+  font-weight: 700;
+}
+
+/* Main Card */
 .pronounce-card {
-  padding: 1.5rem;
+  padding: 1.4rem;
   text-align: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+.pronounce-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
 .pronounce-tag {
-  display: inline-block;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 700;
   text-transform: uppercase;
   color: #818cf8;
   letter-spacing: 0.05em;
-  margin-bottom: 0.4rem;
 }
 
-.pronounce-word {
-  margin: 0;
-  font-size: 2rem;
+.pronounce-custom-toggle {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #c7d2fe;
+  font-size: 0.76rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Syllable Heatmap Pills */
+.pronounce-heatmap-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
+  margin: 0.5rem 0 0.8rem;
+}
+
+.syllable-pill {
+  font-size: 1.85rem;
   font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 12px;
+  letter-spacing: 0.5px;
+  transition: all 0.25s;
+}
+
+.syllable-pill.default {
   color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.syllable-pill.perfect {
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.18);
+  border: 1px solid #22c55e;
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.3);
+}
+
+.syllable-pill.warn {
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.18);
+  border: 1px solid #f59e0b;
+}
+
+.syllable-pill.poor {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.18);
+  border: 1px solid #ef4444;
+}
+
+.pronounce-custom-form {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.pronounce-custom-form input {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 0.65rem 1rem;
+  color: #fff;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.pronounce-custom-form button {
+  background: #6366f1;
+  border: none;
+  color: #fff;
+  padding: 0.65rem 1rem;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
 }
 
 .pronounce-ipa {
   font-family: monospace;
   color: #94a3b8;
   font-size: 0.95rem;
-  margin: 0.35rem 0;
+  margin-bottom: 0.3rem;
 }
 
 .pronounce-tr {
   font-size: 1.05rem;
   color: #e2e8f0;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .pronounce-tip-box {
@@ -100,18 +211,24 @@
   padding: 0.75rem 1rem;
   margin: 1rem 0;
   text-align: left;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: #cbd5e1;
   line-height: 1.4;
+}
+
+.pronounce-audio-controls {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
 }
 
 .pronounce-listen-btn {
   background: rgba(99, 102, 241, 0.15);
   border: 1px solid rgba(99, 102, 241, 0.4);
   color: #c7d2fe;
-  padding: 0.65rem 1.25rem;
+  padding: 0.65rem 1.4rem;
   border-radius: 12px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   font-size: 0.9rem;
   transition: all 0.2s;
@@ -123,11 +240,11 @@
 }
 
 .pronounce-action-area {
-  padding: 1.5rem;
+  padding: 1.2rem 1.4rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.25rem;
+  gap: 1rem;
 }
 
 .pronounce-mic-btn {
@@ -179,8 +296,8 @@
 }
 
 .pronounce-score-circle {
-  width: 56px;
-  height: 56px;
+  width: 58px;
+  height: 58px;
   border-radius: 50%;
   border: 4px solid #22c55e;
   display: flex;
@@ -190,9 +307,8 @@
 }
 
 .score-num {
-  font-weight: 800;
-  font-size: 0.95rem;
-  color: #fff;
+  font-weight: 900;
+  font-size: 1rem;
 }
 
 .pronounce-result-details {
@@ -222,7 +338,7 @@
 }
 
 .pronounce-footer {
-  padding: 1rem 1.5rem;
+  padding: 1rem 1.4rem;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   justify-content: flex-end;
@@ -232,8 +348,8 @@
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.15);
   color: #fff;
-  font-weight: 600;
-  padding: 0.65rem 1.25rem;
+  font-weight: 700;
+  padding: 0.65rem 1.4rem;
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s;

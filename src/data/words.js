@@ -130,7 +130,33 @@ export const words = [
   { id: 'de-c1-002', word: 'die Widerstandskraft', translation: 'стойкость / сопротивляемость', language: 'de', level: 'C1', category: 'emotions', example: 'Seine mentale Widerstandskraft ist bemerkenswert.', exampleTranslation: 'Его душевная стойкость примечательна.' },
   { id: 'de-c1-003', word: 'die Beschaffung', translation: 'закупка / снабжение', language: 'de', level: 'C1', category: 'work', example: 'Die Beschaffung von Rohstoffen gestaltet sich schwierig.', exampleTranslation: 'Закупка сырья оказывается сложной.' },
   { id: 'de-c1-004', word: 'die Artenvielfalt', translation: 'видовое разнообразие', language: 'de', level: 'C1', category: 'nature', example: 'Der Schutz der Artenvielfalt ist essenziell.', exampleTranslation: 'Защита биологического разнообразия имеет ключевое значение.' },
-  { id: 'de-c1-005', word: 'sorgfältig', translation: 'тщательный / аккуратный', language: 'de', level: 'C1', category: 'work', example: 'Sie arbeitet stets äußerst sorgfältig.', exampleTranslation: 'Она всегда работает исключительно тщательно.' }
+  { id: 'de-c1-005', word: 'sorgfältig', translation: 'тщательный / аккуратный', language: 'de', level: 'C1', category: 'work', example: 'Sie arbeitet stets äußerst sorgfältig.', exampleTranslation: 'Она всегда работает исключительно тщательно.' },
+
+  // ========================================================
+  // ==================== FRENCH (FR) =======================
+  // ========================================================
+  { id: 'fr-a1-001', word: 'bonjour', translation: 'здравствуйте / добрый день', language: 'fr', level: 'A1', category: 'basics', example: 'Bonjour! Comment allez-vous?', exampleTranslation: 'Здравствуйте! Как ваши дела?' },
+  { id: 'fr-a1-002', word: 'merci', translation: 'спасибо', language: 'fr', level: 'A1', category: 'basics', example: 'Merci beaucoup pour votre aide.', exampleTranslation: 'Большое спасибо за вашу помощь.' },
+  { id: 'fr-a1-003', word: 'le café', translation: 'кофе / кафе', language: 'fr', level: 'A1', category: 'food', example: 'Un café noir s\'il vous plaît.', exampleTranslation: 'Один чёрный кофе, пожалуйста.' },
+  { id: 'fr-a1-004', word: 'la maison', translation: 'дом', language: 'fr', level: 'A1', category: 'home', example: 'Bienvenue dans ma maison!', exampleTranslation: 'Добро пожаловать в мой дом!' },
+  { id: 'fr-a1-005', word: 'l\'ami', translation: 'друг', language: 'fr', level: 'A1', category: 'people', example: 'C\'est mon meilleur ami.', exampleTranslation: 'Это мой лучший друг.' },
+  { id: 'fr-a1-006', word: 'la ville', translation: 'город', language: 'fr', level: 'A1', category: 'places', example: 'Paris est une belle ville.', exampleTranslation: 'Париж — красивый город.' },
+  { id: 'fr-a2-001', word: 'le voyage', translation: 'путешествие', language: 'fr', level: 'A2', category: 'travel', example: 'Bon voyage en France!', exampleTranslation: 'Счастливого путешествия во Францию!' },
+  { id: 'fr-a2-002', word: 'délicieux', translation: 'вкусный / восхитительный', language: 'fr', level: 'A2', category: 'food', example: 'Ce croissant est absolument délicieux.', exampleTranslation: 'Этот круассан невероятно вкусный.' },
+  { id: 'fr-b1-001', word: 'l\'opportunité', translation: 'возможность', language: 'fr', level: 'B1', category: 'work', example: 'C\'est une opportunité magnifique.', exampleTranslation: 'Это великолепная возможность.' },
+
+  // ========================================================
+  // ==================== SPANISH (ES) ======================
+  // ========================================================
+  { id: 'es-a1-001', word: 'hola', translation: 'привет / здравствуйте', language: 'es', level: 'A1', category: 'basics', example: '¡Hola! ¿Cómo estás hoy?', exampleTranslation: 'Привет! Как ты сегодня?' },
+  { id: 'es-a1-002', word: 'gracias', translation: 'спасибо', language: 'es', level: 'A1', category: 'basics', example: 'Muchas gracias por todo.', exampleTranslation: 'Большое спасибо за всё.' },
+  { id: 'es-a1-003', word: 'el café', translation: 'кофе', language: 'es', level: 'A1', category: 'food', example: 'Un café con leche, por favor.', exampleTranslation: 'Один кофе с молоком, пожалуйста.' },
+  { id: 'es-a1-004', word: 'la casa', translation: 'дом', language: 'es', level: 'A1', category: 'home', example: 'Mi casa es tu casa.', exampleTranslation: 'Мой дом — твой дом.' },
+  { id: 'es-a1-005', word: 'el amigo', translation: 'друг', language: 'es', level: 'A1', category: 'people', example: 'Carlos es mi mejor amigo.', exampleTranslation: 'Карлос — мой лучший друг.' },
+  { id: 'es-a1-006', word: 'la ciudad', translation: 'город', language: 'es', level: 'A1', category: 'places', example: 'Madrid es una ciudad hermosa.', exampleTranslation: 'Мадрид — прекрасный город.' },
+  { id: 'es-a2-001', word: 'el viaje', translation: 'путешествие', language: 'es', level: 'A2', category: 'travel', example: '¡Buen viaje a España!', exampleTranslation: 'Счастливого путешествия в Испанию!' },
+  { id: 'es-a2-002', word: 'delicioso', translation: 'вкусный', language: 'es', level: 'A2', category: 'food', example: 'La paella estuvo deliciosa.', exampleTranslation: 'Паэлья была вкусной.' },
+  { id: 'es-b1-001', word: 'la oportunidad', translation: 'возможность / шанс', language: 'es', level: 'B1', category: 'work', example: 'Aprovecha esta gran oportunidad.', exampleTranslation: 'Воспользуйся этой отличной возможностью.' }
 ];
 
 export default words;
