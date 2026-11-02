@@ -77,13 +77,15 @@ const TUTORS = {
   },
 };
 
+const BUILTIN_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
+
 export default function VoiceTutorModal({ isOpen, onClose, currentLanguage = 'en' }) {
   const [selectedLang, setSelectedLang] = useState(
     ['en', 'de', 'fr', 'es'].includes(currentLanguage) ? currentLanguage : 'en'
   );
   const [activeScenario, setActiveScenario] = useState('free');
   const [speechPace, setSpeechPace] = useState('normal'); // 'slow' | 'normal'
-  const [apiKey, setApiKey] = useState(() => localStorage.getItem('linguo_gemini_key') || '');
+  const [apiKey, setApiKey] = useState(() => localStorage.getItem('linguo_gemini_key') || BUILTIN_KEY);
   const [inputKey, setInputKey] = useState('');
   const [status, setStatus] = useState('disconnected'); // 'connecting' | 'connected' | 'disconnected'
   const [audioLevel, setAudioLevel] = useState(0); // Tutor voice audio level
@@ -168,7 +170,7 @@ export default function VoiceTutorModal({ isOpen, onClose, currentLanguage = 'en
 
   const handleResetKey = () => {
     localStorage.removeItem('linguo_gemini_key');
-    setApiKey('');
+    setApiKey(BUILTIN_KEY);
     setInputKey('');
     setErrorMsg('');
     if (liveClientRef.current) {
