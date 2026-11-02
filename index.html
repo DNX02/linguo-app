@@ -11,10 +11,27 @@
     <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
     <link rel="icon" type="image/png" href="./favicon.ico" />
     <title>Linguo — Учи языки</title>
-    <script type="module" crossorigin src="./assets/index-Djclme4-.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-B2X9UovT.css">
+    <script>
+      // Self-healing cache buster: clears stale caches & unregisters legacy workers
+      const LINGUO_VER = '2.2.0';
+      if (localStorage.getItem('linguo_app_ver') !== LINGUO_VER) {
+        localStorage.setItem('linguo_app_ver', LINGUO_VER);
+        if ('caches' in window) {
+          caches.keys().then((names) => {
+            names.forEach((name) => caches.delete(name));
+          });
+        }
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then((regs) => {
+            regs.forEach((r) => r.unregister());
+          });
+        }
+      }
+    </script>
+    <script type="module" crossorigin src="./assets/index-JU1h2cZD.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-DLoiDWSb.css">
   <link rel="manifest" href="./manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="./registerSW.js"></script></head>
   <body>
-    <div id="root"></div>
+    <div id="root"></div>
   </body>
 </html>
