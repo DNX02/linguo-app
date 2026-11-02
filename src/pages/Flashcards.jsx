@@ -1,13 +1,15 @@
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   getCardsForReview,
+  getAllCards,
   updateCard,
   getDailyProgress,
   saveDailyProgress,
 } from '../db';
 import { calculateNextReview } from '../utils/spaced-repetition';
 import { speakText } from '../utils/speech';
+import { sounds } from '../utils/soundEffects';
 import { api } from '../utils/api';
 import './Flashcards.css';
 
@@ -27,50 +29,93 @@ export default function Flashcards() {
   const [loading, setLoading] = useState(true);
   const [animating, setAnimating] = useState(false);
   const [slideDir, setSlideDir] = useState('');
+  const [studyAll, setStudyAll] = useState(false);
+
+  const isMounted = useRef(true);
+
+  const loadCards = useCallback(async (forcedAll = false) => {
+    try {
+      let loaded = [];
+      if (forcedAll) {
+        loaded = await getAllCards();
+      } else {
+        loaded = await getCardsForReview();
+      }
+      if (isMounted.current) {
+        setCards(loaded || []);
+        setCurrentIndex(0);
+        setFinished(!loaded || loaded.length === 0);
+      }
+    } catch (e) {
+      console.error('Error loading cards:', e);
+    } finally {
+      if (isMounted.current) setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    const loadCards = async () => {
-      const reviewCards = await getCardsForReview();
-      setCards(reviewCards);
-      setFinished(reviewCards.length === 0);
-      setLoading(false);
-    };
+    isMounted.current = true;
     loadCards();
-  }, []);
+    return () => {
+      isMounted.current = false;
+    };
+  }, [loadCards]);
 
   const handleFlip = () => {
     if (!flipped && !animating) {
       setFlipped(true);
+      const card = cards[currentIndex];
+      if (card) {
+        speakText(card.word, card.language);
+      }
     }
   };
 
   const handleQuality = useCallback(
     async (quality) => {
-      if (animating) return;
+      if (animating || !cards[currentIndex]) return;
       setAnimating(true);
 
       const card = cards[currentIndex];
       const updated = calculateNextReview(card, quality);
       await updateCard({ ...card, ...updated });
 
-      // Update daily progress
-      const progress = (await getDailyProgress()) || {
-        date: new Date().toISOString().split('T')[0],
-        correct: 0,
-        wrong: 0,
-        reviewed: 0,
-      };
-      progress.reviewed = (progress.reviewed || 0) + 1;
+      // Audio feedback
       if (quality >= 3) {
-        progress.correct = (progress.correct || 0) + 1;
+        sounds.playCorrect();
       } else {
-        progress.wrong = (progress.wrong || 0) + 1;
+        sounds.playWrong();
       }
-      await saveDailyProgress(progress);
-      api.syncProgress({
-        cards: { [card.id]: { interval: updated.interval, repetitions: updated.repetitions, easeFactor: updated.easeFactor, nextReview: updated.nextReview } },
-        daily: { [progress.date]: progress }
-      }).catch(() => {});
+
+      // Update daily progress safely
+      try {
+        const progress = (await getDailyProgress()) || {
+          date: new Date().toISOString().split('T')[0],
+          correct: 0,
+          wrong: 0,
+          reviewed: 0,
+        };
+        progress.reviewed = (progress.reviewed || 0) + 1;
+        if (quality >= 3) {
+          progress.correct = (progress.correct || 0) + 1;
+        } else {
+          progress.wrong = (progress.wrong || 0) + 1;
+        }
+        await saveDailyProgress(progress);
+        api.syncProgress({
+          cards: {
+            [card.id]: {
+              interval: updated.interval,
+              repetitions: updated.repetitions,
+              easeFactor: updated.easeFactor,
+              nextReview: updated.nextReview,
+            },
+          },
+          daily: { [progress.date]: progress },
+        }).catch(() => {});
+      } catch (err) {
+        console.warn('Progress update warning:', err);
+      }
 
       setSlideDir('slide-out');
 
@@ -78,6 +123,7 @@ export default function Flashcards() {
         const nextIndex = currentIndex + 1;
         if (nextIndex >= cards.length) {
           setFinished(true);
+          sounds.playComplete();
         } else {
           setCurrentIndex(nextIndex);
         }
@@ -86,8 +132,8 @@ export default function Flashcards() {
         setTimeout(() => {
           setSlideDir('');
           setAnimating(false);
-        }, 300);
-      }, 300);
+        }, 250);
+      }, 250);
     },
     [animating, cards, currentIndex]
   );
@@ -103,46 +149,72 @@ export default function Flashcards() {
 
   if (finished) {
     return (
-      <div className="fc-done">
-        <div className="fc-done-emoji">🎉</div>
-        <h2>Поздравляем!</h2>
-        <p>Вы повторили все карточки на сегодня!</p>
-        <div className="fc-done-stats">
-          <span>Просмотрено: {currentIndex} карточек</span>
+      <div className="fc-finished">
+        <div className="fc-finished-card">
+          <span className="fc-finished-emoji">🎉</span>
+          <h2>Отличная работа!</h2>
+          <p>
+            {cards.length > 0
+              ? `Вы успешно повторили ${cards.length} ${
+                  cards.length === 1 ? 'карточку' : cards.length < 5 ? 'карточки' : 'карточек'
+                }!`
+              : 'Нет карточек, требующих повторения прямо сейчас.'}
+          </p>
+          <div className="fc-finished-buttons">
+            <button
+              className="fc-btn fc-btn-primary"
+              onClick={() => {
+                setLoading(true);
+                loadCards(true);
+              }}
+            >
+              🔄 Учить все слова колоды
+            </button>
+            <button
+              className="fc-btn fc-btn-secondary"
+              onClick={() => navigate('/')}
+            >
+              🏠 На главную
+            </button>
+          </div>
         </div>
-        <button className="fc-done-btn" onClick={() => navigate('/')}>
-          На главную
-        </button>
       </div>
     );
   }
 
   const card = cards[currentIndex];
-  const progress = ((currentIndex + 1) / cards.length) * 100;
+  if (!card) return null;
+
+  const progressPercent = Math.round(((currentIndex + 1) / cards.length) * 100);
 
   return (
     <div className="fc-page">
-      <header className="fc-header">
-        <button className="fc-back" onClick={() => navigate('/')}>
+      {/* Header */}
+      <div className="fc-header">
+        <button className="fc-back-btn" onClick={() => navigate('/')}>
           ← Назад
         </button>
         <span className="fc-counter">
           {currentIndex + 1} / {cards.length}
         </span>
-      </header>
+      </div>
 
+      {/* Progress bar */}
       <div className="fc-progress-bar">
         <div
           className="fc-progress-fill"
-          style={{ width: `${progress}%` }}
+          style={{ width: `${progressPercent}%` }}
         />
       </div>
 
+      {/* Flashcard with 3D Flip */}
       <div
         className={`fc-card-container ${slideDir}`}
         onClick={handleFlip}
+        role="button"
+        tabIndex={0}
       >
-        <div className={`fc-card ${flipped ? 'fc-card-flipped' : ''}`}>
+        <div className={`fc-card-inner ${flipped ? 'is-flipped' : ''}`}>
           {/* Front */}
           <div className="fc-card-face fc-card-front">
             <div className="fc-card-badges">

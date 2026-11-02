@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllCards, getDailyProgress, saveDailyProgress } from '../db';
 import { speakText } from '../utils/speech';
+import { sounds } from '../utils/soundEffects';
 import './Quiz.css';
 
 const QUESTIONS_PER_ROUND = 10;
@@ -90,8 +91,10 @@ export default function Quiz() {
       const isCorrect = answer === questions[currentQ].correctAnswer;
 
       if (isCorrect) {
+        sounds.playCorrect();
         setCorrect((c) => c + 1);
       } else {
+        sounds.playWrong();
         setWrong((w) => w + 1);
       }
 
@@ -116,6 +119,7 @@ export default function Quiz() {
 
         setTimeout(() => {
           if (currentQ + 1 >= questions.length) {
+            sounds.playComplete();
             setFinished(true);
           } else {
             setCurrentQ((q) => q + 1);

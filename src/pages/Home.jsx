@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   getAllCards,
@@ -12,6 +12,7 @@ import wordsData from '../data/words';
 import { api } from '../utils/api';
 import AuthModal from '../components/AuthModal';
 import WordManagerModal from '../components/WordManagerModal';
+import DictionaryModal from '../components/DictionaryModal';
 import './Home.css';
 
 const MOTIVATIONAL_PHRASES = [
@@ -37,13 +38,18 @@ export default function Home() {
   const [totalLearned, setTotalLearned] = useState(0);
   const [accuracy, setAccuracy] = useState(0);
   const [grammarDone, setGrammarDone] = useState(0);
-  const [streak, setStreak] = useState(0);
+  const [streak, setStreak] = useState(1);
   const [language, setLanguage] = useState('en');
   const [level, setLevel] = useState('A1');
+  const [dailyGoal, setDailyGoal] = useState(15);
+  const [todayReviewed, setTodayReviewed] = useState(0);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isWordManagerOpen, setIsWordManagerOpen] = useState(false);
+  const [isDictOpen, setIsDictOpen] = useState(false);
+
+  const isMountedRef = useRef(true);
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -54,22 +60,35 @@ export default function Home() {
   };
 
   const seedDatabase = useCallback(async () => {
-    const existing = await getAllCards();
-    if (existing.length === 0) {
-      for (const word of wordsData) {
-        await addCard({
-          ...word,
-          interval: 0,
-          repetitions: 0,
-          easeFactor: 2.5,
-          nextReview: new Date().toISOString(),
-          learned: false,
-        });
+    try {
+      const existing = await getAllCards();
+      if (!existing || existing.length === 0) {
+        for (const word of wordsData) {
+          await addCard({
+            ...word,
+            interval: 0,
+            repetitions: 0,
+            easeFactor: 2.5,
+            nextReview: new Date().toISOString(),
+            learned: false,
+          });
+        }
       }
+    } catch (err) {
+      console.warn('Seed database warning:', err);
     }
   }, []);
 
   useEffect(() => {
+    isMountedRef.current = true;
+
+    // Safety timeout: NEVER let the screen stay in infinite loading
+    const timer = setTimeout(() => {
+      if (isMountedRef.current) {
+        setLoading(false);
+      }
+    }, 1200);
+
     const init = async () => {
       setGreeting(getGreeting());
       setMotivation(
@@ -78,67 +97,77 @@ export default function Home() {
         ]
       );
 
-      await seedDatabase();
-
       try {
-        const currentUser = await api.getMe();
-        setUser(currentUser);
-        // Also fetch any custom words from server and add to local DB
-        const serverCustomWords = await api.getCustomWords();
-        const localCards = await getAllCards();
-        for (const cw of serverCustomWords) {
-          if (!localCards.some(c => c.id === cw.id || (c.word === cw.word && c.language === cw.language))) {
-            await addCard({
-              ...cw,
-              interval: 0,
-              repetitions: 0,
-              easeFactor: 2.5,
-              nextReview: new Date().toISOString(),
-              learned: false,
-            });
+        await seedDatabase();
+
+        // Check user session safely (non-blocking)
+        try {
+          const currentUser = await api.getMe();
+          if (currentUser && isMountedRef.current) setUser(currentUser);
+        } catch (_) {}
+
+        // Load settings
+        const settings = await getSettings();
+        if (isMountedRef.current) {
+          if (settings.language) setLanguage(settings.language);
+          if (settings.level) setLevel(settings.level);
+          if (settings.dailyGoal) setDailyGoal(Number(settings.dailyGoal));
+        }
+
+        // Load card counts
+        const allCards = await getAllCards();
+        const reviewCards = await getCardsForReview();
+        
+        if (isMountedRef.current) {
+          setReviewCount(reviewCards.length);
+          const learned = allCards.filter(
+            (c) => c.repetitions && c.repetitions >= 1
+          );
+          setTotalLearned(learned.length);
+        }
+
+        // Today's progress
+        const progress = await getDailyProgress();
+        if (progress && isMountedRef.current) {
+          const total = (progress.correct || 0) + (progress.wrong || 0);
+          setAccuracy(total > 0 ? Math.round((progress.correct / total) * 100) : 100);
+          setGrammarDone(progress.grammarDone || 0);
+          setTodayReviewed(progress.reviewed || 0);
+        }
+
+        // Streak check (last 7 days max for instant loading)
+        let currentStreak = 0;
+        const today = new Date();
+        for (let i = 0; i < 7; i++) {
+          const date = new Date(today);
+          date.setDate(date.getDate() - i);
+          const dateStr = date.toISOString().split('T')[0];
+          const dayProgress = await getDailyProgress(dateStr);
+          if (dayProgress && ((dayProgress.correct || 0) + (dayProgress.wrong || 0) + (dayProgress.reviewed || 0)) > 0) {
+            currentStreak++;
+          } else if (i > 0) {
+            break;
           }
         }
-      } catch (e) {}
-
-      const settings = await getSettings();
-      if (settings.language) setLanguage(settings.language);
-      if (settings.level) setLevel(settings.level);
-
-      const allCards = await getAllCards();
-      const reviewCards = await getCardsForReview();
-      setReviewCount(reviewCards.length);
-
-      const learned = allCards.filter(
-        (c) => c.repetitions && c.repetitions >= 1
-      );
-      setTotalLearned(learned.length);
-
-      const progress = await getDailyProgress();
-      if (progress) {
-        const total = (progress.correct || 0) + (progress.wrong || 0);
-        setAccuracy(total > 0 ? Math.round((progress.correct / total) * 100) : 0);
-        setGrammarDone(progress.grammarDone || 0);
-      }
-
-      // Calculate streak
-      let currentStreak = 0;
-      const today = new Date();
-      for (let i = 0; i < 365; i++) {
-        const date = new Date(today);
-        date.setDate(date.getDate() - i);
-        const dayProgress = await getDailyProgress(date.toISOString().split('T')[0]);
-        if (dayProgress && ((dayProgress.correct || 0) + (dayProgress.wrong || 0)) > 0) {
-          currentStreak++;
-        } else if (i > 0) {
-          break;
+        if (isMountedRef.current) {
+          setStreak(Math.max(1, currentStreak));
+        }
+      } catch (err) {
+        console.error('Home initialization caught error:', err);
+      } finally {
+        if (isMountedRef.current) {
+          setLoading(false);
+          clearTimeout(timer);
         }
       }
-      setStreak(currentStreak);
-
-      setLoading(false);
     };
 
     init();
+
+    return () => {
+      isMountedRef.current = false;
+      clearTimeout(timer);
+    };
   }, [seedDatabase]);
 
   const handleLanguageChange = async (lang) => {
@@ -151,11 +180,13 @@ export default function Home() {
     await saveSetting('level', lvl);
   };
 
+  const goalPercent = Math.min(100, Math.round((todayReviewed / dailyGoal) * 100));
+
   if (loading) {
     return (
       <div className="home-loading">
         <div className="home-loading-spinner" />
-        <p>Загрузка...</p>
+        <p>Загрузка Linguo...</p>
       </div>
     );
   }
@@ -176,35 +207,62 @@ export default function Home() {
             {user ? `👤 ${user.name || user.username}` : '🔐 Войти'}
           </button>
         </div>
-      </header>
 
-      <section className="home-streak-bar">
-        <div className="home-streak-flame">🔥</div>
-        <div className="home-streak-info">
-          <span className="home-streak-count">{streak}</span>
-          <span className="home-streak-label">
-            {streak === 1 ? 'день' : streak >= 2 && streak <= 4 ? 'дня' : 'дней'} подряд
+        <div className="home-status-strip">
+          <span className="home-pwa-pill">🟢 Офлайн-режим (PWA)</span>
+          <span className="home-mode-pill">
+            {language === 'en' ? '🇬🇧 Английский' : '🇩🇪 Немецкий'} • {level}
           </span>
         </div>
+      </header>
+
+      {/* Streak and Daily Goal Bar */}
+      <section className="home-goal-box">
+        <div className="home-goal-top">
+          <div className="home-streak-mini">
+            <span className="home-streak-flame">🔥</span>
+            <div>
+              <span className="home-streak-num">{streak}</span>
+              <span className="home-streak-txt">
+                {streak === 1 ? 'день' : streak >= 2 && streak <= 4 ? 'дня' : 'дней'} ударно
+              </span>
+            </div>
+          </div>
+          <div className="home-goal-ratio">
+            <span>Цель: {todayReviewed}/{dailyGoal} слов</span>
+            <span className="home-goal-pct">{goalPercent}%</span>
+          </div>
+        </div>
+        <div className="home-progress-bar-bg">
+          <div
+            className="home-progress-bar-fill"
+            style={{ width: `${goalPercent}%` }}
+          />
+        </div>
+        {goalPercent >= 100 && (
+          <div className="home-goal-complete-msg">🎉 Дневная цель выполнена! Отличная работа!</div>
+        )}
       </section>
 
+      {/* Primary Study Card */}
       <section className="home-review-card" onClick={() => navigate('/flashcards')}>
         <div className="home-review-left">
           <span className="home-review-icon">📇</span>
           <div>
-            <h3>Карточки на сегодня</h3>
+            <h3>Умные карточки (SM-2)</h3>
             <p className="home-review-count">
               {reviewCount > 0
                 ? `${reviewCount} ${reviewCount === 1 ? 'карточка' : reviewCount <= 4 ? 'карточки' : 'карточек'} ждут повторения`
-                : 'Всё повторено! 🎉'}
+                : 'Все карточки на сегодня повторены! 🎉'}
             </p>
           </div>
         </div>
-        {reviewCount > 0 && (
-          <button className="home-review-btn">Начать →</button>
-        )}
+        <button className="home-review-btn">
+          {reviewCount > 0 ? 'Учить →' : 'Повторить →'}
+        </button>
       </section>
 
+      {/* Quick Stats Grid */}
       <section className="home-stats-grid">
         <div className="home-stat-card" onClick={() => navigate('/progress')}>
           <span className="home-stat-emoji">📖</span>
@@ -223,9 +281,13 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Language & Level Selectors */}
       <section className="home-selectors">
         <div className="home-selector-group">
-          <h3>🌐 Язык изучения</h3>
+          <div className="home-group-header">
+            <h3>🌐 Язык изучения</h3>
+            <span className="home-badge-info">Английский & Немецкий</span>
+          </div>
           <div className="home-toggle-row">
             <button
               className={`home-toggle-btn ${language === 'en' ? 'active' : ''}`}
@@ -243,7 +305,10 @@ export default function Home() {
         </div>
 
         <div className="home-selector-group">
-          <h3>📊 Уровень</h3>
+          <div className="home-group-header">
+            <h3>📊 Текущий уровень</h3>
+            <span className="home-badge-info">A1 — C2</span>
+          </div>
           <div className="home-level-row">
             {LEVELS.map((lvl) => (
               <button
@@ -258,25 +323,42 @@ export default function Home() {
         </div>
       </section>
 
+      {/* New Quick Feature Actions */}
       <section className="home-quick-actions">
-        <button className="home-action-card" onClick={() => setIsWordManagerOpen(true)}>
+        <button className="home-action-card highlight" onClick={() => setIsDictOpen(true)}>
           <span className="home-action-icon">📖</span>
-          <span>+ Свои слова</span>
+          <div className="home-action-text">
+            <strong>Словарь</strong>
+            <small>80+ слов с озвучкой</small>
+          </div>
         </button>
+
         <button className="home-action-card" onClick={() => navigate('/quiz')}>
           <span className="home-action-icon">🧠</span>
-          <span>Квиз</span>
+          <div className="home-action-text">
+            <strong>Быстрый тест</strong>
+            <small>Проверь себя</small>
+          </div>
         </button>
+
+        <button className="home-action-card" onClick={() => setIsWordManagerOpen(true)}>
+          <span className="home-action-icon">➕</span>
+          <div className="home-action-text">
+            <strong>Свои слова</strong>
+            <small>Добавить в колоду</small>
+          </div>
+        </button>
+
         <button className="home-action-card" onClick={() => navigate('/grammar')}>
           <span className="home-action-icon">✏️</span>
-          <span>Грамматика</span>
-        </button>
-        <button className="home-action-card" onClick={() => navigate('/progress')}>
-          <span className="home-action-icon">📈</span>
-          <span>Прогресс</span>
+          <div className="home-action-text">
+            <strong>Грамматика</strong>
+            <small>Правила и тесты</small>
+          </div>
         </button>
       </section>
 
+      {/* Modals */}
       <AuthModal
         isOpen={isAuthOpen}
         onClose={() => setIsAuthOpen(false)}
@@ -290,9 +372,15 @@ export default function Home() {
           const allCards = await getAllCards();
           const reviewCards = await getCardsForReview();
           setReviewCount(reviewCards.length);
-          const learned = allCards.filter(c => c.repetitions && c.repetitions >= 1);
+          const learned = allCards.filter((c) => c.repetitions && c.repetitions >= 1);
           setTotalLearned(learned.length);
         }}
+      />
+
+      <DictionaryModal
+        isOpen={isDictOpen}
+        onClose={() => setIsDictOpen(false)}
+        defaultLanguage={language}
       />
     </div>
   );

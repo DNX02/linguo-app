@@ -28,6 +28,7 @@ export default function Progress() {
 
   useEffect(() => {
     const loadData = async () => {
+      try {
       const allCards = await getAllCards();
       setTotalWords(allCards.length);
 
@@ -85,7 +86,7 @@ export default function Progress() {
       let current = 0;
       let best = 0;
       let tempStreak = 0;
-      for (let i = 0; i < 365; i++) {
+      for (let i = 0; i < 30; i++) {
         const d = new Date(now);
         d.setDate(d.getDate() - i);
         const dateStr = d.toISOString().split('T')[0];
@@ -105,7 +106,11 @@ export default function Progress() {
       setCurrentStreak(current || tempStreak);
       setBestStreak(Math.max(best, current, tempStreak));
 
-      setLoading(false);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
     };
 
     loadData();

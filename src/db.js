@@ -43,65 +43,104 @@ export async function getDB() {
  * Get all cards, optionally filtered by language and level.
  */
 export async function getAllCards(language, level) {
-  const db = await getDB();
-  let cards;
+  try {
+    const db = await getDB();
+    let cards;
 
-  if (language) {
-    cards = await db.getAllFromIndex('cards', 'language', language);
-  } else {
-    cards = await db.getAll('cards');
+    if (language) {
+      cards = await db.getAllFromIndex('cards', 'language', language);
+    } else {
+      cards = await db.getAll('cards');
+    }
+
+    if (level) {
+      cards = cards.filter((card) => card.level === level);
+    }
+
+    return cards || [];
+  } catch (err) {
+    console.error('getAllCards error:', err);
+    return [];
   }
-
-  if (level) {
-    cards = cards.filter((card) => card.level === level);
-  }
-
-  return cards;
 }
 
 /**
  * Get cards that are due for review (nextReview <= now) for a given language.
  */
 export async function getCardsForReview(language) {
-  const db = await getDB();
-  const now = new Date();
-  let cards;
+  try {
+    const db = await getDB();
+    const now = new Date();
+    let cards;
 
-  if (language) {
-    cards = await db.getAllFromIndex('cards', 'language', language);
-  } else {
-    cards = await db.getAll('cards');
+    if (language) {
+      cards = await db.getAllFromIndex('cards', 'language', language);
+    } else {
+      cards = await db.getAll('cards');
+    }
+
+    return (cards || []).filter((card) => {
+      if (!card.nextReview) return true; // never reviewed = due
+      return new Date(card.nextReview) <= now;
+    });
+  } catch (err) {
+    console.error('getCardsForReview error:', err);
+    return [];
   }
-
-  return cards.filter((card) => {
-    if (!card.nextReview) return true; // never reviewed = due
-    return new Date(card.nextReview) <= now;
-  });
 }
 
 /**
  * Update a card's data (including spaced repetition fields).
  */
 export async function updateCard(card) {
-  const db = await getDB();
-  return db.put('cards', card);
+  try {
+    const db = await getDB();
+    return await db.put('cards', card);
+  } catch (err) {
+    console.error('updateCard error:', err);
+  }
 }
 
 /**
  * Add a new card to the database.
  */
 export async function addCard(card) {
-  const db = await getDB();
-  return db.add('cards', card);
+  try {
+    const db = await getDB();
+    return await db.add('cards', card);
+  } catch (err) {
+    console.error('addCard error:', err);
+  }
 }
 
 /**
- * Get the daily progress record for a specific date.
- * @param {string} date – ISO date string (YYYY-MM-DD)
+ * Get the daily progress record for a specific date (defaults to today).
+ * @param {string} [date] – ISO date string (YYYY-MM-DD)
  */
 export async function getDailyProgress(date) {
-  const db = await getDB();
-  return db.get('progress', date);
+  const targetDate = date || new Date().toISOString().split('T')[0];
+  try {
+    const db = await getDB();
+    const record = await db.get('progress', targetDate);
+    return (
+      record || {
+        date: targetDate,
+        correct: 0,
+        wrong: 0,
+        reviewed: 0,
+        grammarDone: 0,
+      }
+    );
+  } catch (err) {
+    console.error('getDailyProgress error:', err);
+    return {
+      date: targetDate,
+      correct: 0,
+      wrong: 0,
+      reviewed: 0,
+      grammarDone: 0,
+    };
+  }
 }
 
 /**
@@ -109,16 +148,42 @@ export async function getDailyProgress(date) {
  * @param {object} progress – must include { date: "YYYY-MM-DD", ... }
  */
 export async function saveDailyProgress(progress) {
-  const db = await getDB();
-  return db.put('progress', progress);
+  try {
+    const db = await getDB();
+    const safeProgress = {
+      date: progress?.date || new Date().toISOString().split('T')[0],
+      correct: progress?.correct || 0,
+      wrong: progress?.wrong || 0,
+      reviewed: progress?.reviewed || 0,
+      grammarDone: progress?.grammarDone || 0,
+      ...progress,
+    };
+    return await db.put('progress', safeProgress);
+  } catch (err) {
+    console.error('saveDailyProgress error:', err);
+  }
 }
 
 /**
- * Get all settings as an array of { key, value } objects.
+ * Get all settings as an object { [key]: value }.
  */
 export async function getSettings() {
-  const db = await getDB();
-  return db.getAll('settings');
+  try {
+    const db = await getDB();
+    const items = await db.getAll('settings');
+    const settingsObj = {};
+    if (Array.isArray(items)) {
+      for (const item of items) {
+        if (item && item.key) {
+          settingsObj[item.key] = item.value;
+        }
+      }
+    }
+    return settingsObj;
+  } catch (err) {
+    console.error('getSettings error:', err);
+    return {};
+  }
 }
 
 /**
@@ -127,6 +192,10 @@ export async function getSettings() {
  * @param {*} value
  */
 export async function saveSetting(key, value) {
-  const db = await getDB();
-  return db.put('settings', { key, value });
+  try {
+    const db = await getDB();
+    return await db.put('settings', { key, value });
+  } catch (err) {
+    console.error('saveSetting error:', err);
+  }
 }

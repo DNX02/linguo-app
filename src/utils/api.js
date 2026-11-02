@@ -25,13 +25,18 @@ export const api = {
 
     try {
       const res = await fetch(path, { ...options, headers });
-      const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || 'Ошибка запроса к серверу');
+        let errMsg = `Ошибка сервера (${res.status})`;
+        try {
+          const errData = await res.json();
+          errMsg = errData.error || errMsg;
+        } catch (_) {}
+        throw new Error(errMsg);
       }
-      return data;
+      return await res.json();
     } catch (err) {
-      console.warn('API error:', err.message);
+      // Offline or network error - warn but don't crash app
+      console.warn('API request failed:', path, err.message);
       throw err;
     }
   },
@@ -58,7 +63,7 @@ export const api = {
     if (!this.getToken()) return null;
     try {
       const data = await this.request('/api/auth/me');
-      return data.user;
+      return data?.user || null;
     } catch (e) {
       this.setToken(null);
       return null;
@@ -101,15 +106,7 @@ export const api = {
         body: JSON.stringify(progressData)
       });
     } catch (e) {
-      return null;
-    }
-  },
-
-  async getProgress() {
-    if (!this.getToken()) return null;
-    try {
-      return await this.request('/api/progress');
-    } catch (e) {
+      console.warn('Sync failed:', e.message);
       return null;
     }
   }
