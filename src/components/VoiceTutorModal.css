@@ -821,3 +821,196 @@
   line-height: 1.35;
 }
 
+
+/* ========================================================
+   Live Mic Activity Bar, Instant Nudge & Companion Input
+   ======================================================== */
+
+.tutor-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.tutor-modal-content {
+  background: #0f121d;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 28px;
+  width: 100%;
+  max-width: 520px;
+  height: 88vh;
+  max-height: 760px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.8), 0 0 40px rgba(99, 102, 241, 0.15);
+}
+
+.tutor-modal-header {
+  padding: 1.1rem 1.4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.tutor-header-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.tutor-logo-sparkle {
+  font-size: 1.35rem;
+}
+
+.tutor-engine-sub {
+  margin: 0.15rem 0 0;
+  font-size: 0.76rem;
+  color: #94a3b8;
+}
+
+.tutor-mic-live-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 0.85rem;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 14px;
+  margin: 0.4rem 0;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.mic-live-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #94a3b8;
+  transition: color 0.2s;
+}
+
+.mic-live-indicator.speaking {
+  color: #22c55e;
+}
+
+.mic-wave-pulse {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 12px #22c55e;
+  display: inline-block;
+  transition: transform 0.08s ease-out;
+}
+
+.tutor-instant-reply-btn {
+  background: rgba(99, 102, 241, 0.2);
+  border: 1px solid rgba(99, 102, 241, 0.4);
+  color: #c7d2fe;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.35rem 0.75rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.tutor-instant-reply-btn:hover {
+  background: rgba(99, 102, 241, 0.35);
+  transform: translateY(-1px);
+}
+
+.tutor-instant-reply-btn:active {
+  transform: scale(0.97);
+}
+
+.tutor-quick-input-form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+  margin-bottom: 0.4rem;
+}
+
+.tutor-quick-input-field {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 0.65rem 0.9rem;
+  color: #fff;
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.tutor-quick-input-field:focus {
+  border-color: #6366f1;
+}
+
+.tutor-quick-send-btn {
+  background: #6366f1;
+  border: none;
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s, opacity 0.15s;
+}
+
+.tutor-quick-send-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.tutor-quick-send-btn:not(:disabled):hover {
+  transform: scale(1.05);
+}
+
+.hint-card.interactive {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  transition: all 0.15s;
+}
+
+.hint-card.interactive:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(99, 102, 241, 0.5);
+}
+
+.hint-card.interactive:active {
+  transform: scale(0.98);
+}
+
+.hint-card-text {
+  flex: 1;
+}
+
+.hint-send-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #818cf8;
+  background: rgba(99, 102, 241, 0.15);
+  padding: 3px 8px;
+  border-radius: 8px;
+  white-space: nowrap;
+}

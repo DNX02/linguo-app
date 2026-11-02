@@ -86,7 +86,9 @@ export default function VoiceTutorModal({ isOpen, onClose, currentLanguage = 'en
   const [apiKey, setApiKey] = useState(() => localStorage.getItem('linguo_gemini_key') || '');
   const [inputKey, setInputKey] = useState('');
   const [status, setStatus] = useState('disconnected'); // 'connecting' | 'connected' | 'disconnected'
-  const [audioLevel, setAudioLevel] = useState(0);
+  const [audioLevel, setAudioLevel] = useState(0); // Tutor voice audio level
+  const [userMicLevel, setUserMicLevel] = useState(0); // User microphone level
+  const [textInput, setTextInput] = useState('');
   const [transcripts, setTranscripts] = useState([]);
   const [sessionSeconds, setSessionSeconds] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
@@ -298,6 +300,7 @@ Rules:
           }
         },
         onAudioLevel: (lvl) => setAudioLevel(lvl),
+        onUserAudioLevel: (lvl) => setUserMicLevel(lvl),
         onError: (err) => {
           setErrorMsg(err);
           haptics.error();
@@ -313,6 +316,38 @@ Rules:
     }
   };
 
+  const toggleMute = () => {
+    const next = !isMuted;
+    setIsMuted(next);
+    liveClientRef.current?.setMuted(next);
+    sounds.playTap?.();
+    haptics.light();
+  };
+
+  const handleSendTextMessage = (e) => {
+    e?.preventDefault();
+    const trimmed = textInput.trim();
+    if (!trimmed || !liveClientRef.current) return;
+    liveClientRef.current.sendTextMessage(trimmed);
+    setTextInput('');
+    sounds.playTap?.();
+    haptics.light();
+  };
+
+  const handleNudgeTurn = () => {
+    if (!liveClientRef.current) return;
+    liveClientRef.current.sendAudioStreamEnd();
+    sounds.playTap?.();
+    haptics.medium();
+  };
+
+  const handleSelectHint = (phrase) => {
+    if (!liveClientRef.current) return;
+    liveClientRef.current.sendTextMessage(phrase);
+    sounds.playTap?.();
+    haptics.light();
+  };
+
   const handleEndCall = () => {
     if (liveClientRef.current) {
       liveClientRef.current.disconnect();
@@ -320,6 +355,7 @@ Rules:
     }
     setStatus('disconnected');
     setAudioLevel(0);
+    setUserMicLevel(0);
     haptics.light();
 
     const duration = sessionSeconds;
@@ -661,20 +697,72 @@ Rules:
               )}
             </div>
 
+            {/* Live Mic Activity & Instant Reply Trigger */}
+            {status === 'connected' && (
+              <div className="tutor-mic-live-bar animate-in">
+                <div className={`mic-live-indicator ${userMicLevel > 8 ? 'speaking' : ''}`}>
+                  <span
+                    className="mic-wave-pulse"
+                    style={{ transform: `scale(${1 + (userMicLevel / 100) * 0.9})` }}
+                  />
+                  <span className="mic-icon-live">
+                    {isMuted ? '🔇 Микрофон выключен' : userMicLevel > 8 ? '🎙️ Слышу вас...' : '🎤 Говорите в микрофон'}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  className="tutor-instant-reply-btn"
+                  onClick={handleNudgeTurn}
+                  title="Нажмите, если закончили говорить, чтобы репетитор ответил сразу"
+                >
+                  ⚡ Ответить сейчас ➔
+                </button>
+              </div>
+            )}
+
+            {/* Companion Text Input Bar (Можно говорить голосом или писать текстом) */}
+            {status === 'connected' && (
+              <form className="tutor-quick-input-form animate-in" onSubmit={handleSendTextMessage}>
+                <input
+                  type="text"
+                  placeholder="Или напишите репетитору здесь..."
+                  value={textInput}
+                  onChange={(e) => setTextInput(e.target.value)}
+                  className="tutor-quick-input-field"
+                />
+                <button
+                  type="submit"
+                  className="tutor-quick-send-btn"
+                  disabled={!textInput.trim()}
+                  title="Отправить"
+                >
+                  ➤
+                </button>
+              </form>
+            )}
+
             {/* Live Hint Drawer (💡 Что сказать) */}
             {status === 'connected' && showHints && (
               <div className="tutor-hints-drawer animate-pop">
                 <div className="hints-header">
-                  <span>💡 Что можно сказать:</span>
+                  <span>💡 Что можно сказать (нажмите для отправки):</span>
                   <button className="hints-close" onClick={() => setShowHints(false)}>✕</button>
                 </div>
                 <div className="hints-list">
                   {activeHints.map((h, i) => {
                     const foreignPhrase = h[selectedLang] || h.en;
                     return (
-                      <div key={i} className="hint-card">
-                        <div className="hint-foreign">{foreignPhrase}</div>
-                        <div className="hint-ru">{h.ru}</div>
+                      <div
+                        key={i}
+                        className="hint-card interactive"
+                        onClick={() => handleSelectHint(foreignPhrase)}
+                        title="Нажмите, чтобы сказать репетитору"
+                      >
+                        <div className="hint-card-text">
+                          <div className="hint-foreign">{foreignPhrase}</div>
+                          <div className="hint-ru">{h.ru}</div>
+                        </div>
+                        <span className="hint-send-badge">💬 Сказать</span>
                       </div>
                     );
                   })}
@@ -699,7 +787,7 @@ Rules:
                   </button>
                   <button
                     className={`tutor-mute-btn ${isMuted ? 'muted' : ''}`}
-                    onClick={() => setIsMuted(!isMuted)}
+                    onClick={toggleMute}
                   >
                     {isMuted ? '🔇 Вкл. микрофон' : '🎤 Микрофон'}
                   </button>
