@@ -24,6 +24,11 @@ import VoiceTutorModal from '../components/VoiceTutorModal';
 import StoriesModal from '../components/StoriesModal';
 import WordBattleModal from '../components/WordBattleModal';
 import HandsFreeModal from '../components/HandsFreeModal';
+import QuestMapModal from '../components/QuestMapModal';
+import LeaderboardModal from '../components/LeaderboardModal';
+import ShopModal from '../components/ShopModal';
+import VoiceMessengerModal from '../components/VoiceMessengerModal';
+import SmartReaderModal from '../components/SmartReaderModal';
 import { speakText } from '../utils/speech';
 import { haptics } from '../utils/haptics';
 import './Home.css';
@@ -75,6 +80,11 @@ export default function Home() {
   const [isStoriesOpen, setIsStoriesOpen] = useState(false);
   const [isBattleOpen, setIsBattleOpen] = useState(false);
   const [isHandsFreeOpen, setIsHandsFreeOpen] = useState(false);
+  const [isQuestMapOpen, setIsQuestMapOpen] = useState(false);
+  const [isLeaderboardOpen, setIsLeaderboardOpen] = useState(false);
+  const [isShopOpen, setIsShopOpen] = useState(false);
+  const [isVoiceMessengerOpen, setIsVoiceMessengerOpen] = useState(false);
+  const [isSmartReaderOpen, setIsSmartReaderOpen] = useState(false);
 
   const isMountedRef = useRef(true);
 
@@ -254,10 +264,13 @@ export default function Home() {
         </div>
 
         <div className="home-status-strip">
-          <span className="home-pwa-pill">🟢 Офлайн-режим (PWA)</span>
-          <span className="home-mode-pill">
-            {language === 'en' ? '🇬🇧 Английский' : '🇩🇪 Немецкий'} • {level}
-          </span>
+          <span className="home-pwa-pill">🟢 Офлайн (PWA)</span>
+          <button className="home-gem-pill" onClick={() => setIsShopOpen(true)} title="Магазин кристаллов">
+            💎 {gamification.getGems()}
+          </button>
+          <button className="home-league-pill" onClick={() => setIsLeaderboardOpen(true)} title="Лига Лидеров">
+            🏆 Золото
+          </button>
           <button className="home-share-btn-pill" onClick={() => setIsShareOpen(true)}>
             📤 Поделиться
           </button>
@@ -363,6 +376,22 @@ export default function Home() {
         </button>
       </section>
 
+      {/* Interactive Quest Map Adventure Banner */}
+      <section className="home-quest-banner" onClick={() => setIsQuestMapOpen(true)}>
+        <div className="home-quest-banner-left">
+          <div className="home-quest-orb">🗺️</div>
+          <div>
+            <div className="home-quest-tag-row">
+              <span className="home-quest-pill">ДОРОЖКА ПРИКЛЮЧЕНИЙ</span>
+              <span className="home-quest-star-pill">⭐ 8 этапов</span>
+            </div>
+            <h3 className="home-quest-title">Интерактивная карта пути</h3>
+            <p className="home-quest-desc">Уроки-островки, сундуки сокровищ и битва с боссом</p>
+          </div>
+        </div>
+        <button className="home-quest-btn">В путь! ➔</button>
+      </section>
+
       {/* Live AI Voice Tutor Banner (Google Gemini Live) */}
       <section className="home-tutor-banner" onClick={() => setIsTutorOpen(true)}>
         <div className="home-tutor-banner-left">
@@ -454,6 +483,46 @@ export default function Home() {
 
       {/* Quick Feature Actions */}
       <section className="home-quick-actions">
+        <button className="home-action-card highlight" onClick={() => setIsQuestMapOpen(true)}>
+          <span className="home-action-icon">🗺️</span>
+          <div className="home-action-text">
+            <strong>Карта квестов</strong>
+            <small>Дорожка приключений</small>
+          </div>
+        </button>
+
+        <button className="home-action-card" onClick={() => setIsLeaderboardOpen(true)}>
+          <span className="home-action-icon">🏆</span>
+          <div className="home-action-text">
+            <strong>Лига лидеров</strong>
+            <small>Рейтинг и кубки недели</small>
+          </div>
+        </button>
+
+        <button className="home-action-card" onClick={() => setIsShopOpen(true)}>
+          <span className="home-action-icon">💎</span>
+          <div className="home-action-text">
+            <strong>Магазин & Сундук</strong>
+            <small>Кристаллы и бонусы</small>
+          </div>
+        </button>
+
+        <button className="home-action-card highlight" onClick={() => setIsVoiceMessengerOpen(true)}>
+          <span className="home-action-icon">💬</span>
+          <div className="home-action-text">
+            <strong>Аудио-чат (AI)</strong>
+            <small>Голосовые с репетитором</small>
+          </div>
+        </button>
+
+        <button className="home-action-card" onClick={() => setIsSmartReaderOpen(true)}>
+          <span className="home-action-icon">📸</span>
+          <div className="home-action-text">
+            <strong>AI Сканер (Lens)</strong>
+            <small>Умный ридер текстов</small>
+          </div>
+        </button>
+
         <button className="home-action-card highlight" onClick={() => setIsStoriesOpen(true)}>
           <span className="home-action-icon">📖</span>
           <div className="home-action-text">
@@ -657,6 +726,32 @@ export default function Home() {
         isOpen={isHandsFreeOpen}
         onClose={() => setIsHandsFreeOpen(false)}
         currentLanguage={language}
+      />
+
+      <QuestMapModal
+        isOpen={isQuestMapOpen}
+        onClose={() => setIsQuestMapOpen(false)}
+      />
+
+      <LeaderboardModal
+        isOpen={isLeaderboardOpen}
+        onClose={() => setIsLeaderboardOpen(false)}
+      />
+
+      <ShopModal
+        isOpen={isShopOpen}
+        onClose={() => setIsShopOpen(false)}
+      />
+
+      <VoiceMessengerModal
+        isOpen={isVoiceMessengerOpen}
+        onClose={() => setIsVoiceMessengerOpen(false)}
+        currentLanguage={language}
+      />
+
+      <SmartReaderModal
+        isOpen={isSmartReaderOpen}
+        onClose={() => setIsSmartReaderOpen(false)}
       />
     </div>
   );

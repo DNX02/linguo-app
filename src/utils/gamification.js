@@ -105,4 +105,82 @@ export const gamification = {
   isStarred(wordId) {
     return this.getStarred().includes(wordId);
   },
+
+  // Gems & Crystals Currency
+  getGems() {
+    try {
+      const val = localStorage.getItem('linguo_gems');
+      return val !== null ? parseInt(val, 10) : 150;
+    } catch (_) {
+      return 150;
+    }
+  },
+
+  addGems(amount) {
+    try {
+      const current = this.getGems();
+      const updated = current + amount;
+      localStorage.setItem('linguo_gems', updated.toString());
+      return updated;
+    } catch (_) {
+      return amount;
+    }
+  },
+
+  spendGems(amount) {
+    const current = this.getGems();
+    if (current >= amount) {
+      const updated = current - amount;
+      localStorage.setItem('linguo_gems', updated.toString());
+      return true;
+    }
+    return false;
+  },
+
+  // Streak & Streak Freeze
+  getStreak() {
+    try {
+      return parseInt(localStorage.getItem('linguo_streak') || '3', 10);
+    } catch (_) {
+      return 3;
+    }
+  },
+
+  hasStreakFreeze() {
+    try {
+      return localStorage.getItem('linguo_streak_freeze') === 'true';
+    } catch (_) {
+      return false;
+    }
+  },
+
+  setStreakFreeze(val) {
+    try {
+      localStorage.setItem('linguo_streak_freeze', val ? 'true' : 'false');
+    } catch (_) {}
+  },
+
+  // Daily Treasure Chest
+  isDailyChestOpened() {
+    try {
+      const today = new Date().toISOString().slice(0, 10);
+      return localStorage.getItem('linguo_daily_chest') === today;
+    } catch (_) {
+      return false;
+    }
+  },
+
+  openDailyChest() {
+    const today = new Date().toISOString().slice(0, 10);
+    localStorage.setItem('linguo_daily_chest', today);
+    this.addGems(50);
+    this.addXP(40);
+    return { gems: 50, xp: 40 };
+  },
+
+  // Weekly XP for Leaderboards
+  getWeeklyXP() {
+    const totalXP = this.getXP();
+    return Math.max(120, Math.round(totalXP * 0.45));
+  },
 };
