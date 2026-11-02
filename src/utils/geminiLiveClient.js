@@ -68,7 +68,7 @@ export class GeminiLiveClient {
       this.cleanup();
 
       if (event.code === 1008) {
-        this.onError('Неверный API-ключ (код 1008). Ключ Google AI Studio должен начинаться с AIzaSy...');
+        this.onError('В браузере сохранён старый недействительный ключ (код 1008). Нажмите «Вставить новый ключ» ниже.');
       } else if (event.code !== 1000 && event.reason) {
         this.onError(`Соединение закрыто (${event.code}): ${event.reason}`);
       }

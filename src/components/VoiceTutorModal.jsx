@@ -249,7 +249,21 @@ export default function VoiceTutorModal({ isOpen, onClose, currentLanguage = 'en
               )}
             </div>
 
-            {errorMsg && <div className="tutor-error-banner">{errorMsg}</div>}
+            {errorMsg && (
+              <div className="tutor-error-banner">
+                <p>{errorMsg}</p>
+                <button
+                  className="tutor-error-reset-btn"
+                  onClick={() => {
+                    localStorage.removeItem('linguo_gemini_key');
+                    setApiKey('');
+                    setErrorMsg('');
+                  }}
+                >
+                  🔑 Вставить новый ключ API
+                </button>
+              </div>
+            )}
 
             {/* Live Subtitles & Transcripts */}
             <div className="tutor-transcript-box" ref={scrollRef}>
