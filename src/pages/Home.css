@@ -420,3 +420,104 @@
   font-size: 0.72rem;
   color: #94a3b8;
 }
+
+/* Share Pill in Status Strip */
+.home-share-btn-pill {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #fbbf24;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.home-share-btn-pill:hover {
+  background: rgba(245, 158, 11, 0.25);
+}
+
+/* Gamification Rank Card */
+.home-rank-box {
+  background: linear-gradient(135deg, rgba(30, 27, 75, 0.7) 0%, rgba(23, 32, 54, 0.9) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  border-radius: 18px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.2s;
+}
+
+.home-rank-box:active {
+  transform: scale(0.98);
+}
+
+.home-rank-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.home-rank-info {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.home-rank-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.home-rank-level {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.home-rank-xp {
+  font-size: 0.85rem;
+  color: #cbd5e1;
+}
+
+.home-rank-xp strong {
+  color: #f59e0b;
+  font-size: 1.05rem;
+}
+
+.home-rank-progress-bg {
+  background: rgba(255, 255, 255, 0.08);
+  height: 6px;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.home-rank-progress-fill {
+  background: linear-gradient(90deg, #f59e0b, #ec4899);
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.3s ease;
+}
+
+.home-rank-sub {
+  font-size: 0.72rem;
+  color: #64748b;
+  text-align: right;
+}
+
+/* Action card variations */
+.home-action-card.speed-game {
+  border-color: rgba(245, 158, 11, 0.3);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), #172036);
+}
+
+.home-action-card.mistake-card {
+  border-color: rgba(239, 68, 68, 0.3);
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), #172036);
+}

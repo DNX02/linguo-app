@@ -302,3 +302,111 @@
   min-width: 20px;
   text-align: right;
 }
+
+.progress-share-btn {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #fbbf24;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.progress-rank-card {
+  background: linear-gradient(135deg, #1e1b4b 0%, #172036 100%);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.progress-rank-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.progress-rank-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fff;
+  margin-right: 8px;
+}
+
+.progress-rank-lvl {
+  font-size: 0.75rem;
+  color: #a5b4fc;
+  background: rgba(99, 102, 241, 0.2);
+  padding: 2px 8px;
+  border-radius: 8px;
+}
+
+.progress-xp-val {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #f59e0b;
+}
+
+.progress-xp-bar-bg {
+  background: rgba(255, 255, 255, 0.08);
+  height: 8px;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.progress-xp-bar-fill {
+  background: linear-gradient(90deg, #f59e0b, #ec4899);
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.3s ease;
+}
+
+.progress-xp-hint {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.progress-special-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.progress-special-card {
+  background: #172036;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.progress-special-card:active {
+  transform: scale(0.97);
+}
+
+.progress-special-emoji {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+.progress-special-card strong {
+  display: block;
+  font-size: 0.85rem;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+.progress-special-card p {
+  margin: 0;
+  font-size: 0.72rem;
+  color: #94a3b8;
+}

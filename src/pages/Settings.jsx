@@ -1,21 +1,29 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getSettings, saveSetting, getAllCards } from '../db';
 import { api } from '../utils/api';
+import { sounds } from '../utils/soundEffects';
+import { gamification } from '../utils/gamification';
 import AuthModal from '../components/AuthModal';
 import './Settings.css';
 
-const DAILY_GOALS = [10, 20, 30, 50];
+const DAILY_GOALS = [5, 10, 15, 20, 30];
 const LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+const THEMES = [
+  { id: 'navy', label: '🌙 Тёмная (Navy)' },
+  { id: 'oled', label: '⬛ OLED (Чёрная)' },
+  { id: 'light', label: '☀️ Светлая' },
+];
 
 export default function Settings() {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
-  const [dailyGoal, setDailyGoal] = useState(20);
+  const [dailyGoal, setDailyGoal] = useState(15);
   const [defaultLang, setDefaultLang] = useState('both');
   const [currentLevel, setCurrentLevel] = useState('A1');
-  const [notifications, setNotifications] = useState(false);
-  const [darkTheme, setDarkTheme] = useState(true);
+  const [soundEnabled, setSoundEnabled] = useState(true);
+  const [speechSpeed, setSpeechSpeed] = useState('0.9');
+  const [activeTheme, setActiveTheme] = useState('navy');
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [showImportSuccess, setShowImportSuccess] = useState(false);
   const [showExportSuccess, setShowExportSuccess] = useState(false);
@@ -23,23 +31,49 @@ export default function Settings() {
   const [user, setUser] = useState(null);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [syncStatus, setSyncStatus] = useState('');
+  const [mistakesCount, setMistakesCount] = useState(0);
 
   useEffect(() => {
     const loadSettings = async () => {
-      const settings = await getSettings();
-      if (settings.dailyGoal) setDailyGoal(settings.dailyGoal);
-      if (settings.defaultLang) setDefaultLang(settings.defaultLang);
-      if (settings.level) setCurrentLevel(settings.level);
-      if (settings.notifications !== undefined) setNotifications(settings.notifications);
-      if (settings.darkTheme !== undefined) setDarkTheme(settings.darkTheme);
       try {
-        const u = await api.getMe();
-        setUser(u);
-      } catch (e) {}
-      setLoading(false);
+        const settings = await getSettings();
+        if (settings.dailyGoal) setDailyGoal(Number(settings.dailyGoal));
+        if (settings.defaultLang) setDefaultLang(settings.defaultLang);
+        if (settings.level) setCurrentLevel(settings.level);
+        if (settings.soundEnabled !== undefined) {
+          setSoundEnabled(settings.soundEnabled);
+          sounds.enabled = settings.soundEnabled;
+        }
+        if (settings.speechSpeed) setSpeechSpeed(settings.speechSpeed);
+        if (settings.theme) {
+          setActiveTheme(settings.theme);
+          applyTheme(settings.theme);
+        }
+        setMistakesCount(gamification.getMistakes().length);
+        try {
+          const u = await api.getMe();
+          setUser(u);
+        } catch (e) {}
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
     };
     loadSettings();
   }, []);
+
+  const applyTheme = (themeId) => {
+    if (typeof document !== 'undefined') {
+      if (themeId === 'oled') {
+        document.body.setAttribute('data-theme', 'oled');
+      } else if (themeId === 'light') {
+        document.body.setAttribute('data-theme', 'light');
+      } else {
+        document.body.removeAttribute('data-theme');
+      }
+    }
+  };
 
   const handleDailyGoal = async (goal) => {
     setDailyGoal(goal);
@@ -56,16 +90,29 @@ export default function Settings() {
     await saveSetting('level', lvl);
   };
 
-  const handleNotifications = async () => {
-    const newVal = !notifications;
-    setNotifications(newVal);
-    await saveSetting('notifications', newVal);
+  const handleSoundToggle = async () => {
+    const newVal = !soundEnabled;
+    setSoundEnabled(newVal);
+    sounds.enabled = newVal;
+    if (newVal) sounds.playCorrect();
+    await saveSetting('soundEnabled', newVal);
   };
 
-  const handleTheme = async () => {
-    const newVal = !darkTheme;
-    setDarkTheme(newVal);
-    await saveSetting('darkTheme', newVal);
+  const handleSpeechSpeed = async (speed) => {
+    setSpeechSpeed(speed);
+    await saveSetting('speechSpeed', speed);
+  };
+
+  const handleThemeChange = async (themeId) => {
+    setActiveTheme(themeId);
+    applyTheme(themeId);
+    await saveSetting('theme', themeId);
+  };
+
+  const handleClearMistakes = () => {
+    localStorage.removeItem('linguo_mistakes');
+    setMistakesCount(0);
+    sounds.playCorrect();
   };
 
   const handleSync = async () => {
@@ -73,9 +120,14 @@ export default function Settings() {
     try {
       const cards = await getAllCards();
       const cardMap = {};
-      cards.forEach(c => {
+      cards.forEach((c) => {
         if (c.repetitions > 0) {
-          cardMap[c.id] = { interval: c.interval, repetitions: c.repetitions, easeFactor: c.easeFactor, nextReview: c.nextReview };
+          cardMap[c.id] = {
+            interval: c.interval,
+            repetitions: c.repetitions,
+            easeFactor: c.easeFactor,
+            nextReview: c.nextReview,
+          };
         }
       });
       await api.syncProgress({ cards: cardMap });
@@ -92,7 +144,6 @@ export default function Settings() {
   };
 
   const handleResetProgress = async () => {
-    // Clear IndexedDB data
     try {
       const db = await import('../db');
       const allCards = await db.getAllCards();
@@ -107,6 +158,8 @@ export default function Settings() {
         });
       }
       localStorage.removeItem('linguo-grammar-progress');
+      localStorage.removeItem('linguo_mistakes');
+      localStorage.removeItem('linguo_user_xp');
       setShowResetConfirm(false);
       window.location.reload();
     } catch (e) {
@@ -121,11 +174,14 @@ export default function Settings() {
       const grammarProgress = localStorage.getItem('linguo-grammar-progress');
 
       const exportData = {
-        version: '1.0.0',
+        version: '1.2.0',
         exportDate: new Date().toISOString(),
         cards: allCards,
         settings,
         grammarProgress: grammarProgress ? JSON.parse(grammarProgress) : {},
+        xp: gamification.getXP(),
+        mistakes: gamification.getMistakes(),
+        starred: gamification.getStarred(),
       };
 
       const blob = new Blob([JSON.stringify(exportData, null, 2)], {
@@ -181,17 +237,20 @@ export default function Settings() {
         );
       }
 
+      if (data.xp) {
+        localStorage.setItem('linguo_user_xp', data.xp.toString());
+      }
+
       setShowImportSuccess(true);
       setTimeout(() => {
         setShowImportSuccess(false);
         window.location.reload();
-      }, 2000);
+      }, 1500);
     } catch (err) {
       console.error('Import failed:', err);
       alert('Ошибка импорта. Проверьте формат файла.');
     }
 
-    // Reset file input
     e.target.value = '';
   };
 
@@ -242,6 +301,59 @@ export default function Settings() {
             </button>
           </div>
         )}
+      </section>
+
+      {/* Theme Selection */}
+      <section className="settings-section">
+        <h3>🎨 Тема оформления</h3>
+        <div className="settings-theme-row">
+          {THEMES.map((t) => (
+            <button
+              key={t.id}
+              className={`settings-theme-btn ${activeTheme === t.id ? 'active' : ''}`}
+              onClick={() => handleThemeChange(t.id)}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* Audio & Sound Effects */}
+      <section className="settings-section">
+        <div className="settings-toggle-row" onClick={handleSoundToggle}>
+          <div>
+            <h3>🎵 Звуковые эффекты</h3>
+            <p className="settings-desc">Звук при правильных и неправильных ответах</p>
+          </div>
+          <div className={`settings-switch ${soundEnabled ? 'active' : ''}`}>
+            <div className="settings-switch-thumb" />
+          </div>
+        </div>
+
+        <div className="settings-speed-box">
+          <label className="settings-desc">Скорость озвучки слов:</label>
+          <div className="settings-speed-row">
+            <button
+              className={`settings-speed-btn ${speechSpeed === '0.7' ? 'active' : ''}`}
+              onClick={() => handleSpeechSpeed('0.7')}
+            >
+              🐢 Медленно (0.7x)
+            </button>
+            <button
+              className={`settings-speed-btn ${speechSpeed === '0.9' ? 'active' : ''}`}
+              onClick={() => handleSpeechSpeed('0.9')}
+            >
+              Стандарт (0.9x)
+            </button>
+            <button
+              className={`settings-speed-btn ${speechSpeed === '1.0' ? 'active' : ''}`}
+              onClick={() => handleSpeechSpeed('1.0')}
+            >
+              🐰 Быстро (1.0x)
+            </button>
+          </div>
+        </div>
       </section>
 
       {/* Daily goal */}
@@ -302,32 +414,16 @@ export default function Settings() {
         </div>
       </section>
 
-      {/* Toggles */}
-      <section className="settings-section">
-        <div className="settings-toggle-row" onClick={handleNotifications}>
-          <div>
-            <h3>🔔 Напоминания</h3>
-            <p className="settings-desc">Ежедневные напоминания о практике</p>
-          </div>
-          <div className={`settings-switch ${notifications ? 'active' : ''}`}>
-            <div className="settings-switch-thumb" />
-          </div>
-        </div>
-      </section>
-
-      <section className="settings-section">
-        <div className="settings-toggle-row" onClick={handleTheme}>
-          <div>
-            <h3>{darkTheme ? '🌙' : '☀️'} Тема</h3>
-            <p className="settings-desc">
-              {darkTheme ? 'Тёмная тема' : 'Светлая тема'}
-            </p>
-          </div>
-          <div className={`settings-switch ${darkTheme ? 'active' : ''}`}>
-            <div className="settings-switch-thumb" />
-          </div>
-        </div>
-      </section>
+      {/* Mistakes Management */}
+      {mistakesCount > 0 && (
+        <section className="settings-section">
+          <h3>⚠️ Список ошибок</h3>
+          <p className="settings-desc">Сейчас сохранено {mistakesCount} слов на отработку.</p>
+          <button className="settings-clear-mistakes-btn" onClick={handleClearMistakes}>
+            🧹 Очистить список ошибок
+          </button>
+        </section>
+      )}
 
       {/* Data management */}
       <section className="settings-section">
@@ -372,7 +468,7 @@ export default function Settings() {
           </button>
         ) : (
           <div className="settings-reset-confirm">
-            <p>Вы уверены? Весь прогресс будет удалён.</p>
+            <p>Вы уверены? Весь прогресс, очки XP и статистика будут удалены.</p>
             <div className="settings-reset-actions">
               <button className="settings-confirm-yes" onClick={handleResetProgress}>
                 Да, сбросить
@@ -392,10 +488,10 @@ export default function Settings() {
       <section className="settings-section settings-about">
         <h3>ℹ️ О приложении</h3>
         <div className="settings-about-content">
-          <p className="settings-app-name">Linguo</p>
-          <p className="settings-app-version">Версия 1.0.0</p>
+          <p className="settings-app-name">Linguo Super 2.0</p>
+          <p className="settings-app-version">Версия 2.0.0 (PWA Offline)</p>
           <p className="settings-app-desc">
-            Изучайте английский и немецкий с умным повторением
+            Изучайте английский и немецкий с умным повторением, играми и аудированием
           </p>
         </div>
       </section>

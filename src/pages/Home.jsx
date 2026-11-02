@@ -10,9 +10,12 @@ import {
 } from '../db';
 import wordsData from '../data/words';
 import { api } from '../utils/api';
+import { gamification } from '../utils/gamification';
 import AuthModal from '../components/AuthModal';
 import WordManagerModal from '../components/WordManagerModal';
 import DictionaryModal from '../components/DictionaryModal';
+import MatchGameModal from '../components/MatchGameModal';
+import ShareAchievementModal from '../components/ShareAchievementModal';
 import './Home.css';
 
 const MOTIVATIONAL_PHRASES = [
@@ -45,9 +48,15 @@ export default function Home() {
   const [todayReviewed, setTodayReviewed] = useState(0);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const [rank, setRank] = useState(gamification.getRank());
+  const [mistakesCount, setMistakesCount] = useState(0);
+
+  // Modals state
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isWordManagerOpen, setIsWordManagerOpen] = useState(false);
   const [isDictOpen, setIsDictOpen] = useState(false);
+  const [isMatchOpen, setIsMatchOpen] = useState(false);
+  const [isShareOpen, setIsShareOpen] = useState(false);
 
   const isMountedRef = useRef(true);
 
@@ -62,8 +71,9 @@ export default function Home() {
   const seedDatabase = useCallback(async () => {
     try {
       const existing = await getAllCards();
-      if (!existing || existing.length === 0) {
-        for (const word of wordsData) {
+      const existingIds = new Set((existing || []).map((c) => c.id));
+      for (const word of wordsData) {
+        if (!existingIds.has(word.id)) {
           await addCard({
             ...word,
             interval: 0,
@@ -76,6 +86,34 @@ export default function Home() {
       }
     } catch (err) {
       console.warn('Seed database warning:', err);
+    }
+  }, []);
+
+  const refreshStats = useCallback(async () => {
+    try {
+      const allCards = await getAllCards();
+      const reviewCards = await getCardsForReview();
+      
+      if (isMountedRef.current) {
+        setReviewCount(reviewCards.length);
+        const learned = allCards.filter(
+          (c) => c.repetitions && c.repetitions >= 1
+        );
+        setTotalLearned(learned.length);
+        setRank(gamification.getRank());
+        setMistakesCount(gamification.getMistakes().length);
+      }
+
+      // Today's progress
+      const progress = await getDailyProgress();
+      if (progress && isMountedRef.current) {
+        const total = (progress.correct || 0) + (progress.wrong || 0);
+        setAccuracy(total > 0 ? Math.round((progress.correct / total) * 100) : 100);
+        setGrammarDone(progress.grammarDone || 0);
+        setTodayReviewed(progress.reviewed || 0);
+      }
+    } catch (e) {
+      console.error(e);
     }
   }, []);
 
@@ -114,26 +152,7 @@ export default function Home() {
           if (settings.dailyGoal) setDailyGoal(Number(settings.dailyGoal));
         }
 
-        // Load card counts
-        const allCards = await getAllCards();
-        const reviewCards = await getCardsForReview();
-        
-        if (isMountedRef.current) {
-          setReviewCount(reviewCards.length);
-          const learned = allCards.filter(
-            (c) => c.repetitions && c.repetitions >= 1
-          );
-          setTotalLearned(learned.length);
-        }
-
-        // Today's progress
-        const progress = await getDailyProgress();
-        if (progress && isMountedRef.current) {
-          const total = (progress.correct || 0) + (progress.wrong || 0);
-          setAccuracy(total > 0 ? Math.round((progress.correct / total) * 100) : 100);
-          setGrammarDone(progress.grammarDone || 0);
-          setTodayReviewed(progress.reviewed || 0);
-        }
+        await refreshStats();
 
         // Streak check (last 7 days max for instant loading)
         let currentStreak = 0;
@@ -168,7 +187,7 @@ export default function Home() {
       isMountedRef.current = false;
       clearTimeout(timer);
     };
-  }, [seedDatabase]);
+  }, [seedDatabase, refreshStats]);
 
   const handleLanguageChange = async (lang) => {
     setLanguage(lang);
@@ -213,8 +232,35 @@ export default function Home() {
           <span className="home-mode-pill">
             {language === 'en' ? '🇬🇧 Английский' : '🇩🇪 Немецкий'} • {level}
           </span>
+          <button className="home-share-btn-pill" onClick={() => setIsShareOpen(true)}>
+            📤 Поделиться
+          </button>
         </div>
       </header>
+
+      {/* Gamification Rank & XP Card */}
+      <section className="home-rank-box" onClick={() => navigate('/progress')}>
+        <div className="home-rank-top">
+          <div className="home-rank-info">
+            <span className="home-rank-title">{rank.title}</span>
+            <span className="home-rank-level">Уровень {rank.level}</span>
+          </div>
+          <div className="home-rank-xp">
+            <strong>{rank.currentXP}</strong> XP
+          </div>
+        </div>
+        <div className="home-rank-progress-bg">
+          <div
+            className="home-rank-progress-fill"
+            style={{ width: `${rank.progressInLevel}%` }}
+          />
+        </div>
+        <div className="home-rank-sub">
+          {rank.nextRankXP
+            ? `До следующего ранга: ${rank.nextRankXP - rank.currentXP} XP`
+            : 'Максимальный ранг достигнут! 👑'}
+        </div>
+      </section>
 
       {/* Streak and Daily Goal Bar */}
       <section className="home-goal-box">
@@ -323,21 +369,37 @@ export default function Home() {
         </div>
       </section>
 
-      {/* New Quick Feature Actions */}
+      {/* Quick Feature Actions */}
       <section className="home-quick-actions">
         <button className="home-action-card highlight" onClick={() => setIsDictOpen(true)}>
           <span className="home-action-icon">📖</span>
           <div className="home-action-text">
             <strong>Словарь</strong>
-            <small>80+ слов с озвучкой</small>
+            <small>Поиск, озвучка и ⭐</small>
+          </div>
+        </button>
+
+        <button className="home-action-card speed-game" onClick={() => setIsMatchOpen(true)}>
+          <span className="home-action-icon">⚡</span>
+          <div className="home-action-text">
+            <strong>Найди пары</strong>
+            <small>Игра на скорость</small>
           </div>
         </button>
 
         <button className="home-action-card" onClick={() => navigate('/quiz')}>
           <span className="home-action-icon">🧠</span>
           <div className="home-action-text">
-            <strong>Быстрый тест</strong>
-            <small>Проверь себя</small>
+            <strong>Квиз и Аудио</strong>
+            <small>Тесты и на слух</small>
+          </div>
+        </button>
+
+        <button className="home-action-card" onClick={() => navigate('/grammar')}>
+          <span className="home-action-icon">✏️</span>
+          <div className="home-action-text">
+            <strong>Грамматика</strong>
+            <small>12 тем и правила</small>
           </div>
         </button>
 
@@ -349,13 +411,23 @@ export default function Home() {
           </div>
         </button>
 
-        <button className="home-action-card" onClick={() => navigate('/grammar')}>
-          <span className="home-action-icon">✏️</span>
-          <div className="home-action-text">
-            <strong>Грамматика</strong>
-            <small>Правила и тесты</small>
-          </div>
-        </button>
+        {mistakesCount > 0 ? (
+          <button className="home-action-card mistake-card" onClick={() => navigate('/quiz')}>
+            <span className="home-action-icon">⚠️</span>
+            <div className="home-action-text">
+              <strong>Ошибки ({mistakesCount})</strong>
+              <small>Повторить слабые слова</small>
+            </div>
+          </button>
+        ) : (
+          <button className="home-action-card" onClick={() => setIsShareOpen(true)}>
+            <span className="home-action-icon">🏆</span>
+            <div className="home-action-text">
+              <strong>Успехи дня</strong>
+              <small>Поделиться карточкой</small>
+            </div>
+          </button>
+        )}
       </section>
 
       {/* Modals */}
@@ -369,11 +441,7 @@ export default function Home() {
         isOpen={isWordManagerOpen}
         onClose={() => setIsWordManagerOpen(false)}
         onWordAdded={async () => {
-          const allCards = await getAllCards();
-          const reviewCards = await getCardsForReview();
-          setReviewCount(reviewCards.length);
-          const learned = allCards.filter((c) => c.repetitions && c.repetitions >= 1);
-          setTotalLearned(learned.length);
+          await refreshStats();
         }}
       />
 
@@ -381,6 +449,28 @@ export default function Home() {
         isOpen={isDictOpen}
         onClose={() => setIsDictOpen(false)}
         defaultLanguage={language}
+      />
+
+      <MatchGameModal
+        isOpen={isMatchOpen}
+        onClose={() => {
+          setIsMatchOpen(false);
+          refreshStats();
+        }}
+        language={language}
+      />
+
+      <ShareAchievementModal
+        isOpen={isShareOpen}
+        onClose={() => setIsShareOpen(false)}
+        stats={{
+          streak,
+          todayReviewed,
+          accuracy,
+          rankTitle: rank.title,
+          totalXP: rank.currentXP,
+          language,
+        }}
       />
     </div>
   );

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getAllCards } from '../db';
 import { speakText } from '../utils/speech';
+import { gamification } from '../utils/gamification';
 import './DictionaryModal.css';
 
 export default function DictionaryModal({ isOpen, onClose, defaultLanguage = 'en' }) {
@@ -9,12 +10,16 @@ export default function DictionaryModal({ isOpen, onClose, defaultLanguage = 'en
   const [selectedLang, setSelectedLang] = useState(defaultLanguage);
   const [selectedLevel, setSelectedLevel] = useState('ALL');
   const [activeCategory, setActiveCategory] = useState('ALL');
+  const [onlyStarred, setOnlyStarred] = useState(false);
+  const [slowAudio, setSlowAudio] = useState(false);
   const [playingId, setPlayingId] = useState(null);
+  const [starredList, setStarredList] = useState([]);
 
   useEffect(() => {
     if (isOpen) {
       loadWords();
       setSelectedLang(defaultLanguage);
+      setStarredList(gamification.getStarred());
     }
   }, [isOpen, defaultLanguage]);
 
@@ -32,7 +37,14 @@ export default function DictionaryModal({ isOpen, onClose, defaultLanguage = 'en
   const categories = ['ALL', ...new Set(words.map((w) => w.category).filter(Boolean))];
   const levels = ['ALL', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
 
+  const toggleStar = (wordId, e) => {
+    e.stopPropagation();
+    gamification.toggleStarred(wordId);
+    setStarredList([...gamification.getStarred()]);
+  };
+
   const filteredWords = words.filter((w) => {
+    if (onlyStarred && !starredList.includes(w.id)) return false;
     if (selectedLang !== 'all' && w.language !== selectedLang) return false;
     if (selectedLevel !== 'ALL' && w.level !== selectedLevel) return false;
     if (activeCategory !== 'ALL' && w.category !== activeCategory) return false;
@@ -46,10 +58,10 @@ export default function DictionaryModal({ isOpen, onClose, defaultLanguage = 'en
     return true;
   });
 
-  const handleSpeak = (word, e) => {
+  const handleSpeak = (word, e, forceSlow = false) => {
     e.stopPropagation();
     setPlayingId(word.id);
-    speakText(word.word, word.language);
+    speakText(word.word, word.language, { slow: forceSlow || slowAudio });
     setTimeout(() => setPlayingId(null), 1200);
   };
 
@@ -59,7 +71,7 @@ export default function DictionaryModal({ isOpen, onClose, defaultLanguage = 'en
         <div className="dict-header">
           <div className="dict-title-box">
             <h2>📖 Словарь ({filteredWords.length})</h2>
-            <p className="dict-subtitle">Все слова с озвучкой и примерами</p>
+            <p className="dict-subtitle">Все слова с озвучкой, примерами и избранным</p>
           </div>
           <button className="dict-close-btn" onClick={onClose}>✕</button>
         </div>
@@ -112,6 +124,22 @@ export default function DictionaryModal({ isOpen, onClose, defaultLanguage = 'en
                 </option>
               ))}
             </select>
+
+            <button
+              className={`dict-star-filter-btn ${onlyStarred ? 'active' : ''}`}
+              onClick={() => setOnlyStarred(!onlyStarred)}
+              title="Показать только избранные слова"
+            >
+              ⭐
+            </button>
+
+            <button
+              className={`dict-slow-btn ${slowAudio ? 'active' : ''}`}
+              onClick={() => setSlowAudio(!slowAudio)}
+              title="Замедленная речь (0.65x)"
+            >
+              🐢
+            </button>
           </div>
 
           {categories.length > 2 && (
@@ -134,48 +162,73 @@ export default function DictionaryModal({ isOpen, onClose, defaultLanguage = 'en
             <div className="dict-empty">
               <span>🔍</span>
               <p>Ничего не найдено</p>
-              <button onClick={() => { setSearch(''); setSelectedLevel('ALL'); setActiveCategory('ALL'); }} className="dict-reset-btn">
+              <button
+                onClick={() => {
+                  setSearch('');
+                  setSelectedLevel('ALL');
+                  setActiveCategory('ALL');
+                  setOnlyStarred(false);
+                }}
+                className="dict-reset-btn"
+              >
                 Сбросить фильтры
               </button>
             </div>
           ) : (
-            filteredWords.map((item) => (
-              <div key={item.id} className="dict-card">
-                <div className="dict-card-main">
-                  <div className="dict-card-top">
-                    <span className="dict-card-word">{item.word}</span>
-                    <button
-                      className={`dict-audio-btn ${playingId === item.id ? 'playing' : ''}`}
-                      onClick={(e) => handleSpeak(item, e)}
-                      title="Прослушать произношение"
-                    >
-                      🔊
-                    </button>
-                    <span className="dict-card-badge">{item.level}</span>
-                    {item.language === 'en' ? (
-                      <span className="dict-lang-flag">🇬🇧</span>
-                    ) : (
-                      <span className="dict-lang-flag">🇩🇪</span>
-                    )}
-                  </div>
-                  <div className="dict-card-translation">{item.translation}</div>
-                  {item.example && (
-                    <div className="dict-card-example">
-                      <em>«{item.example}»</em>
-                      {item.exampleTranslation && (
-                        <span className="dict-example-tr">{item.exampleTranslation}</span>
+            filteredWords.map((item) => {
+              const isFav = starredList.includes(item.id);
+              return (
+                <div key={item.id} className="dict-card">
+                  <div className="dict-card-main">
+                    <div className="dict-card-top">
+                      <span className="dict-card-word">{item.word}</span>
+                      <button
+                        className={`dict-audio-btn ${playingId === item.id ? 'playing' : ''}`}
+                        onClick={(e) => handleSpeak(item, e)}
+                        title="Прослушать произношение"
+                      >
+                        🔊
+                      </button>
+                      <button
+                        className="dict-audio-slow-btn"
+                        onClick={(e) => handleSpeak(item, e, true)}
+                        title="Прослушать медленно"
+                      >
+                        🐢
+                      </button>
+                      <button
+                        className={`dict-card-star-btn ${isFav ? 'starred' : ''}`}
+                        onClick={(e) => toggleStar(item.id, e)}
+                        title={isFav ? 'Удалить из избранного' : 'Добавить в избранное'}
+                      >
+                        {isFav ? '⭐' : '☆'}
+                      </button>
+                      <span className="dict-card-badge">{item.level}</span>
+                      {item.language === 'en' ? (
+                        <span className="dict-lang-flag">🇬🇧</span>
+                      ) : (
+                        <span className="dict-lang-flag">🇩🇪</span>
                       )}
                     </div>
-                  )}
+                    <div className="dict-card-translation">{item.translation}</div>
+                    {item.example && (
+                      <div className="dict-card-example">
+                        <em>«{item.example}»</em>
+                        {item.exampleTranslation && (
+                          <span className="dict-example-tr">{item.exampleTranslation}</span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  <div className="dict-card-footer">
+                    <span className="dict-cat-label">📁 {item.category || 'Общее'}</span>
+                    <span className="dict-status-pill">
+                      {item.repetitions > 0 ? `✓ Повторено ${item.repetitions} раз` : '⚪ Новое'}
+                    </span>
+                  </div>
                 </div>
-                <div className="dict-card-footer">
-                  <span className="dict-cat-label">📁 {item.category || 'Общее'}</span>
-                  <span className="dict-status-pill">
-                    {item.repetitions > 0 ? `✓ Повторено ${item.repetitions} раз` : '⚪ Новое'}
-                  </span>
-                </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
       </div>

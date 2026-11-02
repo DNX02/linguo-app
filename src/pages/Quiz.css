@@ -415,3 +415,24 @@
 .quiz-home-btn:active {
   transform: scale(0.95);
 }
+.quiz-mode-btn.highlight {
+  border-color: rgba(99, 102, 241, 0.4);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), #1e293b);
+}
+
+.quiz-mode-btn.warning {
+  border-color: rgba(245, 158, 11, 0.3);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), #1e293b);
+}
+
+.quiz-xp-gain {
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #34d399;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 8px 18px;
+  border-radius: 20px;
+  margin: 12px auto;
+  display: inline-block;
+}

@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllCards, getDailyProgress } from '../db';
+import { gamification } from '../utils/gamification';
+import ShareAchievementModal from '../components/ShareAchievementModal';
 import './Progress.css';
 
 const DAYS_OF_WEEK = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
@@ -17,95 +19,101 @@ export default function Progress() {
   const navigate = useNavigate();
   const [totalWords, setTotalWords] = useState(0);
   const [learnedWords, setLearnedWords] = useState(0);
-  const [currentStreak, setCurrentStreak] = useState(0);
-  const [bestStreak, setBestStreak] = useState(0);
-  const [accuracy, setAccuracy] = useState(0);
+  const [currentStreak, setCurrentStreak] = useState(1);
+  const [bestStreak, setBestStreak] = useState(1);
+  const [accuracy, setAccuracy] = useState(100);
   const [todayStats, setTodayStats] = useState({ correct: 0, wrong: 0, reviewed: 0, grammarDone: 0 });
   const [weekActivity, setWeekActivity] = useState([]);
   const [langBreakdown, setLangBreakdown] = useState({ en: 0, de: 0 });
   const [levelDist, setLevelDist] = useState({});
+  const [rank, setRank] = useState(gamification.getRank());
+  const [mistakesCount, setMistakesCount] = useState(0);
+  const [starredCount, setStarredCount] = useState(0);
+  const [isShareOpen, setIsShareOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadData = async () => {
       try {
-      const allCards = await getAllCards();
-      setTotalWords(allCards.length);
+        const allCards = await getAllCards();
+        setTotalWords(allCards.length);
 
-      const learned = allCards.filter((c) => c.repetitions && c.repetitions >= 1);
-      setLearnedWords(learned.length);
+        const learned = allCards.filter((c) => c.repetitions && c.repetitions >= 1);
+        setLearnedWords(learned.length);
 
-      // Language breakdown
-      const enCount = learned.filter((c) => c.language === 'en').length;
-      const deCount = learned.filter((c) => c.language === 'de').length;
-      setLangBreakdown({ en: enCount, de: deCount });
+        setRank(gamification.getRank());
+        setMistakesCount(gamification.getMistakes().length);
+        setStarredCount(gamification.getStarred().length);
 
-      // Level distribution
-      const levels = {};
-      learned.forEach((c) => {
-        const lvl = c.level || 'N/A';
-        levels[lvl] = (levels[lvl] || 0) + 1;
-      });
-      setLevelDist(levels);
+        // Language breakdown
+        const enCount = learned.filter((c) => c.language === 'en').length;
+        const deCount = learned.filter((c) => c.language === 'de').length;
+        setLangBreakdown({ en: enCount, de: deCount });
 
-      // Today's progress
-      const today = await getDailyProgress();
-      if (today) {
-        setTodayStats({
-          correct: today.correct || 0,
-          wrong: today.wrong || 0,
-          reviewed: today.reviewed || 0,
-          grammarDone: today.grammarDone || 0,
+        // Level distribution
+        const levels = {};
+        learned.forEach((c) => {
+          const lvl = c.level || 'A1';
+          levels[lvl] = (levels[lvl] || 0) + 1;
         });
-        const total = (today.correct || 0) + (today.wrong || 0);
-        setAccuracy(total > 0 ? Math.round(((today.correct || 0) / total) * 100) : 0);
-      }
+        setLevelDist(levels);
 
-      // Weekly activity (last 7 days)
-      const weekData = [];
-      const now = new Date();
-      for (let i = 6; i >= 0; i--) {
-        const d = new Date(now);
-        d.setDate(d.getDate() - i);
-        const dateStr = d.toISOString().split('T')[0];
-        const dayProgress = await getDailyProgress(dateStr);
-        const count = dayProgress ? ((dayProgress.correct || 0) + (dayProgress.wrong || 0) + (dayProgress.reviewed || 0)) : 0;
-        const dayOfWeek = d.getDay();
-        // Convert Sunday=0 to Monday-first indexing
-        const adjustedDay = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
-        weekData.push({
-          day: DAYS_OF_WEEK[adjustedDay],
-          date: dateStr,
-          count,
-          isToday: i === 0,
-        });
-      }
-      setWeekActivity(weekData);
-
-      // Streaks
-      let current = 0;
-      let best = 0;
-      let tempStreak = 0;
-      for (let i = 0; i < 30; i++) {
-        const d = new Date(now);
-        d.setDate(d.getDate() - i);
-        const dateStr = d.toISOString().split('T')[0];
-        const dayProg = await getDailyProgress(dateStr);
-        if (dayProg && ((dayProg.correct || 0) + (dayProg.wrong || 0)) > 0) {
-          tempStreak++;
-          if (i === 0 || (i > 0 && tempStreak > 0)) {
-            current = i === 0 ? tempStreak : current;
-          }
-        } else if (i > 0) {
-          if (tempStreak > best) best = tempStreak;
-          if (i <= current + 1) current = tempStreak;
-          tempStreak = 0;
+        // Today's progress
+        const today = await getDailyProgress();
+        if (today) {
+          setTodayStats({
+            correct: today.correct || 0,
+            wrong: today.wrong || 0,
+            reviewed: today.reviewed || 0,
+            grammarDone: today.grammarDone || 0,
+          });
+          const total = (today.correct || 0) + (today.wrong || 0);
+          setAccuracy(total > 0 ? Math.round(((today.correct || 0) / total) * 100) : 100);
         }
-      }
-      if (tempStreak > best) best = tempStreak;
-      setCurrentStreak(current || tempStreak);
-      setBestStreak(Math.max(best, current, tempStreak));
 
+        // Weekly activity (last 7 days)
+        const weekData = [];
+        const now = new Date();
+        for (let i = 6; i >= 0; i--) {
+          const d = new Date(now);
+          d.setDate(d.getDate() - i);
+          const dateStr = d.toISOString().split('T')[0];
+          const dayProgress = await getDailyProgress(dateStr);
+          const count = dayProgress ? ((dayProgress.correct || 0) + (dayProgress.wrong || 0) + (dayProgress.reviewed || 0)) : 0;
+          const dayOfWeek = d.getDay();
+          const adjustedDay = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+          weekData.push({
+            day: DAYS_OF_WEEK[adjustedDay],
+            date: dateStr,
+            count,
+            isToday: i === 0,
+          });
+        }
+        setWeekActivity(weekData);
+
+        // Streaks (last 30 days check)
+        let current = 0;
+        let best = 0;
+        let tempStreak = 0;
+        for (let i = 0; i < 30; i++) {
+          const d = new Date(now);
+          d.setDate(d.getDate() - i);
+          const dateStr = d.toISOString().split('T')[0];
+          const dayProg = await getDailyProgress(dateStr);
+          if (dayProg && ((dayProg.correct || 0) + (dayProg.wrong || 0) + (dayProg.reviewed || 0)) > 0) {
+            tempStreak++;
+            if (i === 0 || (i > 0 && tempStreak > 0)) {
+              current = i === 0 ? tempStreak : current;
+            }
+          } else if (i > 0) {
+            if (tempStreak > best) best = tempStreak;
+            if (i <= current + 1) current = tempStreak;
+            tempStreak = 0;
+          }
+        }
+        if (tempStreak > best) best = tempStreak;
+        setCurrentStreak(Math.max(1, current || tempStreak));
+        setBestStreak(Math.max(1, best, current, tempStreak));
       } catch (err) {
         console.error(err);
       } finally {
@@ -134,7 +142,32 @@ export default function Progress() {
           ← Назад
         </button>
         <h2>📊 Прогресс</h2>
+        <button className="progress-share-btn" onClick={() => setIsShareOpen(true)}>
+          🏆 Поделиться
+        </button>
       </header>
+
+      {/* Gamification Rank Card */}
+      <section className="progress-rank-card">
+        <div className="progress-rank-header">
+          <div>
+            <span className="progress-rank-title">{rank.title}</span>
+            <span className="progress-rank-lvl">Уровень {rank.level}</span>
+          </div>
+          <div className="progress-xp-val">{rank.currentXP} XP</div>
+        </div>
+        <div className="progress-xp-bar-bg">
+          <div
+            className="progress-xp-bar-fill"
+            style={{ width: `${rank.progressInLevel}%` }}
+          />
+        </div>
+        <span className="progress-xp-hint">
+          {rank.nextRankXP
+            ? `Осталось ${rank.nextRankXP - rank.currentXP} XP до следующего звания`
+            : 'Высший ранг полиглота! 👑'}
+        </span>
+      </section>
 
       {/* Today section */}
       <section className="progress-today">
@@ -155,6 +188,24 @@ export default function Progress() {
           <div className="progress-today-item">
             <span className="progress-today-val progress-val-purple">{todayStats.grammarDone}</span>
             <span className="progress-today-label">Грамматика</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Special Decks: Mistakes & Starred */}
+      <section className="progress-special-grid">
+        <div className="progress-special-card" onClick={() => navigate('/quiz')}>
+          <span className="progress-special-emoji">⚠️</span>
+          <div>
+            <strong>Работа над ошибками</strong>
+            <p>{mistakesCount} {mistakesCount === 1 ? 'слово' : mistakesCount < 5 ? 'слова' : 'слов'} на доработку</p>
+          </div>
+        </div>
+        <div className="progress-special-card">
+          <span className="progress-special-emoji">⭐</span>
+          <div>
+            <strong>Избранные слова</strong>
+            <p>{starredCount} {starredCount === 1 ? 'слово' : starredCount < 5 ? 'слова' : 'слов'} в закладках</p>
           </div>
         </div>
       </section>
@@ -196,7 +247,7 @@ export default function Progress() {
         <h3>📖 Общая статистика</h3>
         <div className="progress-overall">
           <div className="progress-overall-row">
-            <span>Всего слов в базе</span>
+            <span>Всего слов в словаре</span>
             <span className="progress-overall-val">{totalWords}</span>
           </div>
           <div className="progress-overall-row">
@@ -204,7 +255,7 @@ export default function Progress() {
             <span className="progress-overall-val">{learnedWords}</span>
           </div>
           <div className="progress-overall-row">
-            <span>Точность</span>
+            <span>Точность ответов</span>
             <span className="progress-overall-val">{accuracy}%</span>
           </div>
         </div>
@@ -252,9 +303,9 @@ export default function Progress() {
           <div className="progress-level-chart">
             {Object.entries(levelDist)
               .sort(([a], [b]) => a.localeCompare(b))
-              .map(([level, count]) => (
-                <div key={level} className="progress-level-row">
-                  <span className="progress-level-label">{level}</span>
+              .map(([lvl, count]) => (
+                <div key={lvl} className="progress-level-row">
+                  <span className="progress-level-label">{lvl}</span>
                   <div className="progress-level-bar-track">
                     <div
                       className="progress-level-bar-fill"
@@ -267,6 +318,18 @@ export default function Progress() {
           </div>
         </section>
       )}
+
+      <ShareAchievementModal
+        isOpen={isShareOpen}
+        onClose={() => setIsShareOpen(false)}
+        stats={{
+          streak: currentStreak,
+          todayReviewed: todayStats.reviewed,
+          accuracy,
+          rankTitle: rank.title,
+          totalXP: rank.currentXP,
+        }}
+      />
     </div>
   );
 }

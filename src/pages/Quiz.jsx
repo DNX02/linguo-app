@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllCards, getDailyProgress, saveDailyProgress } from '../db';
 import { speakText } from '../utils/speech';
 import { sounds } from '../utils/soundEffects';
+import { gamification } from '../utils/gamification';
 import './Quiz.css';
 
 const QUESTIONS_PER_ROUND = 10;
@@ -25,13 +26,21 @@ function generateQuestions(cards, mode) {
     const correctCard = shuffled[i];
     const wrongCards = shuffle(cards.filter((c) => c.id !== correctCard.id)).slice(0, 3);
 
-    const prompt = mode === 'word-to-translation' ? correctCard.word : correctCard.translation;
-    const correctAnswer = mode === 'word-to-translation' ? correctCard.translation : correctCard.word;
+    let prompt = correctCard.word;
+    let correctAnswer = correctCard.translation;
+
+    if (mode === 'translation-to-word') {
+      prompt = correctCard.translation;
+      correctAnswer = correctCard.word;
+    } else if (mode === 'listening') {
+      prompt = '🎧 Нажмите для повтора';
+      correctAnswer = correctCard.translation;
+    }
 
     const options = shuffle([
       correctAnswer,
       ...wrongCards.map((c) =>
-        mode === 'word-to-translation' ? c.translation : c.word
+        mode === 'translation-to-word' ? c.word : c.translation
       ),
     ]);
 
@@ -60,42 +69,77 @@ export default function Quiz() {
   const [questions, setQuestions] = useState([]);
   const [currentQ, setCurrentQ] = useState(0);
   const [selected, setSelected] = useState(null);
+  const [showResult, setShowResult] = useState(false);
   const [correct, setCorrect] = useState(0);
   const [wrong, setWrong] = useState(0);
-  const [showResult, setShowResult] = useState(false);
   const [finished, setFinished] = useState(false);
   const [loading, setLoading] = useState(false);
   const [transitioning, setTransitioning] = useState(false);
+  const [earnedXP, setEarnedXP] = useState(0);
+  const [mistakesCount, setMistakesCount] = useState(0);
+
+  const isMounted = useRef(true);
+
+  useEffect(() => {
+    isMounted.current = true;
+    const mistakes = gamification.getMistakes();
+    setMistakesCount(mistakes.length);
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   const startQuiz = useCallback(async (selectedMode) => {
     setLoading(true);
     setMode(selectedMode);
-    const cards = await getAllCards();
-    const qs = generateQuestions(cards, selectedMode);
-    if (qs.length === 0) {
-      setFinished(true);
+
+    try {
+      let cards = await getAllCards();
+      if (selectedMode === 'mistakes') {
+        const mistakeIds = gamification.getMistakes();
+        const mistakeCards = cards.filter((c) => mistakeIds.includes(c.id));
+        cards = mistakeCards.length >= 4 ? mistakeCards : cards;
+      }
+
+      const generated = generateQuestions(cards, selectedMode);
+      setQuestions(generated);
+      setCurrentQ(0);
+      setCorrect(0);
+      setWrong(0);
+      setSelected(null);
+      setShowResult(false);
+      setFinished(false);
+      setEarnedXP(0);
+
+      // Auto-pronounce for listening mode on start
+      if (selectedMode === 'listening' && generated[0]) {
+        setTimeout(() => {
+          speakText(generated[0].card.word, generated[0].card.language);
+        }, 300);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
     }
-    setQuestions(qs);
-    setCurrentQ(0);
-    setCorrect(0);
-    setWrong(0);
-    setSelected(null);
-    setShowResult(false);
-    setLoading(false);
   }, []);
 
   const handleAnswer = useCallback(
     async (answer) => {
-      if (selected !== null) return;
+      if (selected !== null || !questions[currentQ]) return;
       setSelected(answer);
-      const isCorrect = answer === questions[currentQ].correctAnswer;
+      const question = questions[currentQ];
+      const isCorrect = answer === question.correctAnswer;
 
       if (isCorrect) {
         sounds.playCorrect();
         setCorrect((c) => c + 1);
+        gamification.addXP(10);
+        gamification.removeMistake(question.card.id);
       } else {
         sounds.playWrong();
         setWrong((w) => w + 1);
+        gamification.addMistake(question.card.id);
       }
 
       setShowResult(true);
@@ -103,42 +147,53 @@ export default function Quiz() {
       setTimeout(async () => {
         setTransitioning(true);
 
-        // Update daily progress
-        const progress = (await getDailyProgress()) || {
-          date: new Date().toISOString().split('T')[0],
-          correct: 0,
-          wrong: 0,
-          reviewed: 0,
-        };
-        if (isCorrect) {
-          progress.correct = (progress.correct || 0) + 1;
-        } else {
-          progress.wrong = (progress.wrong || 0) + 1;
-        }
-        await saveDailyProgress(progress);
+        try {
+          const progress = (await getDailyProgress()) || {
+            date: new Date().toISOString().split('T')[0],
+            correct: 0,
+            wrong: 0,
+            reviewed: 0,
+          };
+          if (isCorrect) {
+            progress.correct = (progress.correct || 0) + 1;
+          } else {
+            progress.wrong = (progress.wrong || 0) + 1;
+          }
+          await saveDailyProgress(progress);
+        } catch (_) {}
 
         setTimeout(() => {
           if (currentQ + 1 >= questions.length) {
             sounds.playComplete();
+            const bonusXP = 25 + Math.round((correct / questions.length) * 25);
+            setEarnedXP(bonusXP);
+            gamification.addXP(bonusXP);
             setFinished(true);
           } else {
-            setCurrentQ((q) => q + 1);
+            const nextQ = currentQ + 1;
+            setCurrentQ(nextQ);
             setSelected(null);
             setShowResult(false);
+
+            if (mode === 'listening' && questions[nextQ]) {
+              setTimeout(() => {
+                speakText(questions[nextQ].card.word, questions[nextQ].card.language);
+              }, 200);
+            }
           }
           setTransitioning(false);
         }, 300);
-      }, 1200);
+      }, 1100);
     },
-    [selected, questions, currentQ]
+    [selected, questions, currentQ, correct, mode]
   );
 
   const getResultFeedback = () => {
-    const pct = Math.round((correct / questions.length) * 100);
+    const pct = questions.length > 0 ? Math.round((correct / questions.length) * 100) : 0;
     return RESULT_EMOJI.find((r) => pct >= r.min);
   };
 
-  // Mode selection
+  // Mode selection screen
   if (mode === null) {
     return (
       <div className="quiz-page">
@@ -149,7 +204,8 @@ export default function Quiz() {
           <h2>Квиз</h2>
         </header>
         <div className="quiz-mode-select">
-          <h3>Выберите режим</h3>
+          <h3>Выберите режим тренировки</h3>
+          
           <button
             className="quiz-mode-btn"
             onClick={() => startQuiz('word-to-translation')}
@@ -157,9 +213,10 @@ export default function Quiz() {
             <span className="quiz-mode-icon">🔤</span>
             <div>
               <strong>Слово → Перевод</strong>
-              <p>Угадайте перевод иностранного слова</p>
+              <p>Угадайте русский перевод иностранного слова</p>
             </div>
           </button>
+
           <button
             className="quiz-mode-btn"
             onClick={() => startQuiz('translation-to-word')}
@@ -167,7 +224,29 @@ export default function Quiz() {
             <span className="quiz-mode-icon">🔁</span>
             <div>
               <strong>Перевод → Слово</strong>
-              <p>Угадайте иностранное слово по переводу</p>
+              <p>Угадайте правильное иностранное слово</p>
+            </div>
+          </button>
+
+          <button
+            className="quiz-mode-btn highlight"
+            onClick={() => startQuiz('listening')}
+          >
+            <span className="quiz-mode-icon">🎧</span>
+            <div>
+              <strong>Аудирование (На слух)</strong>
+              <p>Слушайте произношение и выбирайте значение</p>
+            </div>
+          </button>
+
+          <button
+            className="quiz-mode-btn warning"
+            onClick={() => startQuiz('mistakes')}
+          >
+            <span className="quiz-mode-icon">⚠️</span>
+            <div>
+              <strong>Работа над ошибками ({mistakesCount})</strong>
+              <p>Закрепите слова, в которых ранее ошибались</p>
             </div>
           </button>
         </div>
@@ -184,7 +263,7 @@ export default function Quiz() {
     );
   }
 
-  // Finished
+  // Finished screen
   if (finished) {
     const feedback = getResultFeedback();
     const pct = questions.length > 0 ? Math.round((correct / questions.length) * 100) : 0;
@@ -192,25 +271,25 @@ export default function Quiz() {
     return (
       <div className="quiz-finished">
         <div className="quiz-finished-emoji">{feedback?.emoji || '📚'}</div>
-        <h2>{feedback?.text || 'Конец!'}</h2>
+        <h2>{feedback?.text || 'Тест завершён!'}</h2>
         <div className="quiz-finished-score">
           <div className="quiz-score-circle">
             <span className="quiz-score-pct">{pct}%</span>
           </div>
         </div>
-        <div className="quiz-finished-stats">
-          <div className="quiz-fstat">
-            <span className="quiz-fstat-val quiz-fstat-correct">{correct}</span>
-            <span className="quiz-fstat-label">Верно ✅</span>
-          </div>
-          <div className="quiz-fstat">
-            <span className="quiz-fstat-val quiz-fstat-wrong">{wrong}</span>
-            <span className="quiz-fstat-label">Ошибки ❌</span>
-          </div>
-        </div>
+        <p className="quiz-score-text">
+          Правильно: <strong>{correct}</strong> из {questions.length}
+        </p>
+        <div className="quiz-xp-gain">+{earnedXP + correct * 10} XP заработано! ⚡</div>
         <div className="quiz-finished-actions">
-          <button className="quiz-restart-btn" onClick={() => { setMode(null); setFinished(false); }}>
-            Ещё раз
+          <button
+            className="quiz-restart-btn"
+            onClick={() => {
+              setMode(null);
+              setFinished(false);
+            }}
+          >
+            Выбрать другой режим
           </button>
           <button className="quiz-home-btn" onClick={() => navigate('/')}>
             На главную
@@ -221,13 +300,15 @@ export default function Quiz() {
   }
 
   const question = questions[currentQ];
+  if (!question) return null;
+
   const progressPct = ((currentQ + 1) / questions.length) * 100;
 
   return (
     <div className="quiz-page">
       <header className="quiz-header">
-        <button className="quiz-back" onClick={() => navigate('/')}>
-          ← Назад
+        <button className="quiz-back" onClick={() => setMode(null)}>
+          ✕ Выход
         </button>
         <div className="quiz-score-display">
           <span className="quiz-correct-count">✅ {correct}</span>
@@ -248,15 +329,16 @@ export default function Quiz() {
           <span className="quiz-prompt-lang">
             {question.card.language === 'en' ? '🇬🇧' : '🇩🇪'}
           </span>
-          <span className="quiz-prompt-text">{question.prompt}</span>
+          <span className="quiz-prompt-text">
+            {mode === 'listening' ? '🎧 Слушайте слово' : question.prompt}
+          </span>
           <button
             type="button"
             className="quiz-speak-btn"
             title="Озвучить"
             onClick={(e) => {
               e.stopPropagation();
-              const textToSpeak = mode === 'word-to-translation' ? question.prompt : question.correctAnswer;
-              speakText(textToSpeak, question.card.language);
+              speakText(question.card.word, question.card.language);
             }}
           >
             🔊
@@ -264,7 +346,7 @@ export default function Quiz() {
         </div>
 
         <p className="quiz-instruction">
-          {mode === 'word-to-translation'
+          {mode === 'word-to-translation' || mode === 'listening' || mode === 'mistakes'
             ? 'Выберите правильный перевод:'
             : 'Выберите правильное слово:'}
         </p>

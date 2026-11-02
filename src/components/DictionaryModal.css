@@ -344,3 +344,63 @@
   from { opacity: 0; }
   to { opacity: 1; }
 }
+.dict-star-filter-btn, .dict-slow-btn {
+  background: #0f1524;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.dict-star-filter-btn.active {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: #f59e0b;
+}
+
+.dict-slow-btn.active {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: #10b981;
+}
+
+.dict-audio-slow-btn {
+  background: rgba(16, 185, 129, 0.12);
+  border: none;
+  font-size: 0.85rem;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s;
+}
+
+.dict-audio-slow-btn:active {
+  transform: scale(1.2);
+}
+
+.dict-card-star-btn {
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0 4px;
+  transition: transform 0.15s, color 0.15s;
+}
+
+.dict-card-star-btn:active {
+  transform: scale(1.3);
+}
+
+.dict-card-star-btn.starred {
+  color: #f59e0b;
+}

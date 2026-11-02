@@ -904,3 +904,18 @@ input, select, textarea {
     border-right: 1px solid rgba(139, 92, 246, 0.15);
   }
 }
+
+/* ===== Alternative Themes ===== */
+body[data-theme="oled"] {
+  --bg-primary: #000000;
+  --bg-secondary: #080808;
+  --bg-card: #121212;
+}
+
+body[data-theme="light"] {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #e2e8f0;
+  --bg-card: #ffffff;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+}

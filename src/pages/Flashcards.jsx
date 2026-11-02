@@ -10,6 +10,7 @@ import {
 import { calculateNextReview } from '../utils/spaced-repetition';
 import { speakText } from '../utils/speech';
 import { sounds } from '../utils/soundEffects';
+import { gamification } from '../utils/gamification';
 import { api } from '../utils/api';
 import './Flashcards.css';
 
@@ -29,7 +30,7 @@ export default function Flashcards() {
   const [loading, setLoading] = useState(true);
   const [animating, setAnimating] = useState(false);
   const [slideDir, setSlideDir] = useState('');
-  const [studyAll, setStudyAll] = useState(false);
+  const [starredIds, setStarredIds] = useState([]);
 
   const isMounted = useRef(true);
 
@@ -45,6 +46,7 @@ export default function Flashcards() {
         setCards(loaded || []);
         setCurrentIndex(0);
         setFinished(!loaded || loaded.length === 0);
+        setStarredIds(gamification.getStarred());
       }
     } catch (e) {
       console.error('Error loading cards:', e);
@@ -71,6 +73,15 @@ export default function Flashcards() {
     }
   };
 
+  const handleToggleStar = (e) => {
+    e.stopPropagation();
+    const card = cards[currentIndex];
+    if (card) {
+      gamification.toggleStarred(card.id);
+      setStarredIds([...gamification.getStarred()]);
+    }
+  };
+
   const handleQuality = useCallback(
     async (quality) => {
       if (animating || !cards[currentIndex]) return;
@@ -80,11 +91,14 @@ export default function Flashcards() {
       const updated = calculateNextReview(card, quality);
       await updateCard({ ...card, ...updated });
 
-      // Audio feedback
+      // Audio feedback & Gamification
       if (quality >= 3) {
         sounds.playCorrect();
+        gamification.addXP(10);
+        gamification.removeMistake(card.id);
       } else {
         sounds.playWrong();
+        gamification.addMistake(card.id);
       }
 
       // Update daily progress safely
@@ -124,6 +138,7 @@ export default function Flashcards() {
         if (nextIndex >= cards.length) {
           setFinished(true);
           sounds.playComplete();
+          gamification.addXP(25);
         } else {
           setCurrentIndex(nextIndex);
         }
@@ -185,6 +200,7 @@ export default function Flashcards() {
   const card = cards[currentIndex];
   if (!card) return null;
 
+  const isStarred = starredIds.includes(card.id);
   const progressPercent = Math.round(((currentIndex + 1) / cards.length) * 100);
 
   return (
@@ -229,20 +245,41 @@ export default function Flashcards() {
               <span className="fc-badge fc-badge-lang">
                 {card.language === 'en' ? '🇬🇧' : '🇩🇪'}
               </span>
+              <button
+                type="button"
+                className={`fc-star-btn ${isStarred ? 'active' : ''}`}
+                onClick={handleToggleStar}
+                title="Добавить в избранное"
+              >
+                {isStarred ? '⭐' : '☆'}
+              </button>
             </div>
             <div className="fc-card-word">
               {card.word}
-              <button
-                type="button"
-                className="fc-speak-btn"
-                title="Озвучить слово"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  speakText(card.word, card.language);
-                }}
-              >
-                🔊
-              </button>
+              <div className="fc-audio-group">
+                <button
+                  type="button"
+                  className="fc-speak-btn"
+                  title="Озвучить слово"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    speakText(card.word, card.language);
+                  }}
+                >
+                  🔊
+                </button>
+                <button
+                  type="button"
+                  className="fc-speak-btn fc-slow-btn"
+                  title="Озвучить медленно"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    speakText(card.word, card.language, { slow: true });
+                  }}
+                >
+                  🐢
+                </button>
+              </div>
             </div>
             {card.transcription && (
               <div className="fc-card-transcription">[{card.transcription}]</div>
