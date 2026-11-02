@@ -20,6 +20,7 @@ import DialoguesModal from '../components/DialoguesModal';
 import IrregularVerbsModal from '../components/IrregularVerbsModal';
 import SentenceBuilderModal from '../components/SentenceBuilderModal';
 import PronunciationModal from '../components/PronunciationModal';
+import VoiceTutorModal from '../components/VoiceTutorModal';
 import { speakText } from '../utils/speech';
 import { haptics } from '../utils/haptics';
 import './Home.css';
@@ -67,6 +68,7 @@ export default function Home() {
   const [isIrregularOpen, setIsIrregularOpen] = useState(false);
   const [isSentenceOpen, setIsSentenceOpen] = useState(false);
   const [isPronounceOpen, setIsPronounceOpen] = useState(false);
+  const [isTutorOpen, setIsTutorOpen] = useState(false);
 
   const isMountedRef = useRef(true);
 
@@ -355,6 +357,22 @@ export default function Home() {
         </button>
       </section>
 
+      {/* Live AI Voice Tutor Banner (Google Gemini Live) */}
+      <section className="home-tutor-banner" onClick={() => setIsTutorOpen(true)}>
+        <div className="home-tutor-banner-left">
+          <div className="home-tutor-orb-mini">🎙️</div>
+          <div>
+            <div className="home-tutor-tag-row">
+              <span className="home-tutor-pill">LIVE AI</span>
+              <span className="home-tutor-name-pill">Emma & Lukas</span>
+            </div>
+            <h3 className="home-tutor-title">Живой разговорный ИИ-репетитор</h3>
+            <p className="home-tutor-desc">Свободный голосовой диалог в реальном времени</p>
+          </div>
+        </div>
+        <button className="home-tutor-call-btn">Позвонить 📞</button>
+      </section>
+
       {/* Quick Stats Grid */}
       <section className="home-stats-grid">
         <div className="home-stat-card" onClick={() => navigate('/progress')}>
@@ -573,6 +591,12 @@ export default function Home() {
       <PronunciationModal
         isOpen={isPronounceOpen}
         onClose={() => setIsPronounceOpen(false)}
+        currentLanguage={language}
+      />
+
+      <VoiceTutorModal
+        isOpen={isTutorOpen}
+        onClose={() => setIsTutorOpen(false)}
         currentLanguage={language}
       />
     </div>
