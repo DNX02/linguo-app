@@ -10,6 +10,8 @@ export default function Grammar() {
   const navigate = useNavigate();
   const [topics, setTopics] = useState([]);
   const [selectedLang, setSelectedLang] = useState('all');
+  const [selectedLevel, setSelectedLevel] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
   const [activeTopic, setActiveTopic] = useState(null);
   const [currentEx, setCurrentEx] = useState(0);
   const [selected, setSelected] = useState(null);
@@ -97,8 +99,15 @@ export default function Grammar() {
   };
 
   const filteredTopics = topics.filter((t) => {
-    if (selectedLang === 'all') return true;
-    return t.language === selectedLang;
+    if (selectedLang !== 'all' && t.language !== selectedLang) return false;
+    if (selectedLevel !== 'all' && t.level !== selectedLevel) return false;
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      const matchTitle = (t.title || '').toLowerCase().includes(q);
+      const matchDesc = (t.description || '').toLowerCase().includes(q);
+      if (!matchTitle && !matchDesc) return false;
+    }
+    return true;
   });
 
   // Exercise mode
@@ -218,14 +227,43 @@ export default function Grammar() {
           className={`grammar-lang-tab ${selectedLang === 'en' ? 'active' : ''}`}
           onClick={() => setSelectedLang('en')}
         >
-          🇺🇸 Английский (US)
+          🇺🇸 English ({topics.filter((t) => t.language === 'en').length})
         </button>
         <button
           className={`grammar-lang-tab ${selectedLang === 'de' ? 'active' : ''}`}
           onClick={() => setSelectedLang('de')}
         >
-          🇩🇪 Немецкий
+          🇩🇪 Deutsch ({topics.filter((t) => t.language === 'de').length})
         </button>
+      </div>
+
+      {/* Level filter & search bar */}
+      <div className="grammar-filter-bar">
+        <div className="grammar-level-pills">
+          {['all', 'A1', 'A2', 'B1', 'B2'].map((lvl) => (
+            <button
+              key={lvl}
+              className={`grammar-level-pill ${selectedLevel === lvl ? 'active' : ''}`}
+              onClick={() => setSelectedLevel(lvl)}
+            >
+              {lvl === 'all' ? 'Все уровни' : lvl}
+            </button>
+          ))}
+        </div>
+        <div className="grammar-search-wrap">
+          <input
+            type="text"
+            className="grammar-search-input"
+            placeholder="🔍 Поиск правила..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          {searchQuery && (
+            <button className="grammar-search-clear" onClick={() => setSearchQuery('')}>
+              ×
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="grammar-topics">
