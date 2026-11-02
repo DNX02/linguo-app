@@ -34,16 +34,11 @@ import { haptics } from '../utils/haptics';
 import './Home.css';
 
 const MOTIVATIONAL_PHRASES = [
-  'Каждый день — шаг к свободному владению! 🚀',
-  'Ты на правильном пути! 💪',
-  'Практика делает мастера! 🎯',
-  'Учись сегодня — говори завтра! 🌟',
-  'Языки открывают двери в мир! 🌍',
-  'Не останавливайся на достигнутом! 🔥',
-  'Маленькие шаги ведут к большим победам! 🏆',
-  'Ты уже лучше, чем вчера! ✨',
-  'Вперёд к новым знаниям! 📚',
-  'Каждое слово — кирпичик в фундаменте! 🧱',
+  'Каждый день — шаг к свободному владению языком.',
+  'Постоянство и регулярность дают максимальный результат.',
+  'Маленькие шаги ведут к большим победам.',
+  'Вы уверенно двигаетесь к свободному общению.',
+  'Языковая практика сегодня — лёгкость завтра.',
 ];
 
 const LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
@@ -65,6 +60,10 @@ export default function Home() {
   const [user, setUser] = useState(null);
   const [rank, setRank] = useState(gamification.getRank());
   const [mistakesCount, setMistakesCount] = useState(0);
+  const [gems, setGems] = useState(() => gamification.getGems());
+
+  // Category Tab Filter for clean, uncluttered browsing
+  const [activeCategoryTab, setActiveCategoryTab] = useState('voice'); // 'voice' | 'games' | 'library'
 
   // Modals state
   const [isAuthOpen, setIsAuthOpen] = useState(false);
@@ -121,7 +120,7 @@ export default function Home() {
     try {
       const allCards = await getAllCards();
       const reviewCards = await getCardsForReview();
-      
+
       if (isMountedRef.current) {
         setReviewCount(reviewCards.length);
         const learned = allCards.filter(
@@ -130,108 +129,91 @@ export default function Home() {
         setTotalLearned(learned.length);
         setRank(gamification.getRank());
         setMistakesCount(gamification.getMistakes().length);
+        setGems(gamification.getGems());
       }
 
       // Today's progress
       const progress = await getDailyProgress();
-      if (progress && isMountedRef.current) {
-        const total = (progress.correct || 0) + (progress.wrong || 0);
-        setAccuracy(total > 0 ? Math.round((progress.correct / total) * 100) : 100);
-        setGrammarDone(progress.grammarDone || 0);
-        setTodayReviewed(progress.reviewed || 0);
+      if (isMountedRef.current) {
+        setTodayReviewed(progress.cardsReviewed || 0);
+        if (progress.cardsReviewed > 0) {
+          const acc = Math.round(
+            ((progress.cardsReviewed - (progress.mistakes || 0)) /
+              progress.cardsReviewed) *
+              100
+          );
+          setAccuracy(Math.max(0, acc));
+        } else {
+          setAccuracy(100);
+        }
       }
-    } catch (e) {
-      console.error(e);
+
+      // Settings
+      const savedLang = await getSettings('language');
+      const savedLevel = await getSettings('level');
+      const savedGoal = await getSettings('dailyGoal');
+      const savedStreak = await getSettings('streak');
+
+      if (isMountedRef.current) {
+        if (savedLang) setLanguage(savedLang);
+        if (savedLevel) setLevel(savedLevel);
+        if (savedGoal) setDailyGoal(Number(savedGoal));
+        if (savedStreak) setStreak(Number(savedStreak));
+      }
+
+      // Auth user
+      const currentUser = api.getCurrentUser();
+      if (isMountedRef.current) {
+        setUser(currentUser);
+      }
+    } catch (err) {
+      console.error('Error refreshing stats:', err);
     }
   }, []);
 
   useEffect(() => {
     isMountedRef.current = true;
+    setGreeting(getGreeting());
+    const randomPhrase =
+      MOTIVATIONAL_PHRASES[
+        Math.floor(Math.random() * MOTIVATIONAL_PHRASES.length)
+      ];
+    setMotivation(randomPhrase);
 
-    // Safety timeout: NEVER let the screen stay in infinite loading
-    const timer = setTimeout(() => {
+    const init = async () => {
+      setLoading(true);
+      await seedDatabase();
+      await refreshStats();
       if (isMountedRef.current) {
         setLoading(false);
       }
-    }, 1200);
-
-    const init = async () => {
-      setGreeting(getGreeting());
-      setMotivation(
-        MOTIVATIONAL_PHRASES[
-          Math.floor(Math.random() * MOTIVATIONAL_PHRASES.length)
-        ]
-      );
-
-      try {
-        await seedDatabase();
-
-        // Check user session safely (non-blocking)
-        try {
-          const currentUser = await api.getMe();
-          if (currentUser && isMountedRef.current) setUser(currentUser);
-        } catch (_) {}
-
-        // Load settings
-        const settings = await getSettings();
-        if (isMountedRef.current) {
-          if (settings.language) setLanguage(settings.language);
-          if (settings.level) setLevel(settings.level);
-          if (settings.dailyGoal) setDailyGoal(Number(settings.dailyGoal));
-        }
-
-        await refreshStats();
-
-        // Streak check (last 7 days max for instant loading)
-        let currentStreak = 0;
-        const today = new Date();
-        for (let i = 0; i < 7; i++) {
-          const date = new Date(today);
-          date.setDate(date.getDate() - i);
-          const dateStr = date.toISOString().split('T')[0];
-          const dayProgress = await getDailyProgress(dateStr);
-          if (dayProgress && ((dayProgress.correct || 0) + (dayProgress.wrong || 0) + (dayProgress.reviewed || 0)) > 0) {
-            currentStreak++;
-          } else if (i > 0) {
-            break;
-          }
-        }
-        if (isMountedRef.current) {
-          setStreak(Math.max(1, currentStreak));
-        }
-      } catch (err) {
-        console.error('Home initialization caught error:', err);
-      } finally {
-        if (isMountedRef.current) {
-          setLoading(false);
-          clearTimeout(timer);
-        }
-      }
     };
-
     init();
 
     return () => {
       isMountedRef.current = false;
-      clearTimeout(timer);
     };
   }, [seedDatabase, refreshStats]);
 
-  const handleLanguageChange = async (lang) => {
-    setLanguage(lang);
-    await saveSetting('language', lang);
+  const handleLanguageChange = async (newLang) => {
+    haptics.light();
+    setLanguage(newLang);
+    await saveSetting('language', newLang);
   };
 
-  const handleLevelChange = async (lvl) => {
-    setLevel(lvl);
-    await saveSetting('level', lvl);
+  const handleLevelChange = async (newLevel) => {
+    haptics.light();
+    setLevel(newLevel);
+    await saveSetting('level', newLevel);
   };
 
-  const goalPercent = Math.min(100, Math.round((todayReviewed / dailyGoal) * 100));
+  const goalPercent = Math.min(
+    100,
+    Math.round((todayReviewed / dailyGoal) * 100)
+  );
 
-  // Word of the Day calculation (deterministic per day)
   const dayOfYear = Math.floor(
-    (new Date() - new Date(new Date().getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24)
+    (Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000
   );
   const langWords = wordsData.filter((w) => w.language === language);
   const wordOfTheDay =
@@ -248,415 +230,378 @@ export default function Home() {
 
   return (
     <div className="home-page">
-      <header className="home-header">
-        <div className="home-top-row">
-          <div className="home-greeting">
-            <h1>{greeting}! 👋</h1>
-            <p className="home-motivation">{motivation}</p>
-          </div>
-          <button
-            className={`home-user-badge ${user ? 'home-user-logged' : ''}`}
-            onClick={() => setIsAuthOpen(true)}
-            title={user ? `Профиль: ${user.name}` : 'Войти в аккаунт'}
-          >
-            {user ? `👤 ${user.name || user.username}` : '🔐 Войти'}
-          </button>
-        </div>
-
-        <div className="home-status-strip">
-          <span className="home-pwa-pill">🟢 Офлайн (PWA)</span>
-          <button className="home-gem-pill" onClick={() => setIsShopOpen(true)} title="Магазин кристаллов">
-            💎 {gamification.getGems()}
-          </button>
-          <button className="home-league-pill" onClick={() => setIsLeaderboardOpen(true)} title="Лига Лидеров">
-            🏆 Золото
-          </button>
-          <button className="home-share-btn-pill" onClick={() => setIsShareOpen(true)}>
-            📤 Поделиться
-          </button>
-        </div>
-      </header>
-
-      {/* Gamification Rank & XP Card */}
-      <section className="home-rank-box" onClick={() => navigate('/progress')}>
-        <div className="home-rank-top">
-          <div className="home-rank-info">
-            <span className="home-rank-title">{rank.title}</span>
-            <span className="home-rank-level">Уровень {rank.level}</span>
-          </div>
-          <div className="home-rank-xp">
-            <strong>{rank.currentXP}</strong> XP
-          </div>
-        </div>
-        <div className="home-rank-progress-bg">
-          <div
-            className="home-rank-progress-fill"
-            style={{ width: `${rank.progressInLevel}%` }}
-          />
-        </div>
-        <div className="home-rank-sub">
-          {rank.nextRankXP
-            ? `До следующего ранга: ${rank.nextRankXP - rank.currentXP} XP`
-            : 'Максимальный ранг достигнут! 👑'}
-        </div>
-      </section>
-
-      {/* Streak and Daily Goal Bar */}
-      <section className="home-goal-box">
-        <div className="home-goal-top">
-          <div className="home-streak-mini">
-            <span className="home-streak-flame">🔥</span>
-            <div>
-              <span className="home-streak-num">{streak}</span>
-              <span className="home-streak-txt">
-                {streak === 1 ? 'день' : streak >= 2 && streak <= 4 ? 'дня' : 'дней'} ударно
+      {/* ===== EXECUTIVE GLASS HEADER ===== */}
+      <header className="exec-header">
+        <div className="exec-top">
+          <div className="exec-user-profile">
+            <div className="exec-avatar-ring" onClick={() => setIsAuthOpen(true)}>
+              <span>{user ? '👤' : '🦉'}</span>
+            </div>
+            <div className="exec-user-text">
+              <h2 className="exec-user-name">
+                {user ? user.name || user.username : 'Гость'}
+              </h2>
+              <span className="exec-level-tag">
+                {language.toUpperCase()} • {level}
               </span>
             </div>
           </div>
-          <div className="home-goal-ratio">
-            <span>Цель: {todayReviewed}/{dailyGoal} слов</span>
-            <span className="home-goal-pct">{goalPercent}%</span>
+
+          {/* Quick HUD Metrics */}
+          <div className="exec-hud">
+            <button
+              className="exec-hud-item streak"
+              onClick={() => setIsShareOpen(true)}
+              title="Ударный режим"
+            >
+              <span className="hud-icon">🔥</span>
+              <strong>{streak}</strong>
+            </button>
+
+            <button
+              className="exec-hud-item gems"
+              onClick={() => setIsShopOpen(true)}
+              title="Кристаллы"
+            >
+              <span className="hud-icon">💎</span>
+              <strong>{gems}</strong>
+            </button>
+
+            <button
+              className="exec-hud-item league"
+              onClick={() => setIsLeaderboardOpen(true)}
+              title="Лига лидеров"
+            >
+              <span className="hud-icon">🏆</span>
+              <strong>Топ</strong>
+            </button>
           </div>
         </div>
-        <div className="home-progress-bar-bg">
+      </header>
+
+      {/* ===== HERO SHOWCASE (Bento Style) ===== */}
+      <section className="home-bento-hero">
+        {/* Card 1: Gemini 3.8 Live Voice Tutor */}
+        <div className="bento-card tutor-card" onClick={() => setIsTutorOpen(true)}>
+          <div className="bento-card-bg-glow" />
+          <div className="bento-top-row">
+            <span className="bento-live-badge">
+              <span className="live-dot-pulse" /> LIVE AI
+            </span>
+            <span className="bento-tutor-names">Emma • Lukas • Amélie • Carlos</span>
+          </div>
+
+          <div className="bento-body">
+            <h3>Живой голосовой ИИ</h3>
+            <p>Практикуйте реальную беглую речь в естественном диалоге</p>
+          </div>
+
+          <div className="bento-footer">
+            <span className="bento-action-pill">
+              Начать разговор <span>📞</span>
+            </span>
+          </div>
+        </div>
+
+        {/* Card 2: Interactive Quest Map */}
+        <div className="bento-card quest-card" onClick={() => setIsQuestMapOpen(true)}>
+          <div className="bento-card-bg-glow quest-glow" />
+          <div className="bento-top-row">
+            <span className="bento-quest-badge">ДОРОЖКА ПУТИ</span>
+            <span className="bento-quest-stat">⭐ 8 этапов</span>
+          </div>
+
+          <div className="bento-body">
+            <h3>Карта приключений</h3>
+            <p>Уроки-островки, сундуки сокровищ и битва с боссом</p>
+          </div>
+
+          <div className="bento-footer">
+            <span className="bento-action-pill green">
+              В путь <span>➔</span>
+            </span>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== MISSION & PROGRESS CARD ===== */}
+      <section className="mission-card">
+        <div className="mission-header">
+          <div className="mission-rank-meta">
+            <span className="rank-shield">{rank.title}</span>
+            <span className="rank-xp-info">
+              {rank.currentXP} XP {rank.nextRankXP ? `• До ранга: ${rank.nextRankXP - rank.currentXP} XP` : ''}
+            </span>
+          </div>
+          <div className="mission-goal-count">
+            Сегодня: <strong>{todayReviewed}/{dailyGoal} слов</strong>
+          </div>
+        </div>
+
+        <div className="mission-progress-track">
           <div
-            className="home-progress-bar-fill"
+            className="mission-progress-bar"
             style={{ width: `${goalPercent}%` }}
           />
         </div>
-        {goalPercent >= 100 && (
-          <div className="home-goal-complete-msg">🎉 Дневная цель выполнена! Отличная работа!</div>
-        )}
       </section>
 
-      {/* Word of the Day (Слово дня) */}
-      {wordOfTheDay && (
-        <section className="home-wotd-card">
-          <div className="home-wotd-top">
-            <span className="home-wotd-tag">✨ Слово дня</span>
-            <span className="home-wotd-badge">{wordOfTheDay.level || 'A1'} • {language === 'en' ? '🇬🇧' : '🇩🇪'}</span>
-          </div>
-          <div className="home-wotd-body">
-            <div>
-              <h2 className="home-wotd-word">{wordOfTheDay.word}</h2>
-              {wordOfTheDay.transcription && (
-                <div className="home-wotd-trans">[{wordOfTheDay.transcription}]</div>
-              )}
-              <div className="home-wotd-meaning">{wordOfTheDay.translation}</div>
-            </div>
-            <button
-              className="home-wotd-audio-btn"
-              title="Послушать произношение"
-              onClick={() => {
-                speakText(wordOfTheDay.word, wordOfTheDay.language);
-                haptics.light();
-              }}
-            >
-              🔊
-            </button>
-          </div>
-        </section>
-      )}
-
-      {/* Primary Study Card */}
-      <section className="home-review-card" onClick={() => navigate('/flashcards')}>
-        <div className="home-review-left">
-          <span className="home-review-icon">📇</span>
+      {/* ===== PRIMARY STUDY CARD (Smart Cards SM-2) ===== */}
+      <section className="primary-study-card" onClick={() => navigate('/flashcards')}>
+        <div className="study-card-left">
+          <div className="study-card-icon-box">📇</div>
           <div>
             <h3>Умные карточки (SM-2)</h3>
-            <p className="home-review-count">
+            <p className="study-card-sub">
               {reviewCount > 0
-                ? `${reviewCount} ${reviewCount === 1 ? 'карточка' : reviewCount <= 4 ? 'карточки' : 'карточек'} ждут повторения`
-                : 'Все карточки на сегодня повторены! 🎉'}
+                ? `${reviewCount} ${reviewCount === 1 ? 'карточка готова' : 'карточек готовы'} к интервальному повторению`
+                : 'Все карточки на сегодня успешно повторены!'}
             </p>
           </div>
         </div>
-        <button className="home-review-btn">
-          {reviewCount > 0 ? 'Учить →' : 'Повторить →'}
+        <button className="study-card-cta">
+          {reviewCount > 0 ? 'Учить' : 'Повторить'} ➔
         </button>
       </section>
 
-      {/* Interactive Quest Map Adventure Banner */}
-      <section className="home-quest-banner" onClick={() => setIsQuestMapOpen(true)}>
-        <div className="home-quest-banner-left">
-          <div className="home-quest-orb">🗺️</div>
-          <div>
-            <div className="home-quest-tag-row">
-              <span className="home-quest-pill">ДОРОЖКА ПРИКЛЮЧЕНИЙ</span>
-              <span className="home-quest-star-pill">⭐ 8 этапов</span>
-            </div>
-            <h3 className="home-quest-title">Интерактивная карта пути</h3>
-            <p className="home-quest-desc">Уроки-островки, сундуки сокровищ и битва с боссом</p>
-          </div>
-        </div>
-        <button className="home-quest-btn">В путь! ➔</button>
-      </section>
-
-      {/* Live AI Voice Tutor Banner (Google Gemini Live) */}
-      <section className="home-tutor-banner" onClick={() => setIsTutorOpen(true)}>
-        <div className="home-tutor-banner-left">
-          <div className="home-tutor-orb-mini">🎙️</div>
-          <div>
-            <div className="home-tutor-tag-row">
-              <span className="home-tutor-pill">LIVE AI</span>
-              <span className="home-tutor-name-pill">Emma & Lukas</span>
-            </div>
-            <h3 className="home-tutor-title">Живой разговорный ИИ-репетитор</h3>
-            <p className="home-tutor-desc">Свободный голосовой диалог в реальном времени</p>
-          </div>
-        </div>
-        <button className="home-tutor-call-btn">Позвонить 📞</button>
-      </section>
-
-      {/* Quick Stats Grid */}
-      <section className="home-stats-grid">
-        <div className="home-stat-card" onClick={() => navigate('/progress')}>
-          <span className="home-stat-emoji">📖</span>
-          <span className="home-stat-value">{totalLearned}</span>
-          <span className="home-stat-label">Слов изучено</span>
-        </div>
-        <div className="home-stat-card" onClick={() => navigate('/quiz')}>
-          <span className="home-stat-emoji">🎯</span>
-          <span className="home-stat-value">{accuracy}%</span>
-          <span className="home-stat-label">Точность</span>
-        </div>
-        <div className="home-stat-card" onClick={() => navigate('/grammar')}>
-          <span className="home-stat-emoji">📝</span>
-          <span className="home-stat-value">{grammarDone}</span>
-          <span className="home-stat-label">Грамматика</span>
-        </div>
-      </section>
-
-      {/* Language & Level Selectors */}
-      <section className="home-selectors">
-        <div className="home-selector-group">
-          <div className="home-group-header">
-            <h3>🌐 Язык изучения</h3>
-            <span className="home-badge-info">4 языка</span>
-          </div>
-          <div className="home-toggle-row">
+      {/* ===== LANGUAGE & LEVEL CONTROL STRIP ===== */}
+      <section className="control-strip">
+        {/* Language Segmented Bar */}
+        <div className="segmented-control">
+          {[
+            { id: 'en', flag: '🇬🇧', label: 'English' },
+            { id: 'de', flag: '🇩🇪', label: 'Deutsch' },
+            { id: 'fr', flag: '🇫🇷', label: 'Français' },
+            { id: 'es', flag: '🇪🇸', label: 'Español' },
+          ].map((l) => (
             <button
-              className={`home-toggle-btn ${language === 'en' ? 'active' : ''}`}
-              onClick={() => handleLanguageChange('en')}
+              key={l.id}
+              className={`segmented-btn ${language === l.id ? 'active' : ''}`}
+              onClick={() => handleLanguageChange(l.id)}
             >
-              🇬🇧 English
+              <span>{l.flag}</span>
+              <span className="seg-label">{l.label}</span>
             </button>
-            <button
-              className={`home-toggle-btn ${language === 'de' ? 'active' : ''}`}
-              onClick={() => handleLanguageChange('de')}
-            >
-              🇩🇪 Deutsch
-            </button>
-            <button
-              className={`home-toggle-btn ${language === 'fr' ? 'active' : ''}`}
-              onClick={() => handleLanguageChange('fr')}
-            >
-              🇫🇷 Français
-            </button>
-            <button
-              className={`home-toggle-btn ${language === 'es' ? 'active' : ''}`}
-              onClick={() => handleLanguageChange('es')}
-            >
-              🇪🇸 Español
-            </button>
-          </div>
+          ))}
         </div>
 
-        <div className="home-selector-group">
-          <div className="home-group-header">
-            <h3>📊 Текущий уровень</h3>
-            <span className="home-badge-info">A1 — C2</span>
-          </div>
-          <div className="home-level-row">
-            {LEVELS.map((lvl) => (
-              <button
-                key={lvl}
-                className={`home-level-btn ${level === lvl ? 'active' : ''}`}
-                onClick={() => handleLevelChange(lvl)}
-              >
-                {lvl}
-              </button>
-            ))}
-          </div>
+        {/* Level Pills */}
+        <div className="levels-strip">
+          {LEVELS.map((lvl) => (
+            <button
+              key={lvl}
+              className={`level-chip ${level === lvl ? 'active' : ''}`}
+              onClick={() => handleLevelChange(lvl)}
+            >
+              {lvl}
+            </button>
+          ))}
         </div>
       </section>
 
-      {/* Quick Feature Actions */}
-      <section className="home-quick-actions">
-        <button className="home-action-card highlight" onClick={() => setIsQuestMapOpen(true)}>
-          <span className="home-action-icon">🗺️</span>
-          <div className="home-action-text">
-            <strong>Карта квестов</strong>
-            <small>Дорожка приключений</small>
-          </div>
-        </button>
-
-        <button className="home-action-card" onClick={() => setIsLeaderboardOpen(true)}>
-          <span className="home-action-icon">🏆</span>
-          <div className="home-action-text">
-            <strong>Лига лидеров</strong>
-            <small>Рейтинг и кубки недели</small>
-          </div>
-        </button>
-
-        <button className="home-action-card" onClick={() => setIsShopOpen(true)}>
-          <span className="home-action-icon">💎</span>
-          <div className="home-action-text">
-            <strong>Магазин & Сундук</strong>
-            <small>Кристаллы и бонусы</small>
-          </div>
-        </button>
-
-        <button className="home-action-card highlight" onClick={() => setIsVoiceMessengerOpen(true)}>
-          <span className="home-action-icon">💬</span>
-          <div className="home-action-text">
-            <strong>Аудио-чат (AI)</strong>
-            <small>Голосовые с репетитором</small>
-          </div>
-        </button>
-
-        <button className="home-action-card" onClick={() => setIsSmartReaderOpen(true)}>
-          <span className="home-action-icon">📸</span>
-          <div className="home-action-text">
-            <strong>AI Сканер (Lens)</strong>
-            <small>Умный ридер текстов</small>
-          </div>
-        </button>
-
-        <button className="home-action-card highlight" onClick={() => setIsStoriesOpen(true)}>
-          <span className="home-action-icon">📖</span>
-          <div className="home-action-text">
-            <strong>Истории (Stories)</strong>
-            <small>Аудио-спектакли и диалоги</small>
-          </div>
-        </button>
-
-        <button className="home-action-card speed-game" onClick={() => setIsBattleOpen(true)}>
-          <span className="home-action-icon">⚔️</span>
-          <div className="home-action-text">
-            <strong>Спид-батл 1-на-1</strong>
-            <small>Дуэль против Duo Bot</small>
-          </div>
-        </button>
-
-        <button className="home-action-card" onClick={() => setIsHandsFreeOpen(true)}>
-          <span className="home-action-icon">🚗</span>
-          <div className="home-action-text">
-            <strong>За рулём (Audio)</strong>
-            <small>Hands-free аудиотренажёр</small>
-          </div>
-        </button>
-
-        <button className="home-action-card highlight" onClick={() => setIsDialoguesOpen(true)}>
-          <span className="home-action-icon">💬</span>
-          <div className="home-action-text">
-            <strong>Диалоги (AI)</strong>
-            <small>Живая речь и роли</small>
-          </div>
-        </button>
-
-        <button className="home-action-card" onClick={() => setIsIrregularOpen(true)}>
-          <span className="home-action-icon">⚡</span>
-          <div className="home-action-text">
-            <strong>Глаголы</strong>
-            <small>3 формы и тест</small>
-          </div>
-        </button>
-
-        <button className="home-action-card" onClick={() => setIsSentenceOpen(true)}>
-          <span className="home-action-icon">🧩</span>
-          <div className="home-action-text">
-            <strong>Собери фразу</strong>
-            <small>Конструктор слов</small>
-          </div>
-        </button>
-
-        <button className="home-action-card" onClick={() => setIsPronounceOpen(true)}>
-          <span className="home-action-icon">🎙️</span>
-          <div className="home-action-text">
-            <strong>Произношение</strong>
-            <small>Оценка с микрофоном</small>
-          </div>
-        </button>
-
-        <button className="home-action-card highlight" onClick={() => setIsDictOpen(true)}>
-          <span className="home-action-icon">📖</span>
-          <div className="home-action-text">
-            <strong>Словарь</strong>
-            <small>Поиск, озвучка и ⭐</small>
-          </div>
-        </button>
-
-        <button className="home-action-card speed-game" onClick={() => setIsMatchOpen(true)}>
-          <span className="home-action-icon">⚡</span>
-          <div className="home-action-text">
-            <strong>Найди пары</strong>
-            <small>Игра на скорость</small>
-          </div>
-        </button>
-
-        <button className="home-action-card" onClick={() => navigate('/quiz')}>
-          <span className="home-action-icon">🧠</span>
-          <div className="home-action-text">
-            <strong>Квиз и Аудио</strong>
-            <small>Тесты и на слух</small>
-          </div>
-        </button>
-
-        <button className="home-action-card" onClick={() => navigate('/grammar')}>
-          <span className="home-action-icon">✏️</span>
-          <div className="home-action-text">
-            <strong>Грамматика</strong>
-            <small>12 тем и правила</small>
-          </div>
-        </button>
-
-        <button className="home-action-card" onClick={() => setIsWordManagerOpen(true)}>
-          <span className="home-action-icon">➕</span>
-          <div className="home-action-text">
-            <strong>Свои слова</strong>
-            <small>Добавить в колоду</small>
-          </div>
-        </button>
-
-        {mistakesCount > 0 ? (
-          <button className="home-action-card mistake-card" onClick={() => navigate('/quiz')}>
-            <span className="home-action-icon">⚠️</span>
-            <div className="home-action-text">
-              <strong>Ошибки ({mistakesCount})</strong>
-              <small>Повторить слабые слова</small>
-            </div>
+      {/* ===== CATEGORIZED FEATURE STUDIO ===== */}
+      <section className="studio-section">
+        {/* Segmented Category Filter */}
+        <div className="studio-tabs">
+          <button
+            className={`studio-tab-btn ${activeCategoryTab === 'voice' ? 'active' : ''}`}
+            onClick={() => {
+              setActiveCategoryTab('voice');
+              haptics.light();
+            }}
+          >
+            <span>🎙️</span> Голос и Речь
           </button>
-        ) : (
-          <button className="home-action-card" onClick={() => setIsShareOpen(true)}>
-            <span className="home-action-icon">🏆</span>
-            <div className="home-action-text">
-              <strong>Успехи дня</strong>
-              <small>Поделиться карточкой</small>
-            </div>
+          <button
+            className={`studio-tab-btn ${activeCategoryTab === 'games' ? 'active' : ''}`}
+            onClick={() => {
+              setActiveCategoryTab('games');
+              haptics.light();
+            }}
+          >
+            <span>⚔️</span> Тренажёры
           </button>
-        )}
+          <button
+            className={`studio-tab-btn ${activeCategoryTab === 'library' ? 'active' : ''}`}
+            onClick={() => {
+              setActiveCategoryTab('library');
+              haptics.light();
+            }}
+          >
+            <span>📚</span> Инструменты
+          </button>
+        </div>
+
+        {/* Feature Grid */}
+        <div className="studio-grid animate-fade">
+          {activeCategoryTab === 'voice' && (
+            <>
+              <div className="feature-tile" onClick={() => setIsTutorOpen(true)}>
+                <div className="tile-icon-wrap indigo">🎙️</div>
+                <div className="tile-content">
+                  <h4>Voice Tutor Live</h4>
+                  <p>Разговорный диалог с Gemini 3.8 в реальном времени</p>
+                </div>
+              </div>
+
+              <div className="feature-tile" onClick={() => setIsVoiceMessengerOpen(true)}>
+                <div className="tile-icon-wrap violet">💬</div>
+                <div className="tile-content">
+                  <h4>Аудио-чат Telegram</h4>
+                  <p>Голосовые сообщения и заметки с репетитором</p>
+                </div>
+              </div>
+
+              <div className="feature-tile" onClick={() => setIsPronounceOpen(true)}>
+                <div className="tile-icon-wrap emerald">🎯</div>
+                <div className="tile-content">
+                  <h4>Тренер произношения</h4>
+                  <p>Оценка акцента и тепловая карта слогов (Heatmap)</p>
+                </div>
+              </div>
+
+              <div className="feature-tile" onClick={() => setIsStoriesOpen(true)}>
+                <div className="tile-icon-wrap amber">📖</div>
+                <div className="tile-content">
+                  <h4>Linguo Stories</h4>
+                  <p>Интерактивные сюжетные аудио-спектакли</p>
+                </div>
+              </div>
+
+              <div className="feature-tile" onClick={() => setIsDialoguesOpen(true)}>
+                <div className="tile-icon-wrap sky">🗣️</div>
+                <div className="tile-content">
+                  <h4>Диалоги по ролям</h4>
+                  <p>Кафе, отель, вокзал и знакомства</p>
+                </div>
+              </div>
+
+              <div className="feature-tile" onClick={() => setIsHandsFreeOpen(true)}>
+                <div className="tile-icon-wrap rose">🚗</div>
+                <div className="tile-content">
+                  <h4>Режим «За рулём»</h4>
+                  <p>Hands-free фоновый плеер слов для наушников</p>
+                </div>
+              </div>
+            </>
+          )}
+
+          {activeCategoryTab === 'games' && (
+            <>
+              <div className="feature-tile highlight-battle" onClick={() => setIsBattleOpen(true)}>
+                <div className="tile-icon-wrap rose">⚔️</div>
+                <div className="tile-content">
+                  <h4>Спид-батл 1-на-1</h4>
+                  <p>Динамичный 45-секундный поединок против Duo Bot</p>
+                </div>
+              </div>
+
+              <div className="feature-tile" onClick={() => setIsMatchOpen(true)}>
+                <div className="tile-icon-wrap amber">⚡</div>
+                <div className="tile-content">
+                  <h4>Найди пары</h4>
+                  <p>Скоростная игра на совпадение слов и переводов</p>
+                </div>
+              </div>
+
+              <div className="feature-tile" onClick={() => setIsSentenceOpen(true)}>
+                <div className="tile-icon-wrap sky">🧩</div>
+                <div className="tile-content">
+                  <h4>Собери фразу</h4>
+                  <p>Конструктор правильного порядка слов</p>
+                </div>
+              </div>
+
+              <div className="feature-tile" onClick={() => setIsIrregularOpen(true)}>
+                <div className="tile-icon-wrap violet">⚡</div>
+                <div className="tile-content">
+                  <h4>Неправильные глаголы</h4>
+                  <p>Таблица трёх форм и экспресс-тест</p>
+                </div>
+              </div>
+
+              <div className="feature-tile" onClick={() => navigate('/quiz')}>
+                <div className="tile-icon-wrap indigo">🧠</div>
+                <div className="tile-content">
+                  <h4>Квиз и Аудирование</h4>
+                  <p>Тестирование знаний и распознавание на слух</p>
+                </div>
+              </div>
+            </>
+          )}
+
+          {activeCategoryTab === 'library' && (
+            <>
+              <div className="feature-tile" onClick={() => setIsSmartReaderOpen(true)}>
+                <div className="tile-icon-wrap emerald">📸</div>
+                <div className="tile-content">
+                  <h4>AI Smart Reader & Lens</h4>
+                  <p>Разбор текстов, перевод по тапу и добавление в колоду</p>
+                </div>
+              </div>
+
+              <div className="feature-tile" onClick={() => setIsDictOpen(true)}>
+                <div className="tile-icon-wrap indigo">📚</div>
+                <div className="tile-content">
+                  <h4>Словарь</h4>
+                  <p>Поиск слов, озвучка и избранные закладки ⭐</p>
+                </div>
+              </div>
+
+              <div className="feature-tile" onClick={() => navigate('/grammar')}>
+                <div className="tile-icon-wrap amber">✏️</div>
+                <div className="tile-content">
+                  <h4>Справочник грамматики</h4>
+                  <p>12 тем с наглядными правилами и примерами</p>
+                </div>
+              </div>
+
+              <div className="feature-tile" onClick={() => setIsWordManagerOpen(true)}>
+                <div className="tile-icon-wrap sky">➕</div>
+                <div className="tile-content">
+                  <h4>Свои слова</h4>
+                  <p>Добавление персональных карточек в колоду</p>
+                </div>
+              </div>
+
+              <div className="feature-tile" onClick={() => setIsShopOpen(true)}>
+                <div className="tile-icon-wrap rose">💎</div>
+                <div className="tile-content">
+                  <h4>Магазин бонусов</h4>
+                  <p>Заморозка стрика, бустеры 2x XP и сундук</p>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
       </section>
 
-      {/* Modals */}
+      {/* ===== MODAL WINDOWS ===== */}
       <AuthModal
         isOpen={isAuthOpen}
         onClose={() => setIsAuthOpen(false)}
-        onAuthSuccess={(u) => setUser(u)}
+        onAuthSuccess={(u) => {
+          setUser(u);
+          refreshStats();
+        }}
       />
 
       <WordManagerModal
         isOpen={isWordManagerOpen}
-        onClose={() => setIsWordManagerOpen(false)}
-        onWordAdded={async () => {
-          await refreshStats();
+        onClose={() => {
+          setIsWordManagerOpen(false);
+          refreshStats();
         }}
+        currentLanguage={language}
       />
 
       <DictionaryModal
         isOpen={isDictOpen}
-        onClose={() => setIsDictOpen(false)}
-        defaultLanguage={language}
+        onClose={() => {
+          setIsDictOpen(false);
+          refreshStats();
+        }}
+        currentLanguage={language}
       />
 
       <MatchGameModal
@@ -665,20 +610,13 @@ export default function Home() {
           setIsMatchOpen(false);
           refreshStats();
         }}
-        language={language}
+        currentLanguage={language}
       />
 
       <ShareAchievementModal
         isOpen={isShareOpen}
         onClose={() => setIsShareOpen(false)}
-        stats={{
-          streak,
-          todayReviewed,
-          accuracy,
-          rankTitle: rank.title,
-          totalXP: rank.currentXP,
-          language,
-        }}
+        stats={{ streak, totalLearned, rank, accuracy }}
       />
 
       <DialoguesModal
@@ -740,7 +678,10 @@ export default function Home() {
 
       <ShopModal
         isOpen={isShopOpen}
-        onClose={() => setIsShopOpen(false)}
+        onClose={() => {
+          setIsShopOpen(false);
+          setGems(gamification.getGems());
+        }}
       />
 
       <VoiceMessengerModal
