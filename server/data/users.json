@@ -1,0 +1,12 @@
+[
+  {
+    "id": "usr_253e04ea",
+    "username": "testuser",
+    "name": "???????? ????????????",
+    "hash": "85cd6d51031c1f55b4ad2dc9d02cc6004f7f1d37f6df6f68d27998b0b6ee607158252dd3cb687f7cc74784ff63c054b60603c69ad45b6759fb84c2a30ea4000b",
+    "salt": "68d7c06ea3e5d8661f342d26c51698d8",
+    "createdAt": "2026-11-02T09:00:14.308Z",
+    "level": "A1",
+    "targetLanguage": "en"
+  }
+]
