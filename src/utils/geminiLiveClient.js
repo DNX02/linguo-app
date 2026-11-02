@@ -35,7 +35,7 @@ export class GeminiLiveClient {
 
     this.onStatusChange('connecting');
 
-    const url = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=${this.apiKey}`;
+    const url = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=${this.apiKey}`;
     this.ws = new WebSocket(url);
 
     this.ws.onopen = async () => {

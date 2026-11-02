@@ -160,6 +160,7 @@ export default function Home() {
   const [isStoriesOpen, setIsStoriesOpen] = useState(false);
   const [isBattleOpen, setIsBattleOpen] = useState(false);
   const [isHandsFreeOpen, setIsHandsFreeOpen] = useState(false);
+  const [isQuestMapOpen, setIsQuestMapOpen] = useState(false);
   const [isLeaderboardOpen, setIsLeaderboardOpen] = useState(false);
   const [isShopOpen, setIsShopOpen] = useState(false);
   const [isVoiceMessengerOpen, setIsVoiceMessengerOpen] = useState(false);
