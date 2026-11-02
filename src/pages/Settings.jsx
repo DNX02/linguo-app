@@ -4,6 +4,7 @@ import { getSettings, saveSetting, getAllCards } from '../db';
 import { api } from '../utils/api';
 import { sounds } from '../utils/soundEffects';
 import { gamification } from '../utils/gamification';
+import { speakText } from '../utils/speech';
 import AuthModal from '../components/AuthModal';
 import './Settings.css';
 
@@ -23,6 +24,7 @@ export default function Settings() {
   const [currentLevel, setCurrentLevel] = useState('A1');
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [speechSpeed, setSpeechSpeed] = useState('0.9');
+  const [voiceEngine, setVoiceEngine] = useState('studio');
   const [activeTheme, setActiveTheme] = useState('navy');
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [showImportSuccess, setShowImportSuccess] = useState(false);
@@ -45,6 +47,10 @@ export default function Settings() {
           sounds.enabled = settings.soundEnabled;
         }
         if (settings.speechSpeed) setSpeechSpeed(settings.speechSpeed);
+        
+        const savedEngine = localStorage.getItem('linguo_voice_engine') || settings.voiceEngine || 'studio';
+        setVoiceEngine(savedEngine);
+
         if (settings.theme) {
           setActiveTheme(settings.theme);
           applyTheme(settings.theme);
@@ -101,6 +107,22 @@ export default function Settings() {
   const handleSpeechSpeed = async (speed) => {
     setSpeechSpeed(speed);
     await saveSetting('speechSpeed', speed);
+  };
+
+  const handleVoiceEngine = async (engine) => {
+    setVoiceEngine(engine);
+    localStorage.setItem('linguo_voice_engine', engine);
+    await saveSetting('voiceEngine', engine);
+    // Preview the selected engine
+    speakText('Hello, this is human-like voice', 'en');
+  };
+
+  const handleTestVoice = (lang) => {
+    if (lang === 'en') {
+      speakText('Hello! Practice makes perfect.', 'en');
+    } else {
+      speakText('Guten Tag! Übung macht den Meister.', 'de');
+    }
   };
 
   const handleThemeChange = async (themeId) => {
@@ -303,6 +325,79 @@ export default function Settings() {
         )}
       </section>
 
+      {/* Voice & Pronunciation Section */}
+      <section className="settings-section">
+        <h3>🗣️ Озвучка и голос (Human Voice)</h3>
+        <p className="settings-desc">Выберите движок произношения слов:</p>
+
+        <div className="settings-voice-options">
+          <button
+            className={`settings-voice-btn ${voiceEngine === 'studio' ? 'active' : ''}`}
+            onClick={() => handleVoiceEngine('studio')}
+          >
+            <span className="settings-voice-icon">🌟</span>
+            <div>
+              <strong>Студийный живой голос (Рекомендуется)</strong>
+              <small>Нейросеть с естественной интонацией человека</small>
+            </div>
+          </button>
+
+          <button
+            className={`settings-voice-btn ${voiceEngine === 'system' ? 'active' : ''}`}
+            onClick={() => handleVoiceEngine('system')}
+          >
+            <span className="settings-voice-icon">📱</span>
+            <div>
+              <strong>Системный голос iOS Siri / Google</strong>
+              <small>Встроенный диктор вашего устройства (работает офлайн)</small>
+            </div>
+          </button>
+        </div>
+
+        {/* Test voice buttons */}
+        <div className="settings-voice-test-row">
+          <button className="settings-test-btn" onClick={() => handleTestVoice('en')}>
+            🔊 Тест: English 🇬🇧
+          </button>
+          <button className="settings-test-btn" onClick={() => handleTestVoice('de')}>
+            🔊 Тест: Deutsch 🇩🇪
+          </button>
+        </div>
+
+        {/* Speed adjustment */}
+        <div className="settings-speed-box">
+          <label className="settings-desc">Скорость речи:</label>
+          <div className="settings-speed-row">
+            <button
+              className={`settings-speed-btn ${speechSpeed === '0.7' ? 'active' : ''}`}
+              onClick={() => handleSpeechSpeed('0.7')}
+            >
+              🐢 0.7x
+            </button>
+            <button
+              className={`settings-speed-btn ${speechSpeed === '0.9' ? 'active' : ''}`}
+              onClick={() => handleSpeechSpeed('0.9')}
+            >
+              Стандарт 0.9x
+            </button>
+            <button
+              className={`settings-speed-btn ${speechSpeed === '1.0' ? 'active' : ''}`}
+              onClick={() => handleSpeechSpeed('1.0')}
+            >
+              🐰 1.0x
+            </button>
+          </div>
+        </div>
+
+        <div className="settings-tip-box">
+          <span className="settings-tip-icon">💡</span>
+          <p>
+            <strong>Совет для iPhone:</strong> Чтобы системный голос звучал максимально естественно, откройте{' '}
+            <em>Настройки iPhone → Универсальный доступ → Устный контент → Голоса</em> и выберите улучшенный голос <strong>Siri</strong>.
+          </p>
+        </div>
+      </section>
+
       {/* Theme Selection */}
       <section className="settings-section">
         <h3>🎨 Тема оформления</h3>
@@ -328,30 +423,6 @@ export default function Settings() {
           </div>
           <div className={`settings-switch ${soundEnabled ? 'active' : ''}`}>
             <div className="settings-switch-thumb" />
-          </div>
-        </div>
-
-        <div className="settings-speed-box">
-          <label className="settings-desc">Скорость озвучки слов:</label>
-          <div className="settings-speed-row">
-            <button
-              className={`settings-speed-btn ${speechSpeed === '0.7' ? 'active' : ''}`}
-              onClick={() => handleSpeechSpeed('0.7')}
-            >
-              🐢 Медленно (0.7x)
-            </button>
-            <button
-              className={`settings-speed-btn ${speechSpeed === '0.9' ? 'active' : ''}`}
-              onClick={() => handleSpeechSpeed('0.9')}
-            >
-              Стандарт (0.9x)
-            </button>
-            <button
-              className={`settings-speed-btn ${speechSpeed === '1.0' ? 'active' : ''}`}
-              onClick={() => handleSpeechSpeed('1.0')}
-            >
-              🐰 Быстро (1.0x)
-            </button>
           </div>
         </div>
       </section>
@@ -489,9 +560,9 @@ export default function Settings() {
         <h3>ℹ️ О приложении</h3>
         <div className="settings-about-content">
           <p className="settings-app-name">Linguo Super 2.0</p>
-          <p className="settings-app-version">Версия 2.0.0 (PWA Offline)</p>
+          <p className="settings-app-version">Версия 2.1.0 (Studio Neural Audio)</p>
           <p className="settings-app-desc">
-            Изучайте английский и немецкий с умным повторением, играми и аудированием
+            Изучайте английский и немецкий с умным повторением, играми и естественной человеческой речью
           </p>
         </div>
       </section>
