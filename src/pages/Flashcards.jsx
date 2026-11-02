@@ -328,7 +328,7 @@ export default function Flashcards() {
                 <span className="fc-badge fc-badge-level">{card.level}</span>
               )}
               <span className="fc-badge fc-badge-lang">
-                {card.language === 'en' ? '🇬🇧' : '🇩🇪'}
+                {card.language === 'en' ? '🇺🇸' : '🇩🇪'}
               </span>
               <button
                 type="button"

@@ -327,7 +327,7 @@ export default function Quiz() {
       <div className={`quiz-question-area ${transitioning ? 'quiz-slide-out' : 'quiz-slide-in'}`}>
         <div className="quiz-prompt-card">
           <span className="quiz-prompt-lang">
-            {question.card.language === 'en' ? '🇬🇧' : '🇩🇪'}
+            {question.card.language === 'en' ? '🇺🇸' : '🇩🇪'}
           </span>
           <span className="quiz-prompt-text">
             {mode === 'listening' ? '🎧 Слушайте слово' : question.prompt}

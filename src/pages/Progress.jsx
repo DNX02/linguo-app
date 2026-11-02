@@ -267,7 +267,7 @@ export default function Progress() {
         <div className="progress-lang-breakdown">
           <div className="progress-lang-item">
             <div className="progress-lang-header">
-              <span>🇬🇧 English</span>
+              <span>🇺🇸 English (US)</span>
               <span>{langBreakdown.en} слов</span>
             </div>
             <div className="progress-lang-bar">

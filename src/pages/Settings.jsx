@@ -357,7 +357,7 @@ export default function Settings() {
         {/* Test voice buttons */}
         <div className="settings-voice-test-row">
           <button className="settings-test-btn" onClick={() => handleTestVoice('en')}>
-            🔊 Тест: English 🇬🇧
+            🔊 Тест: English (US) 🇺🇸
           </button>
           <button className="settings-test-btn" onClick={() => handleTestVoice('de')}>
             🔊 Тест: Deutsch 🇩🇪
@@ -452,7 +452,7 @@ export default function Settings() {
             className={`settings-lang-btn ${defaultLang === 'en' ? 'active' : ''}`}
             onClick={() => handleLang('en')}
           >
-            🇬🇧 English
+            🇺🇸 English (US)
           </button>
           <button
             className={`settings-lang-btn ${defaultLang === 'de' ? 'active' : ''}`}

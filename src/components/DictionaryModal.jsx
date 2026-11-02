@@ -97,7 +97,7 @@ export default function DictionaryModal({ isOpen, onClose, defaultLanguage = 'en
                 className={`dict-toggle ${selectedLang === 'en' ? 'active' : ''}`}
                 onClick={() => setSelectedLang('en')}
               >
-                🇬🇧 English
+                🇺🇸 English (US)
               </button>
               <button
                 className={`dict-toggle ${selectedLang === 'de' ? 'active' : ''}`}
@@ -205,7 +205,7 @@ export default function DictionaryModal({ isOpen, onClose, defaultLanguage = 'en
                       </button>
                       <span className="dict-card-badge">{item.level}</span>
                       {item.language === 'en' ? (
-                        <span className="dict-lang-flag">🇬🇧</span>
+                        <span className="dict-lang-flag">🇺🇸</span>
                       ) : (
                         <span className="dict-lang-flag">🇩🇪</span>
                       )}

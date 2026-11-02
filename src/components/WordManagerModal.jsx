@@ -125,7 +125,7 @@ export default function WordManagerModal({ isOpen, onClose, onWordAdded }) {
             <div className="wm-field wm-flex-1">
               <label>Язык</label>
               <select value={language} onChange={(e) => setLanguage(e.target.value)}>
-                <option value="en">🇬🇧 Английский</option>
+                <option value="en">🇺🇸 English (US) — Американский</option>
                 <option value="de">🇩🇪 Немецкий</option>
               </select>
             </div>

@@ -89,7 +89,7 @@ export default function IrregularVerbsModal({ isOpen, onClose, defaultLang = 'en
               className={`iv-tab-btn ${lang === 'en' ? 'active' : ''}`}
               onClick={() => { setLang('en'); setQuizIndex(0); setIsAnswered(false); }}
             >
-              🇬🇧 English (V1 - V2 - V3)
+              🇺🇸 English (US) (V1 - V2 - V3)
             </button>
             <button
               className={`iv-tab-btn ${lang === 'de' ? 'active' : ''}`}

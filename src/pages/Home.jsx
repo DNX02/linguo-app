@@ -305,7 +305,7 @@ export default function Home() {
         {/* Language Flag Switcher */}
         <div className="duo-flag-pill">
           {['en', 'de', 'fr', 'es'].map((code) => {
-            const flag = code === 'en' ? '🇬🇧' : code === 'de' ? '🇩🇪' : code === 'fr' ? '🇫🇷' : '🇪🇸';
+            const flag = code === 'en' ? '🇺🇸' : code === 'de' ? '🇩🇪' : code === 'fr' ? '🇫🇷' : '🇪🇸';
             return (
               <button
                 key={code}

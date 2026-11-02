@@ -218,7 +218,7 @@ export default function Grammar() {
           className={`grammar-lang-tab ${selectedLang === 'en' ? 'active' : ''}`}
           onClick={() => setSelectedLang('en')}
         >
-          🇬🇧 Английский
+          🇺🇸 Английский (US)
         </button>
         <button
           className={`grammar-lang-tab ${selectedLang === 'de' ? 'active' : ''}`}
@@ -244,7 +244,7 @@ export default function Grammar() {
                 <div className="grammar-topic-top">
                   <span className="grammar-topic-level">{topic.level}</span>
                   <span className="grammar-topic-lang">
-                    {topic.language === 'en' ? '🇬🇧 EN' : '🇩🇪 DE'}
+                    {topic.language === 'en' ? '🇺🇸 US' : '🇩🇪 DE'}
                   </span>
                   {isCompleted && <span className="grammar-topic-check">✅ Пройдено</span>}
                 </div>

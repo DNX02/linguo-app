@@ -15,7 +15,7 @@ export default function ShareAchievementModal({ isOpen, onClose, stats = {} }) {
     language = 'en',
   } = stats;
 
-  const langLabel = language === 'en' ? '🇬🇧 Английский' : '🇩🇪 Немецкий';
+  const langLabel = language === 'en' ? '🇺🇸 Американский английский' : '🇩🇪 Немецкий';
 
   const shareText = `🚀 Мой прогресс в Linguo!\n` +
     `🔥 Серия: ${streak} ${streak === 1 ? 'день' : streak < 5 ? 'дня' : 'дней'} подряд\n` +
@@ -58,7 +58,7 @@ export default function ShareAchievementModal({ isOpen, onClose, stats = {} }) {
           <div className="share-card-brand">
             <span className="share-logo-icon">🦉</span>
             <span className="share-logo-text">Linguo App</span>
-            <span className="share-card-flag">{language === 'en' ? '🇬🇧' : '🇩🇪'}</span>
+            <span className="share-card-flag">{language === 'en' ? '🇺🇸' : '🇩🇪'}</span>
           </div>
 
           <div className="share-card-streak">
