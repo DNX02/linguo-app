@@ -127,7 +127,9 @@ export default function VoiceTutorModal({ isOpen, onClose, currentLanguage = 'en
 
       liveClientRef.current = client;
       await client.connect();
-      sounds.playTap();
+      try {
+        sounds.playTap?.();
+      } catch (_) {}
     } catch (err) {
       setErrorMsg(err.message || 'Ошибка запуска сессии');
       haptics.error();

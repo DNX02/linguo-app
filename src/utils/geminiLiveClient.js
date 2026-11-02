@@ -62,10 +62,16 @@ export class GeminiLiveClient {
       this.disconnect();
     };
 
-    this.ws.onclose = () => {
+    this.ws.onclose = (event) => {
       this.isConnected = false;
       this.onStatusChange('disconnected');
       this.cleanup();
+
+      if (event.code === 1008) {
+        this.onError('Неверный API-ключ (код 1008). Ключ Google AI Studio должен начинаться с AIzaSy...');
+      } else if (event.code !== 1000 && event.reason) {
+        this.onError(`Соединение закрыто (${event.code}): ${event.reason}`);
+      }
     };
   }
 
