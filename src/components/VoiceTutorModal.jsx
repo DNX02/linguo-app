@@ -13,7 +13,7 @@ const TUTORS = {
     flag: '🇺🇸',
     lang: 'English',
     voice: 'Kore',
-    model: 'models/gemini-2.0-flash-exp',
+    model: 'models/gemini-3.8-live',
     description: 'Дружелюбный репетитор английского из Калифорнии',
     systemInstruction: `You are Emma, an enthusiastic, patient, and warm American English tutor speaking with a Russian native student.
 Your goal is to have a natural spoken conversation.
@@ -31,7 +31,7 @@ Rules:
     flag: '🇩🇪',
     lang: 'Deutsch',
     voice: 'Puck',
-    model: 'models/gemini-2.0-flash-exp',
+    model: 'models/gemini-3.8-live',
     description: 'Носитель немецкого языка из Берлина',
     systemInstruction: `Du bist Lukas, ein freundlicher und geduldiger Deutschlehrer für russischsprachige Schüler.
 Dein Ziel ist ein natürliches Gespräch.

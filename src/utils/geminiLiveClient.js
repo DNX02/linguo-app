@@ -5,7 +5,7 @@
 export class GeminiLiveClient {
   constructor(options = {}) {
     this.apiKey = options.apiKey || '';
-    this.model = options.model || 'models/gemini-2.0-flash-exp';
+    this.model = options.model || 'models/gemini-3.8-live';
     this.voiceName = options.voiceName || 'Kore'; // Kore, Aoede, Puck, Fenrir, Charon
     this.systemInstruction = options.systemInstruction || 'You are Emma, a friendly language tutor.';
 
@@ -98,7 +98,28 @@ export class GeminiLiveClient {
     this.ws.send(JSON.stringify(setupMessage));
   }
 
+  sendInitialGreeting() {
+    if (!this.ws || this.ws.readyState !== WebSocket.OPEN) return;
+    const greetingMsg = {
+      clientContent: {
+        turns: [
+          {
+            role: 'user',
+            parts: [{ text: 'Hello! I am ready to practice. Please introduce yourself and give a warm 1-sentence welcome.' }],
+          },
+        ],
+        turnComplete: true,
+      },
+    };
+    this.ws.send(JSON.stringify(greetingMsg));
+  }
+
   handleServerMessage(msg) {
+    if (msg.setupComplete) {
+      this.sendInitialGreeting();
+      return;
+    }
+
     // 1. Check for audio output chunks
     const parts = msg.serverContent?.modelTurn?.parts;
     if (parts) {
