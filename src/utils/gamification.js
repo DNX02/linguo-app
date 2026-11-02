@@ -13,6 +13,15 @@ export const RANKS = [
   { level: 6, title: '👑 Полиглот', minXP: 2500, maxXP: 999999 },
 ];
 
+export const MASCOT_SKINS = [
+  { id: 'classic', name: 'Классический Linguo', emoji: '🦉', desc: 'Любимый зелёный маскот полиглотов', cost: 0 },
+  { id: 'cyber', name: 'Киберпанк Нео-Сова', emoji: '🕶️', desc: 'Голографические очки и неоновый стиль', cost: 120 },
+  { id: 'detective', name: 'Детектив Шерлок', emoji: '🕵️', desc: 'Расследует самые сложные грамматические тайны', cost: 180 },
+  { id: 'harvard', name: 'Профессор Гарварда', emoji: '🎓', desc: 'Академическая мантия и строгий подход', cost: 240 },
+  { id: 'emperor', name: 'Император Знаний', emoji: '👑', desc: 'Золотая корона для покорителей языков', cost: 350 },
+  { id: 'nasa', name: 'Астронавт NASA', emoji: '🚀', desc: 'Готов покорять космические высоты английского', cost: 500 },
+];
+
 export const gamification = {
   getXP() {
     try {
@@ -182,5 +191,124 @@ export const gamification = {
   getWeeklyXP() {
     const totalXP = this.getXP();
     return Math.max(120, Math.round(totalXP * 0.45));
+  },
+
+  // Mascot Skins System
+  getMascotSkin() {
+    try {
+      return localStorage.getItem('linguo_mascot_skin') || 'classic';
+    } catch (_) {
+      return 'classic';
+    }
+  },
+
+  setMascotSkin(skinId) {
+    try {
+      localStorage.setItem('linguo_mascot_skin', skinId);
+      return skinId;
+    } catch (_) {
+      return 'classic';
+    }
+  },
+
+  getUnlockedSkins() {
+    try {
+      return JSON.parse(localStorage.getItem('linguo_unlocked_skins') || '["classic"]');
+    } catch (_) {
+      return ['classic'];
+    }
+  },
+
+  unlockSkin(skinId, cost = 0) {
+    if (cost > 0 && !this.spendGems(cost)) {
+      return false;
+    }
+    try {
+      const unlocked = this.getUnlockedSkins();
+      if (!unlocked.includes(skinId)) {
+        unlocked.push(skinId);
+        localStorage.setItem('linguo_unlocked_skins', JSON.stringify(unlocked));
+      }
+      this.setMascotSkin(skinId);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  },
+
+  // CEFR Certificate System
+  getCertificate() {
+    try {
+      const data = localStorage.getItem('linguo_cefr_cert');
+      return data ? JSON.parse(data) : null;
+    } catch (_) {
+      return null;
+    }
+  },
+
+  saveCertificate(certData) {
+    try {
+      localStorage.setItem('linguo_cefr_cert', JSON.stringify(certData));
+      return certData;
+    } catch (_) {
+      return certData;
+    }
+  },
+
+  // Daily Quests System
+  getDailyQuests() {
+    const today = new Date().toISOString().slice(0, 10);
+    const storedDate = localStorage.getItem('linguo_quests_date');
+    if (storedDate !== today) {
+      const freshQuests = [
+        { id: 'q1', title: 'Ударный темп', desc: 'Наберите 60 XP за день', target: 60, progress: 0, rewardXP: 30, rewardGems: 15, claimed: false },
+        { id: 'q2', title: 'Живой разговор', desc: 'Поговорите с репетитором Emma', target: 1, progress: 0, rewardXP: 40, rewardGems: 20, claimed: false },
+        { id: 'q3', title: 'Гроза дуэлей', desc: 'Сыграйте 1 спид-батл слов', target: 1, progress: 0, rewardXP: 35, rewardGems: 20, claimed: false },
+      ];
+      localStorage.setItem('linguo_quests_date', today);
+      localStorage.setItem('linguo_quests_data', JSON.stringify(freshQuests));
+      return freshQuests;
+    }
+    try {
+      return JSON.parse(localStorage.getItem('linguo_quests_data') || '[]');
+    } catch (_) {
+      return [];
+    }
+  },
+
+  updateQuestProgress(questId, amount = 1) {
+    try {
+      const quests = this.getDailyQuests();
+      const updated = quests.map((q) => {
+        if (q.id === questId && !q.claimed) {
+          return { ...q, progress: Math.min(q.target, q.progress + amount) };
+        }
+        return q;
+      });
+      localStorage.setItem('linguo_quests_data', JSON.stringify(updated));
+      return updated;
+    } catch (_) {
+      return [];
+    }
+  },
+
+  claimQuest(questId) {
+    try {
+      const quests = this.getDailyQuests();
+      let rewards = null;
+      const updated = quests.map((q) => {
+        if (q.id === questId && q.progress >= q.target && !q.claimed) {
+          rewards = { xp: q.rewardXP, gems: q.rewardGems };
+          this.addXP(q.rewardXP);
+          this.addGems(q.rewardGems);
+          return { ...q, claimed: true };
+        }
+        return q;
+      });
+      localStorage.setItem('linguo_quests_data', JSON.stringify(updated));
+      return rewards;
+    } catch (_) {
+      return null;
+    }
   },
 };

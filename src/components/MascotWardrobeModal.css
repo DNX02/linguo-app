@@ -1,0 +1,418 @@
+/* ========================================================
+   Linguo Mascot Wardrobe & Daily Quests Hall
+   ======================================================== */
+
+.wardrobe-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 7, 18, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  padding: 1rem;
+}
+
+.wardrobe-modal-content {
+  background: #0d1222;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 28px;
+  width: 100%;
+  max-width: 540px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.9), 0 0 50px rgba(88, 204, 2, 0.2);
+}
+
+.wardrobe-modal-header {
+  padding: 1.1rem 1.4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.wardrobe-header-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.wardrobe-sparkle {
+  font-size: 1.5rem;
+}
+
+.wardrobe-header-title h3 {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.wardrobe-header-title p {
+  margin: 0.15rem 0 0;
+  font-size: 0.76rem;
+  color: #94a3b8;
+}
+
+.wardrobe-close-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: #94a3b8;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wardrobe-top-strip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.85rem 1.4rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.wardrobe-tabs-pill {
+  display: flex;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 3px;
+  border-radius: 12px;
+}
+
+.wt-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.wt-btn.active {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+.wardrobe-gems-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: #38bdf8;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.wardrobe-modal-body {
+  padding: 1.25rem 1.4rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Featured Mascot Card */
+.mascot-spotlight-card {
+  text-align: center;
+  background: linear-gradient(135deg, rgba(88, 204, 2, 0.15), rgba(56, 189, 248, 0.1));
+  border: 1px solid rgba(88, 204, 2, 0.3);
+  border-radius: 20px;
+  padding: 1.25rem 1rem;
+  margin-bottom: 1.25rem;
+  position: relative;
+}
+
+.mascot-avatar-stage {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  margin: 0 auto 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mascot-giant-emoji {
+  font-size: 4rem;
+  z-index: 2;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+}
+
+.mascot-aura-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(88, 204, 2, 0.4), transparent 70%);
+  animation: pulseAura 2.5s infinite ease-in-out;
+}
+
+@keyframes pulseAura {
+  0%, 100% { transform: scale(0.95); opacity: 0.6; }
+  50% { transform: scale(1.15); opacity: 0.9; }
+}
+
+.mascot-spotlight-card h3 {
+  margin: 0.2rem 0;
+  font-size: 1.2rem;
+  color: #fff;
+}
+
+.mascot-tagline {
+  margin: 0 0 0.65rem;
+  font-size: 0.8rem;
+  color: #cbd5e1;
+}
+
+.mascot-active-pill {
+  display: inline-block;
+  background: #58cc02;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 3px 12px;
+  border-radius: 99px;
+}
+
+/* Skins Grid */
+.skins-collection-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.skin-card {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.skin-card:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.skin-card.equipped {
+  border-color: #58cc02;
+  background: rgba(88, 204, 2, 0.1);
+}
+
+.skin-emoji-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.equipped-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #58cc02;
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 900;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.skin-info {
+  flex: 1;
+}
+
+.skin-info strong {
+  display: block;
+  font-size: 0.92rem;
+  color: #fff;
+}
+
+.skin-info small {
+  font-size: 0.74rem;
+  color: #94a3b8;
+  line-height: 1.3;
+}
+
+.skin-action-area {
+  flex-shrink: 0;
+}
+
+.skin-status-tag.active {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #58cc02;
+}
+
+.skin-equip-btn {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.skin-buy-btn {
+  background: rgba(56, 189, 248, 0.2);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  color: #7dd3fc;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 5px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* Quests View */
+.quests-hero-card {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(99, 102, 241, 0.1));
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 18px;
+  padding: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.qh-icon {
+  font-size: 2rem;
+}
+
+.quests-hero-card h4 {
+  margin: 0 0 0.2rem;
+  font-size: 1rem;
+  color: #fff;
+}
+
+.quests-hero-card p {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #cbd5e1;
+}
+
+.quests-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.quest-item-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 0.85rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.quest-item-card.claimed {
+  opacity: 0.6;
+}
+
+.quest-meta-col {
+  flex: 1;
+}
+
+.quest-meta-col strong {
+  display: block;
+  font-size: 0.9rem;
+  color: #fff;
+}
+
+.quest-meta-col p {
+  margin: 0.2rem 0 0.4rem;
+  font-size: 0.76rem;
+  color: #94a3b8;
+}
+
+.quest-progress-track {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 0.25rem;
+}
+
+.quest-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #58cc02, #38bdf8);
+  border-radius: 99px;
+}
+
+.quest-count-lbl {
+  font-size: 0.7rem;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.quest-rewards-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.quest-rewards-pills {
+  display: flex;
+  gap: 4px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #fde047;
+}
+
+.quest-claim-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: #94a3b8;
+  font-size: 0.76rem;
+  font-weight: 800;
+  padding: 5px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.quest-claim-btn.ready {
+  background: #58cc02;
+  color: #fff;
+  border-bottom: 2px solid #46a302;
+}
+
+.quest-claimed-lbl {
+  font-size: 0.74rem;
+  color: #58cc02;
+  font-weight: 800;
+}

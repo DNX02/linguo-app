@@ -29,6 +29,11 @@ import LeaderboardModal from '../components/LeaderboardModal';
 import ShopModal from '../components/ShopModal';
 import VoiceMessengerModal from '../components/VoiceMessengerModal';
 import SmartReaderModal from '../components/SmartReaderModal';
+import CertificationModal from '../components/CertificationModal';
+import CinemaRoleplayModal from '../components/CinemaRoleplayModal';
+import MascotWardrobeModal from '../components/MascotWardrobeModal';
+import SlangVaultModal from '../components/SlangVaultModal';
+import { MASCOT_SKINS } from '../utils/gamification';
 import { speakText } from '../utils/speech';
 import { sounds } from '../utils/sounds';
 import { haptics } from '../utils/haptics';
@@ -165,6 +170,11 @@ export default function Home() {
   const [isShopOpen, setIsShopOpen] = useState(false);
   const [isVoiceMessengerOpen, setIsVoiceMessengerOpen] = useState(false);
   const [isSmartReaderOpen, setIsSmartReaderOpen] = useState(false);
+  const [isCertOpen, setIsCertOpen] = useState(false);
+  const [isCinemaOpen, setIsCinemaOpen] = useState(false);
+  const [isWardrobeOpen, setIsWardrobeOpen] = useState(false);
+  const [isSlangOpen, setIsSlangOpen] = useState(false);
+  const [mascotSkin, setMascotSkin] = useState(() => gamification.getMascotSkin());
 
   const isMountedRef = useRef(true);
 
@@ -296,6 +306,7 @@ export default function Home() {
   };
 
   const maxUnlocked = Math.max(...completedNodes, 1);
+  const activeSkinEmoji = MASCOT_SKINS.find((s) => s.id === mascotSkin)?.emoji || '🦉';
   const currentQ = activeQuiz?.questions ? activeQuiz.questions[qIndex] : null;
 
   return (
@@ -412,6 +423,69 @@ export default function Home() {
         </button>
       </section>
 
+      {/* ===== GLOBAL EXPANSION 2.0 BENTO SUITE ===== */}
+      <section className="duo-expansion-bento">
+        <button
+          className="bento-tile cert"
+          onClick={() => setIsCertOpen(true)}
+        >
+          <div className="bento-glow cert-glow" />
+          <div className="bento-icon-col">
+            <span className="bento-big-icon">🏛️</span>
+            <span className="bento-badge gold">CEFR EXAM</span>
+          </div>
+          <div className="bento-text-col">
+            <strong>Сертификат CEFR</strong>
+            <small>Экзамен A1-C2 и диплом США</small>
+          </div>
+        </button>
+
+        <button
+          className="bento-tile cinema"
+          onClick={() => setIsCinemaOpen(true)}
+        >
+          <div className="bento-glow cinema-glow" />
+          <div className="bento-icon-col">
+            <span className="bento-big-icon">🎬</span>
+            <span className="bento-badge purple">3D ROLEPLAY</span>
+          </div>
+          <div className="bento-text-col">
+            <strong>Симуляции США</strong>
+            <small>Starbucks, Погранконтроль, Google</small>
+          </div>
+        </button>
+
+        <button
+          className="bento-tile slang"
+          onClick={() => setIsSlangOpen(true)}
+        >
+          <div className="bento-glow slang-glow" />
+          <div className="bento-icon-col">
+            <span className="bento-big-icon">🗽</span>
+            <span className="bento-badge amber">SLANG 2026</span>
+          </div>
+          <div className="bento-text-col">
+            <strong>Секретный сленг</strong>
+            <small>Живые идиомы Америки без цензуры</small>
+          </div>
+        </button>
+
+        <button
+          className="bento-tile wardrobe"
+          onClick={() => setIsWardrobeOpen(true)}
+        >
+          <div className="bento-glow wardrobe-glow" />
+          <div className="bento-icon-col">
+            <span className="bento-big-icon">{activeSkinEmoji}</span>
+            <span className="bento-badge green">WARDROBE</span>
+          </div>
+          <div className="bento-text-col">
+            <strong>Гардероб совы</strong>
+            <small>6 скинов Linguo и квесты дня</small>
+          </div>
+        </button>
+      </section>
+
       {/* ===== THE WINDING DUOLINGO PATH (ДОРОЖКА УРОВНЕЙ) ===== */}
       <main className="duo-path-stage">
         <div className="duo-nodes-track">
@@ -441,8 +515,13 @@ export default function Home() {
 
                 {/* Duo Mascot Sitting Next to Active Node */}
                 {isCurrent && (
-                  <div className="duo-mascot-spotlight animate-bounce">
-                    <span className="duo-owl-char">🦉</span>
+                  <div
+                    className="duo-mascot-spotlight animate-bounce"
+                    onClick={() => setIsWardrobeOpen(true)}
+                    style={{ cursor: 'pointer' }}
+                    title="Нажмите, чтобы открыть гардероб Linguo"
+                  >
+                    <span className="duo-owl-char">{activeSkinEmoji}</span>
                     <div className="duo-owl-speech">
                       Вперёд к знаниям!
                     </div>
@@ -665,6 +744,39 @@ export default function Home() {
       <SmartReaderModal
         isOpen={isSmartReaderOpen}
         onClose={() => setIsSmartReaderOpen(false)}
+      />
+
+      <CertificationModal
+        isOpen={isCertOpen}
+        onClose={() => {
+          setIsCertOpen(false);
+          refreshStats();
+        }}
+      />
+
+      <CinemaRoleplayModal
+        isOpen={isCinemaOpen}
+        onClose={() => {
+          setIsCinemaOpen(false);
+          refreshStats();
+        }}
+      />
+
+      <MascotWardrobeModal
+        isOpen={isWardrobeOpen}
+        onClose={() => {
+          setIsWardrobeOpen(false);
+          refreshStats();
+        }}
+        onSkinChange={(newSkin) => setMascotSkin(newSkin)}
+      />
+
+      <SlangVaultModal
+        isOpen={isSlangOpen}
+        onClose={() => {
+          setIsSlangOpen(false);
+          refreshStats();
+        }}
       />
     </div>
   );
