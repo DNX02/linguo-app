@@ -453,3 +453,614 @@
 .grammar-next-btn:active {
   transform: scale(0.97);
 }
+
+
+/* =========================================================
+   DETAILED GRAMMAR HANDBOOK & THEORY STYLES
+   ========================================================= */
+
+/* Mode Switcher */
+.grammar-mode-switcher {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 5px;
+  border-radius: 16px;
+  margin-bottom: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.grammar-mode-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 10px 8px;
+  background: transparent;
+  border: none;
+  border-radius: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.grammar-mode-btn:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+}
+
+.grammar-mode-btn.active {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(129, 140, 248, 0.15));
+  color: #fff;
+  border: 1px solid rgba(99, 102, 241, 0.5);
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
+}
+
+.mode-btn-icon {
+  font-size: 1.25rem;
+}
+
+.mode-btn-label {
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.mode-btn-badge {
+  font-size: 0.68rem;
+  color: #a5b4fc;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+/* Card badges & marker tags */
+.grammar-theory-tag {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  padding: 2px 7px;
+  border-radius: 6px;
+  margin-left: auto;
+}
+
+.grammar-card-markers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.grammar-card-marker-pill {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.grammar-card-marker-more {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: 700;
+  padding: 2px 4px;
+}
+
+/* Dual Card Actions */
+.grammar-card-actions {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  width: 100%;
+}
+
+.grammar-card-btn {
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: none;
+}
+
+.grammar-card-btn:active {
+  transform: scale(0.96);
+}
+
+.grammar-card-btn.theory-btn {
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  color: #c7d2fe;
+}
+
+.grammar-card-btn.theory-btn:hover {
+  background: rgba(99, 102, 241, 0.25);
+  color: #fff;
+}
+
+.grammar-card-btn.practice-btn {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.grammar-card-btn.practice-btn:hover {
+  filter: brightness(1.1);
+}
+
+/* Header badges */
+.grammar-header-badges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.grammar-topic-lang-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #e2e8f0;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 3px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.grammar-theory-quick-btn {
+  background: rgba(99, 102, 241, 0.2);
+  border: 1px solid rgba(99, 102, 241, 0.4);
+  color: #a5b4fc;
+  font-size: 0.76rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.grammar-theory-quick-btn:active {
+  transform: scale(0.95);
+  background: #6366f1;
+  color: #fff;
+}
+
+/* Detailed Rule Page (Theory Reader) */
+.grammar-theory-view {
+  padding-bottom: 90px;
+}
+
+.rule-hero-card {
+  position: relative;
+  background: linear-gradient(145deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.85));
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  border-radius: 24px;
+  padding: 24px 20px;
+  margin-bottom: 24px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4), 0 0 20px rgba(99, 102, 241, 0.1);
+  overflow: hidden;
+}
+
+.rule-hero-card::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 140px;
+  height: 140px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.35) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.rule-hero-flag {
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.rule-hero-title {
+  font-size: 1.45rem;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -0.02em;
+  margin: 0 0 6px;
+  line-height: 1.25;
+}
+
+.rule-hero-subtitle {
+  font-size: 0.92rem;
+  color: #a5b4fc;
+  font-weight: 600;
+  margin: 0 0 16px;
+  line-height: 1.4;
+}
+
+.rule-hero-overview {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 14px;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.rule-hero-overview p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #e2e8f0;
+  line-height: 1.55;
+}
+
+/* Sections */
+.rule-section {
+  margin-bottom: 24px;
+}
+
+.rule-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 14px;
+  letter-spacing: -0.01em;
+}
+
+.rule-section-icon {
+  font-size: 1.15rem;
+}
+
+/* Formulas Grid */
+.rule-formulas-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rule-formula-card {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 14px 16px;
+  backdrop-filter: blur(12px);
+}
+
+.rule-formula-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.12);
+  padding: 3px 8px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.rule-formula-text {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.88rem;
+  color: #f1f5f9;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 10px 12px;
+  border-radius: 10px;
+  margin: 0 0 8px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.45;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.rule-formula-example {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 0.82rem;
+}
+
+.example-tag {
+  color: var(--text-muted);
+  font-weight: 700;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+}
+
+.rule-formula-example code {
+  color: #a7f3d0;
+  font-family: inherit;
+  font-weight: 600;
+}
+
+/* Rules list */
+.rule-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rule-item-box {
+  display: flex;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.rule-item-number {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: #6366f1;
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.rule-item-content {
+  flex: 1;
+}
+
+.rule-item-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 4px;
+}
+
+.rule-item-text {
+  font-size: 0.85rem;
+  color: #cbd5e1;
+  line-height: 1.45;
+  margin: 0;
+}
+
+/* Markers chips */
+.rule-markers-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.rule-marker-chip {
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  color: #c7d2fe;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 20px;
+  transition: all 0.2s;
+}
+
+.rule-marker-chip:hover {
+  background: rgba(99, 102, 241, 0.25);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+/* Live examples with audio */
+.rule-examples-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rule-example-card {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 14px 16px;
+  backdrop-filter: blur(10px);
+}
+
+.rule-example-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.rule-example-orig {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.35;
+}
+
+.rule-audio-btn {
+  background: rgba(99, 102, 241, 0.2);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  color: #fff;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+.rule-audio-btn:active {
+  transform: scale(0.9);
+  background: #6366f1;
+}
+
+.rule-example-trans {
+  font-size: 0.88rem;
+  color: #94a3b8;
+  margin-bottom: 6px;
+}
+
+.rule-example-note {
+  font-size: 0.78rem;
+  color: #a5b4fc;
+  background: rgba(99, 102, 241, 0.08);
+  padding: 4px 8px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+/* Common mistakes */
+.rule-mistakes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rule-mistake-card {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.rule-mistake-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.rule-mistake-row.wrong {
+  background: rgba(239, 68, 68, 0.12);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.rule-mistake-row.wrong .mistake-text {
+  text-decoration: line-through;
+  opacity: 0.9;
+}
+
+.rule-mistake-row.correct {
+  background: rgba(16, 185, 129, 0.12);
+  color: #6ee7b7;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.rule-mistake-why {
+  font-size: 0.8rem;
+  color: #cbd5e1;
+  padding: 4px 8px 0;
+  line-height: 1.4;
+}
+
+/* Pro Tip */
+.rule-protip-box {
+  background: linear-gradient(135deg, rgba(234, 179, 8, 0.12), rgba(245, 158, 11, 0.05));
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.rule-protip-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fde047;
+  font-weight: 800;
+  font-size: 0.92rem;
+  margin-bottom: 6px;
+}
+
+.rule-protip-text {
+  margin: 0;
+  font-size: 0.86rem;
+  color: #fef08a;
+  line-height: 1.5;
+}
+
+/* Bottom Floating CTA Button */
+.rule-bottom-cta {
+  position: fixed;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 16px;
+  z-index: 100;
+}
+
+.rule-start-practice-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 18px;
+  padding: 16px 20px;
+  font-size: 0.96rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 8px 30px rgba(99, 102, 241, 0.5), 0 2px 6px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.rule-start-practice-btn:active {
+  transform: scale(0.97);
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+}
+
+.rule-cta-xp {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 900;
+  color: #fef08a;
+}
+
+/* Empty state */
+.grammar-empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 20px;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.empty-icon {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.grammar-empty-state h3 {
+  color: #fff;
+  margin: 0 0 6px;
+  font-size: 1.1rem;
+}
+
+.grammar-empty-state p {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin: 0;
+}
