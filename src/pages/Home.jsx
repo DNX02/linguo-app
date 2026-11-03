@@ -38,6 +38,12 @@ import DuelArenaModal from '../components/DuelArenaModal';
 import AudioStoriesModal from '../components/AudioStoriesModal';
 import LeaguesModal from '../components/LeaguesModal';
 import SmartNewsModal from '../components/SmartNewsModal';
+import PhotoScannerModal from '../components/PhotoScannerModal';
+import MusicLyricsModal from '../components/MusicLyricsModal';
+import WordleCrosswordModal from '../components/WordleCrosswordModal';
+import MessengerSimModal from '../components/MessengerSimModal';
+import GrammarBossModal from '../components/GrammarBossModal';
+import WordRushModal from '../components/WordRushModal';
 import { MASCOT_SKINS } from '../utils/gamification';
 import { speakText } from '../utils/speech';
 import { sounds } from '../utils/sounds';
@@ -184,6 +190,12 @@ export default function Home() {
   const [isAudioStoriesOpen, setIsAudioStoriesOpen] = useState(false);
   const [isLeaguesOpen, setIsLeaguesOpen] = useState(false);
   const [isNewsOpen, setIsNewsOpen] = useState(false);
+  const [isPhotoScannerOpen, setIsPhotoScannerOpen] = useState(false);
+  const [isMusicLyricsOpen, setIsMusicLyricsOpen] = useState(false);
+  const [isWordleOpen, setIsWordleOpen] = useState(false);
+  const [isMessengerSimOpen, setIsMessengerSimOpen] = useState(false);
+  const [isGrammarBossOpen, setIsGrammarBossOpen] = useState(false);
+  const [isWordRushOpen, setIsWordRushOpen] = useState(false);
   const [mascotSkin, setMascotSkin] = useState(() => gamification.getMascotSkin());
 
   const isMountedRef = useRef(true);
@@ -569,6 +581,96 @@ export default function Home() {
             <small>Статьи дня с переводом по тапу</small>
           </div>
         </button>
+
+        <button
+          className="bento-tile scanner"
+          onClick={() => setIsPhotoScannerOpen(true)}
+        >
+          <div className="bento-glow scanner-glow" />
+          <div className="bento-icon-col">
+            <span className="bento-big-icon">📷</span>
+            <span className="bento-badge indigo">AI SCANNER</span>
+          </div>
+          <div className="bento-text-col">
+            <strong>Сканер предметов</strong>
+            <small>Интерактивные сцены и транскрипция</small>
+          </div>
+        </button>
+
+        <button
+          className="bento-tile music"
+          onClick={() => setIsMusicLyricsOpen(true)}
+        >
+          <div className="bento-glow music-glow" />
+          <div className="bento-icon-col">
+            <span className="bento-big-icon">🎵</span>
+            <span className="bento-badge fuchsia">LYRICAL</span>
+          </div>
+          <div className="bento-text-col">
+            <strong>Английский по песням</strong>
+            <small>Караоке хитов и разбор сленга</small>
+          </div>
+        </button>
+
+        <button
+          className="bento-tile puzzle"
+          onClick={() => setIsWordleOpen(true)}
+        >
+          <div className="bento-glow puzzle-glow" />
+          <div className="bento-icon-col">
+            <span className="bento-big-icon">🧩</span>
+            <span className="bento-badge teal">DAILY WORDLE</span>
+          </div>
+          <div className="bento-text-col">
+            <strong>Wordle & Кроссворд</strong>
+            <small>Интеллектуальная игра на 5 букв</small>
+          </div>
+        </button>
+
+        <button
+          className="bento-tile chat-sim"
+          onClick={() => setIsMessengerSimOpen(true)}
+        >
+          <div className="bento-glow chat-glow" />
+          <div className="bento-icon-col">
+            <span className="bento-big-icon">💬</span>
+            <span className="bento-badge sky">MESSENGER</span>
+          </div>
+          <div className="bento-text-col">
+            <strong>Чат-симулятор</strong>
+            <small>Переписка в iMessage с живыми нейтивами</small>
+          </div>
+        </button>
+
+        <button
+          className="bento-tile boss"
+          onClick={() => setIsGrammarBossOpen(true)}
+        >
+          <div className="bento-glow boss-glow" />
+          <div className="bento-icon-col">
+            <span className="bento-big-icon">🧠</span>
+            <span className="bento-badge crimson">RPG BOSS</span>
+          </div>
+          <div className="bento-text-col">
+            <strong>Боссы Грамматики</strong>
+            <small>Сражения с Драконом Времен</small>
+          </div>
+        </button>
+
+        <button
+          className="bento-tile rush"
+          onClick={() => setIsWordRushOpen(true)}
+        >
+          <div className="bento-glow rush-glow" />
+          <div className="bento-icon-col">
+            <span className="bento-big-icon">⏱️</span>
+            <span className="bento-badge amber">45S SPRINT</span>
+          </div>
+          <div className="bento-text-col">
+            <strong>Спринт Слов</strong>
+            <small>Аркада на реакцию и выживание</small>
+          </div>
+        </button>
       </section>
 
       {/* ===== THE WINDING DUOLINGO PATH (ДОРОЖКА УРОВНЕЙ) ===== */}
@@ -900,6 +1002,54 @@ export default function Home() {
         isOpen={isNewsOpen}
         onClose={() => {
           setIsNewsOpen(false);
+          refreshStats();
+        }}
+      />
+
+      <PhotoScannerModal
+        isOpen={isPhotoScannerOpen}
+        onClose={() => {
+          setIsPhotoScannerOpen(false);
+          refreshStats();
+        }}
+      />
+
+      <MusicLyricsModal
+        isOpen={isMusicLyricsOpen}
+        onClose={() => {
+          setIsMusicLyricsOpen(false);
+          refreshStats();
+        }}
+      />
+
+      <WordleCrosswordModal
+        isOpen={isWordleOpen}
+        onClose={() => {
+          setIsWordleOpen(false);
+          refreshStats();
+        }}
+      />
+
+      <MessengerSimModal
+        isOpen={isMessengerSimOpen}
+        onClose={() => {
+          setIsMessengerSimOpen(false);
+          refreshStats();
+        }}
+      />
+
+      <GrammarBossModal
+        isOpen={isGrammarBossOpen}
+        onClose={() => {
+          setIsGrammarBossOpen(false);
+          refreshStats();
+        }}
+      />
+
+      <WordRushModal
+        isOpen={isWordRushOpen}
+        onClose={() => {
+          setIsWordRushOpen(false);
           refreshStats();
         }}
       />

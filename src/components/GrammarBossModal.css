@@ -1,0 +1,312 @@
+/* Grammar Boss Modal Styles */
+
+.boss-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 6, 18, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: fadeIn 0.25s ease-out;
+}
+
+.boss-modal-card {
+  width: 100%;
+  max-width: 520px;
+  background: linear-gradient(150deg, #1f1122 0%, #0d0612 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 26px;
+  padding: 22px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(239, 68, 68, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.boss-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.boss-title-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.boss-badge-icon {
+  font-size: 2rem;
+  background: rgba(239, 68, 68, 0.2);
+  border-radius: 14px;
+  padding: 6px;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.boss-title-box h3 {
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.boss-title-box p {
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  margin: 2px 0 0;
+}
+
+.boss-close-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: #fff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Selector */
+.boss-selector-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.boss-pill-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 8px 14px;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.boss-pill-btn.active {
+  background: #dc2626;
+  color: #fff;
+  border-color: #ef4444;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
+}
+
+/* Arena */
+.boss-arena-stage {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+}
+
+.boss-monster-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+}
+
+.boss-avatar-big {
+  font-size: 4.5rem;
+  filter: drop-shadow(0 6px 16px rgba(239, 68, 68, 0.5));
+  animation: floatMonster 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes floatMonster {
+  from { transform: translateY(0); }
+  to { transform: translateY(-8px); }
+}
+
+.boss-name {
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 900;
+  margin: 0;
+}
+
+.boss-hp-bar {
+  width: 80%;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.boss-hp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ef4444, #f97316);
+  border-radius: 6px;
+  transition: width 0.3s ease;
+}
+
+.boss-hp-num {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.spell-banner {
+  background: rgba(234, 179, 8, 0.2);
+  border: 1px solid #eab308;
+  color: #fde047;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 900;
+}
+
+.player-rpg-hud {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.82rem;
+  color: #cbd5e1;
+}
+
+.player-rpg-hud strong {
+  color: #34d399;
+}
+
+.player-hp-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.player-hp-fill {
+  height: 100%;
+  background: #10b981;
+  border-radius: 6px;
+  transition: width 0.3s;
+}
+
+/* Spells Card */
+.boss-spell-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.boss-q-text {
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin: 0;
+  text-align: center;
+}
+
+.spells-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.spell-cast-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  color: #fff;
+  padding: 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+}
+
+.spell-cast-btn:active {
+  transform: scale(0.98);
+  background: rgba(239, 68, 68, 0.3);
+  border-color: #ef4444;
+}
+
+/* Result Screens */
+.boss-victory-box,
+.boss-defeat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 24px 16px;
+  gap: 10px;
+}
+
+.loot-icon {
+  font-size: 3.5rem;
+}
+
+.boss-victory-box h2 {
+  color: #fde047;
+  margin: 0;
+}
+
+.boss-defeat-box h2 {
+  color: #f87171;
+  margin: 0;
+}
+
+.boss-victory-box p,
+.boss-defeat-box p {
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  margin: 0;
+}
+
+.loot-chips {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.loot-chips span {
+  background: rgba(251, 191, 36, 0.15);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  color: #fde047;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.boss-rematch-btn {
+  width: 100%;
+  margin-top: 10px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  border: none;
+  border-radius: 14px;
+  color: #fff;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.boss-rematch-btn.retry {
+  background: linear-gradient(135deg, #dc2626, #ef4444);
+}
