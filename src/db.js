@@ -1,4 +1,5 @@
 import { openDB } from 'idb';
+import { words as initialWords } from './data/words.js';
 
 const DB_NAME = 'linguo-db';
 const DB_VERSION = 1;
@@ -40,17 +41,47 @@ export async function getDB() {
 }
 
 /**
+ * Ensures the database contains the core vocabulary dataset.
+ */
+async function seedDefaultCards(db) {
+  try {
+    const count = await db.count('cards');
+    if (count === 0 && initialWords && initialWords.length > 0) {
+      const tx = db.transaction('cards', 'readwrite');
+      const now = new Date().toISOString();
+      for (const w of initialWords) {
+        tx.store.put({
+          ...w,
+          interval: 1,
+          repetitions: 0,
+          easeFactor: 2.5,
+          nextReview: now,
+        });
+      }
+      await tx.done;
+    }
+  } catch (e) {
+    console.warn('Auto-seed cards notice:', e);
+  }
+}
+
+/**
  * Get all cards, optionally filtered by language and level.
  */
 export async function getAllCards(language, level) {
   try {
     const db = await getDB();
+    await seedDefaultCards(db);
     let cards;
 
     if (language) {
       cards = await db.getAllFromIndex('cards', 'language', language);
     } else {
       cards = await db.getAll('cards');
+    }
+
+    if (!cards || cards.length === 0) {
+      cards = [...initialWords];
     }
 
     if (level) {
@@ -60,7 +91,10 @@ export async function getAllCards(language, level) {
     return cards || [];
   } catch (err) {
     console.error('getAllCards error:', err);
-    return [];
+    let fallback = [...initialWords];
+    if (language) fallback = fallback.filter((w) => w.language === language);
+    if (level) fallback = fallback.filter((w) => w.level === level);
+    return fallback;
   }
 }
 
@@ -70,6 +104,7 @@ export async function getAllCards(language, level) {
 export async function getCardsForReview(language) {
   try {
     const db = await getDB();
+    await seedDefaultCards(db);
     const now = new Date();
     let cards;
 
@@ -79,13 +114,19 @@ export async function getCardsForReview(language) {
       cards = await db.getAll('cards');
     }
 
-    return (cards || []).filter((card) => {
+    if (!cards || cards.length === 0) {
+      cards = [...initialWords];
+    }
+
+    const dueCards = (cards || []).filter((card) => {
       if (!card.nextReview) return true; // never reviewed = due
       return new Date(card.nextReview) <= now;
     });
+
+    return dueCards.length > 0 ? dueCards : cards.slice(0, 20);
   } catch (err) {
     console.error('getCardsForReview error:', err);
-    return [];
+    return initialWords.slice(0, 20);
   }
 }
 

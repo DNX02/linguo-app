@@ -7,6 +7,7 @@ import {
   getDailyProgress,
   saveDailyProgress,
 } from '../db';
+import { words as initialWords } from '../data/words';
 import { calculateNextReview } from '../utils/spaced-repetition';
 import { speakText } from '../utils/speech';
 import { sounds } from '../utils/soundEffects';
@@ -48,14 +49,22 @@ export default function Flashcards() {
       } else {
         loaded = await getCardsForReview();
       }
+      if (!loaded || loaded.length === 0) {
+        loaded = [...initialWords];
+      }
       if (isMounted.current) {
-        setCards(loaded || []);
+        setCards(loaded);
         setCurrentIndex(0);
-        setFinished(!loaded || loaded.length === 0);
+        setFinished(false);
         setStarredIds(gamification.getStarred());
       }
     } catch (e) {
       console.error('Error loading cards:', e);
+      if (isMounted.current) {
+        setCards([...initialWords]);
+        setCurrentIndex(0);
+        setFinished(false);
+      }
     } finally {
       if (isMounted.current) setLoading(false);
     }

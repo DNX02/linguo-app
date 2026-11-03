@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllCards, getDailyProgress, saveDailyProgress } from '../db';
+import { words as initialWords } from '../data/words';
 import { speakText } from '../utils/speech';
 import { sounds } from '../utils/soundEffects';
 import { gamification } from '../utils/gamification';
@@ -18,13 +19,13 @@ function shuffle(array) {
 }
 
 function generateQuestions(cards, mode) {
-  if (cards.length < 4) return [];
-  const shuffled = shuffle(cards);
+  const source = (!cards || cards.length < 4) ? initialWords : cards;
+  const shuffled = shuffle(source);
   const questions = [];
 
   for (let i = 0; i < Math.min(QUESTIONS_PER_ROUND, shuffled.length); i++) {
     const correctCard = shuffled[i];
-    const wrongCards = shuffle(cards.filter((c) => c.id !== correctCard.id)).slice(0, 3);
+    const wrongCards = shuffle(source.filter((c) => c.id !== correctCard.id)).slice(0, 3);
 
     let prompt = correctCard.word;
     let correctAnswer = correctCard.translation;
@@ -95,13 +96,20 @@ export default function Quiz() {
 
     try {
       let cards = await getAllCards();
+      if (!cards || cards.length < 4) {
+        cards = [...initialWords];
+      }
       if (selectedMode === 'mistakes') {
         const mistakeIds = gamification.getMistakes();
         const mistakeCards = cards.filter((c) => mistakeIds.includes(c.id));
         cards = mistakeCards.length >= 4 ? mistakeCards : cards;
       }
 
-      const generated = generateQuestions(cards, selectedMode);
+      let generated = generateQuestions(cards, selectedMode);
+      if (!generated || generated.length === 0) {
+        generated = generateQuestions(initialWords, selectedMode);
+      }
+
       setQuestions(generated);
       setCurrentQ(0);
       setCorrect(0);
@@ -111,11 +119,11 @@ export default function Quiz() {
       setFinished(false);
       setEarnedXP(0);
 
-      // Auto-pronounce for listening mode on start
+      // Pronounce for listening mode immediately on start
       if (selectedMode === 'listening' && generated[0]) {
         setTimeout(() => {
           speakText(generated[0].card.word, generated[0].card.language);
-        }, 300);
+        }, 150);
       }
     } catch (e) {
       console.error(e);
@@ -300,7 +308,23 @@ export default function Quiz() {
   }
 
   const question = questions[currentQ];
-  if (!question) return null;
+  if (!question) {
+    return (
+      <div className="quiz-page">
+        <header className="quiz-header">
+          <button className="quiz-back" onClick={() => setMode(null)}>
+            ← К режимам
+          </button>
+        </header>
+        <div className="quiz-finished">
+          <h2>Подготовка тренировки...</h2>
+          <button className="quiz-restart-btn" onClick={() => startQuiz(mode || 'word-to-translation')}>
+            ⚡ Начать тест
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const progressPct = ((currentQ + 1) / questions.length) * 100;
 
@@ -325,12 +349,21 @@ export default function Quiz() {
       </div>
 
       <div className={`quiz-question-area ${transitioning ? 'quiz-slide-out' : 'quiz-slide-in'}`}>
-        <div className="quiz-prompt-card">
+        <div
+          className="quiz-prompt-card"
+          onClick={() => {
+            if (question.card) {
+              speakText(question.card.word, question.card.language);
+            }
+          }}
+          style={{ cursor: 'pointer' }}
+          title="Нажмите, чтобы прослушать произношение"
+        >
           <span className="quiz-prompt-lang">
             {question.card.language === 'en' ? '🇺🇸' : '🇩🇪'}
           </span>
           <span className="quiz-prompt-text">
-            {mode === 'listening' ? '🎧 Слушайте слово' : question.prompt}
+            {mode === 'listening' ? '🎧 Нажмите для повтора' : question.prompt}
           </span>
           <button
             type="button"
