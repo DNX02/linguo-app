@@ -1,0 +1,327 @@
+/* Smart News Modal Styles */
+
+.news-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 8, 20, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: fadeIn 0.25s ease-out;
+}
+
+.news-modal-card {
+  width: 100%;
+  max-width: 540px;
+  background: linear-gradient(150deg, #151a2c 0%, #0c101c 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 26px;
+  padding: 22px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(16, 185, 129, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.news-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.news-title-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.news-badge-icon {
+  font-size: 2rem;
+  background: rgba(16, 185, 129, 0.15);
+  border-radius: 14px;
+  padding: 6px;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.news-title-box h3 {
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.news-title-box p {
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  margin: 2px 0 0;
+}
+
+.news-close-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: #fff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.news-close-btn:hover {
+  background: rgba(239, 68, 68, 0.3);
+}
+
+/* Feed list */
+.news-feed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.news-card-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.news-card-item:hover {
+  background: rgba(255, 255, 255, 0.07);
+  transform: translateY(-2px);
+  border-color: rgba(16, 185, 129, 0.35);
+}
+
+.news-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.news-category-pill {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #34d399;
+  background: rgba(16, 185, 129, 0.12);
+  padding: 3px 8px;
+  border-radius: 8px;
+}
+
+.news-lang-pill {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  font-weight: 700;
+}
+
+.news-card-title {
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin: 0;
+  line-height: 1.35;
+}
+
+.news-card-summary {
+  color: #cbd5e1;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.news-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 8px;
+  margin-top: 4px;
+}
+
+.news-read-btn {
+  color: #38bdf8;
+  font-weight: 800;
+}
+
+/* Reader View */
+.news-reader-view {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.news-back-to-list-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #a5b4fc;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  width: fit-content;
+}
+
+.article-header-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.news-level-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #6366f1;
+  background: rgba(99, 102, 241, 0.15);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.news-date {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+.article-full-title {
+  color: #fff;
+  font-size: 1.35rem;
+  font-weight: 900;
+  line-height: 1.3;
+  margin: 0;
+}
+
+/* Paragraphs */
+.article-paragraphs-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.article-para-box {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 16px;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.para-orig-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.para-orig-text {
+  color: #fff;
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.para-listen-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.para-listen-btn:active {
+  background: #10b981;
+}
+
+.para-ru-text {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Vocabulary chips */
+.article-vocab-box {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 16px;
+  margin-top: 6px;
+}
+
+.article-vocab-box h4 {
+  color: #fde047;
+  font-size: 0.9rem;
+  margin: 0 0 10px;
+  font-weight: 800;
+}
+
+.vocab-chips-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.vocab-chip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.vocab-chip-text {
+  font-size: 0.82rem;
+  color: #fff;
+}
+
+.vocab-chip-text strong {
+  color: #38bdf8;
+}
+
+.vocab-chip-text span {
+  color: #94a3b8;
+  margin-left: 4px;
+}
+
+.vocab-save-btn {
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: #38bdf8;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.vocab-save-btn.saved {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: #10b981;
+  color: #34d399;
+}

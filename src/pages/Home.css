@@ -736,3 +736,41 @@
   color: #94a3b8;
   line-height: 1.35;
 }
+
+
+/* ===== BENTO EXPANSION 3.0 NEW TILES ===== */
+.accent-glow { background: #ef4444; }
+.duel-glow { background: #f43f5e; }
+.audio-glow { background: #0ea5e9; }
+.leagues-glow { background: #eab308; }
+.news-glow { background: #10b981; }
+
+.bento-badge.red {
+  background: rgba(239, 68, 68, 0.18);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
+
+.bento-badge.rose {
+  background: rgba(244, 63, 94, 0.18);
+  border: 1px solid rgba(244, 63, 94, 0.4);
+  color: #fda4af;
+}
+
+.bento-badge.cyan {
+  background: rgba(14, 165, 233, 0.18);
+  border: 1px solid rgba(14, 165, 233, 0.4);
+  color: #7dd3fc;
+}
+
+.bento-badge.yellow {
+  background: rgba(234, 179, 8, 0.18);
+  border: 1px solid rgba(234, 179, 8, 0.4);
+  color: #fde047;
+}
+
+.bento-badge.emerald {
+  background: rgba(16, 185, 129, 0.18);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #6ee7b7;
+}

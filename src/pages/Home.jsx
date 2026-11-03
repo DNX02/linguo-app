@@ -33,6 +33,11 @@ import CertificationModal from '../components/CertificationModal';
 import CinemaRoleplayModal from '../components/CinemaRoleplayModal';
 import MascotWardrobeModal from '../components/MascotWardrobeModal';
 import SlangVaultModal from '../components/SlangVaultModal';
+import AccentCoachModal from '../components/AccentCoachModal';
+import DuelArenaModal from '../components/DuelArenaModal';
+import AudioStoriesModal from '../components/AudioStoriesModal';
+import LeaguesModal from '../components/LeaguesModal';
+import SmartNewsModal from '../components/SmartNewsModal';
 import { MASCOT_SKINS } from '../utils/gamification';
 import { speakText } from '../utils/speech';
 import { sounds } from '../utils/sounds';
@@ -174,6 +179,11 @@ export default function Home() {
   const [isCinemaOpen, setIsCinemaOpen] = useState(false);
   const [isWardrobeOpen, setIsWardrobeOpen] = useState(false);
   const [isSlangOpen, setIsSlangOpen] = useState(false);
+  const [isAccentCoachOpen, setIsAccentCoachOpen] = useState(false);
+  const [isDuelOpen, setIsDuelOpen] = useState(false);
+  const [isAudioStoriesOpen, setIsAudioStoriesOpen] = useState(false);
+  const [isLeaguesOpen, setIsLeaguesOpen] = useState(false);
+  const [isNewsOpen, setIsNewsOpen] = useState(false);
   const [mascotSkin, setMascotSkin] = useState(() => gamification.getMascotSkin());
 
   const isMountedRef = useRef(true);
@@ -484,6 +494,81 @@ export default function Home() {
             <small>6 скинов Linguo и квесты дня</small>
           </div>
         </button>
+
+        <button
+          className="bento-tile accent-coach"
+          onClick={() => setIsAccentCoachOpen(true)}
+        >
+          <div className="bento-glow accent-glow" />
+          <div className="bento-icon-col">
+            <span className="bento-big-icon">🎙️</span>
+            <span className="bento-badge red">AI NATIVE</span>
+          </div>
+          <div className="bento-text-col">
+            <strong>Тренажёр акцента</strong>
+            <small>Анализ звуков и % Native Score</small>
+          </div>
+        </button>
+
+        <button
+          className="bento-tile duel"
+          onClick={() => setIsDuelOpen(true)}
+        >
+          <div className="bento-glow duel-glow" />
+          <div className="bento-icon-col">
+            <span className="bento-big-icon">⚔️</span>
+            <span className="bento-badge rose">1-ON-1 PVP</span>
+          </div>
+          <div className="bento-text-col">
+            <strong>Арена Дуэлей</strong>
+            <small>Битва 60 сек против AI-соперников</small>
+          </div>
+        </button>
+
+        <button
+          className="bento-tile audio-stories"
+          onClick={() => setIsAudioStoriesOpen(true)}
+        >
+          <div className="bento-glow audio-glow" />
+          <div className="bento-icon-col">
+            <span className="bento-big-icon">📻</span>
+            <span className="bento-badge cyan">LISTENING</span>
+          </div>
+          <div className="bento-text-col">
+            <strong>Аудио-истории</strong>
+            <small>Караоке-субтитры и проверка слуха</small>
+          </div>
+        </button>
+
+        <button
+          className="bento-tile leagues"
+          onClick={() => setIsLeaguesOpen(true)}
+        >
+          <div className="bento-glow leagues-glow" />
+          <div className="bento-icon-col">
+            <span className="bento-big-icon">🏆</span>
+            <span className="bento-badge yellow">TOURNAMENT</span>
+          </div>
+          <div className="bento-text-col">
+            <strong>Турнир Лиг</strong>
+            <small>5 дивизионов и еженедельный топ</small>
+          </div>
+        </button>
+
+        <button
+          className="bento-tile news"
+          onClick={() => setIsNewsOpen(true)}
+        >
+          <div className="bento-glow news-glow" />
+          <div className="bento-icon-col">
+            <span className="bento-big-icon">📰</span>
+            <span className="bento-badge emerald">SMART NEWS</span>
+          </div>
+          <div className="bento-text-col">
+            <strong>Лента новостей</strong>
+            <small>Статьи дня с переводом по тапу</small>
+          </div>
+        </button>
       </section>
 
       {/* ===== THE WINDING DUOLINGO PATH (ДОРОЖКА УРОВНЕЙ) ===== */}
@@ -775,6 +860,46 @@ export default function Home() {
         isOpen={isSlangOpen}
         onClose={() => {
           setIsSlangOpen(false);
+          refreshStats();
+        }}
+      />
+
+      <AccentCoachModal
+        isOpen={isAccentCoachOpen}
+        onClose={() => {
+          setIsAccentCoachOpen(false);
+          refreshStats();
+        }}
+      />
+
+      <DuelArenaModal
+        isOpen={isDuelOpen}
+        onClose={() => {
+          setIsDuelOpen(false);
+          refreshStats();
+        }}
+      />
+
+      <AudioStoriesModal
+        isOpen={isAudioStoriesOpen}
+        onClose={() => {
+          setIsAudioStoriesOpen(false);
+          refreshStats();
+        }}
+      />
+
+      <LeaguesModal
+        isOpen={isLeaguesOpen}
+        onClose={() => {
+          setIsLeaguesOpen(false);
+          refreshStats();
+        }}
+      />
+
+      <SmartNewsModal
+        isOpen={isNewsOpen}
+        onClose={() => {
+          setIsNewsOpen(false);
           refreshStats();
         }}
       />

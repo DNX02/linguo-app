@@ -1,0 +1,416 @@
+/* Accent Coach Modal Styles */
+
+.accent-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 7, 18, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: fadeIn 0.25s ease-out;
+}
+
+.accent-modal-card {
+  width: 100%;
+  max-width: 520px;
+  background: linear-gradient(150deg, #131c31 0%, #0c1220 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 26px;
+  padding: 22px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(99, 102, 241, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.accent-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.accent-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.accent-badge-icon {
+  font-size: 2rem;
+  background: rgba(99, 102, 241, 0.2);
+  border-radius: 14px;
+  padding: 6px;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.accent-title-wrap h3 {
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.accent-title-wrap p {
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  margin: 2px 0 0;
+}
+
+.accent-close-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: #fff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.accent-close-btn:hover {
+  background: rgba(239, 68, 68, 0.3);
+}
+
+/* Lang switcher */
+.accent-lang-tabs {
+  display: flex;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 4px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.accent-lang-tab {
+  flex: 1;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.accent-lang-tab.active {
+  background: #6366f1;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+/* Challenge target */
+.accent-target-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.accent-target-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.accent-level-pill {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #6366f1;
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.accent-focus-pill {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #a5b4fc;
+}
+
+.accent-phrase-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.accent-target-phrase {
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.accent-audio-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(99, 102, 241, 0.2);
+  border: 1px solid rgba(99, 102, 241, 0.4);
+  color: #fff;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.accent-audio-btn:active {
+  transform: scale(0.92);
+  background: #6366f1;
+}
+
+.accent-tip-box {
+  display: flex;
+  gap: 8px;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  padding: 10px 12px;
+  border-radius: 12px;
+}
+
+.accent-tip-icon {
+  font-size: 1rem;
+}
+
+.accent-tip-box p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #fef3c7;
+  line-height: 1.4;
+}
+
+/* Mic controls */
+.accent-controls-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.accent-mic-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px;
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 18px;
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.accent-mic-btn:active {
+  transform: scale(0.97);
+}
+
+.accent-mic-btn.listening {
+  background: linear-gradient(135deg, #dc2626, #ef4444);
+  box-shadow: 0 8px 24px rgba(239, 68, 68, 0.5);
+  animation: pulseMic 1.2s infinite;
+}
+
+@keyframes pulseMic {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+.accent-wave-animation {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+}
+
+.wave-bar {
+  width: 4px;
+  height: 100%;
+  background: #f87171;
+  border-radius: 4px;
+  animation: waveMotion 0.8s ease-in-out infinite alternate;
+}
+
+.wave-bar:nth-child(2) { animation-delay: 0.15s; height: 70%; }
+.wave-bar:nth-child(3) { animation-delay: 0.3s; height: 100%; }
+.wave-bar:nth-child(4) { animation-delay: 0.45s; height: 60%; }
+.wave-bar:nth-child(5) { animation-delay: 0.6s; height: 85%; }
+
+@keyframes waveMotion {
+  from { transform: scaleY(0.3); }
+  to { transform: scaleY(1); }
+}
+
+/* Evaluation card */
+.accent-eval-card {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 18px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: fadeIn 0.3s ease-out;
+}
+
+.accent-eval-card.eval-native {
+  border-color: rgba(16, 185, 129, 0.4);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(0, 0, 0, 0.2));
+}
+
+.accent-eval-card.eval-good {
+  border-color: rgba(59, 130, 246, 0.4);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(0, 0, 0, 0.2));
+}
+
+.accent-eval-card.eval-retry {
+  border-color: rgba(239, 68, 68, 0.3);
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.08), rgba(0, 0, 0, 0.2));
+}
+
+.accent-eval-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.accent-score-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 14px;
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+
+.accent-score-num {
+  font-size: 1.45rem;
+  font-weight: 900;
+  color: #34d399;
+}
+
+.accent-score-label {
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.accent-eval-feedback {
+  font-size: 0.88rem;
+  color: #fff;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.accent-word-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.breakdown-title {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+.words-stream {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.stream-word {
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 8px;
+}
+
+.stream-word.word-perfect {
+  color: #6ee7b7;
+  background: rgba(16, 185, 129, 0.18);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.stream-word.word-missed {
+  color: #fca5a5;
+  background: rgba(239, 68, 68, 0.18);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  text-decoration: underline wavy #ef4444;
+}
+
+.accent-user-transcript {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 8px;
+}
+
+/* Footer nav */
+.accent-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 14px;
+}
+
+.accent-nav-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.accent-nav-btn.primary {
+  background: #6366f1;
+  border-color: #4f46e5;
+}
+
+.accent-nav-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.accent-page-indicator {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  font-weight: 700;
+}
