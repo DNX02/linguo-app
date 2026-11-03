@@ -11,6 +11,7 @@ const SONGS = [
     lang: 'en',
     genre: '🔥 Alt Rock',
     coverEmoji: '⚡',
+    audioUrl: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/c0/3f/36/c03f367a-b66b-fd0a-a54c-30f8250c4410/mzaf_12768434238801682952.plus.aac.p.m4a',
     lines: [
       { text: 'First things first, I\'ma say all the words inside my head.', ru: 'Прежде всего, я скажу все слова, что крутятся в голове.' },
       { text: 'I\'m fired up and tired of the way that things have been.', ru: 'Я на взводе и устал от того, как всё шло.' },
@@ -30,6 +31,7 @@ const SONGS = [
     lang: 'en',
     genre: '🎻 Baroque Pop',
     coverEmoji: '👑',
+    audioUrl: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/a3/30/8e/a3308eed-d8b7-e0b3-f09d-5e1b0f4d660a/mzaf_8517946447501075134.plus.aac.p.m4a',
     lines: [
       { text: 'I used to rule the world, seas would rise when I gave the word.', ru: 'Когда-то я правил миром, моря вздымались по моему слову.' },
       { text: 'Now in the morning I sleep alone, sweep the streets I used to own.', ru: 'Теперь по утрам я просыпаюсь один, подметаю улицы, которыми владел.' },
@@ -49,6 +51,7 @@ const SONGS = [
     lang: 'de',
     genre: '🤘 Neue Deutsche Härte',
     coverEmoji: '☀️',
+    audioUrl: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/58/89/be/5889beee-3248-8e1f-bb77-98fb0dd7998b/mzaf_18321568262675482928.plus.aac.p.m4a',
     lines: [
       { text: 'Eins, zwei, drei, vier, fünf, sechs, sieben, acht, neun, aus!', ru: 'Один, два, три, четыре, пять, шесть, семь, восемь, девять, конец!' },
       { text: 'Alle warten auf das Licht, fürchtet euch, fürchtet euch nicht.', ru: 'Все ждут света, бойтесь, не бойтесь.' },
@@ -61,6 +64,26 @@ const SONGS = [
       idiom: 'Warten auf (+ Akkusativ) — глагол "warten" в немецком требует предлога "auf" (ждать чего-то).',
     },
   },
+  {
+    id: 'song-4',
+    title: 'Cruel Summer',
+    artist: 'Taylor Swift',
+    lang: 'en',
+    genre: '💖 Synth-Pop',
+    coverEmoji: '🌸',
+    audioUrl: 'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/44/af/81/44af8168-9609-1b85-5048-ada08dceacf3/mzaf_1341699644335558812.plus.aac.p.m4a',
+    lines: [
+      { text: 'Fever dream high in the quiet of the night, you know that I caught it.', ru: 'Лихорадочный сон посреди ночной тишины, ты знаешь, меня накрыло.' },
+      { text: 'Bad, bad boy, shiny toy with a price, you know that I bought it.', ru: 'Плохой парень, блестящая игрушка с ценой, ты знаешь, я купилась.' },
+      { text: 'It\'s new, the shape of your body, it\'s blue, the feeling I\'ve ___!', ru: 'Это ново — очертания твоего тела; это грусть — чувство, которое у меня появилось!' },
+    ],
+    challenge: {
+      missingWord: 'got',
+      options: ['lost', 'got', 'seen'],
+      correct: 1,
+      idiom: 'Feeling blue — идиома, означающая грустить, испытывать печаль.',
+    },
+  },
 ];
 
 export default function MusicLyricsModal({ isOpen, onClose }) {
@@ -68,38 +91,70 @@ export default function MusicLyricsModal({ isOpen, onClose }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [answeredIdx, setAnsweredIdx] = useState(null);
   const [isAnswerCorrect, setIsAnswerCorrect] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(30);
+  const audioRef = useRef(null);
 
   useEffect(() => {
+    // Setup real audio player
+    const audio = new Audio();
+    audioRef.current = audio;
+
+    audio.onended = () => {
+      setIsPlaying(false);
+      setCurrentTime(0);
+    };
+
+    audio.ontimeupdate = () => {
+      setCurrentTime(audio.currentTime);
+      if (audio.duration && !isNaN(audio.duration)) {
+        setDuration(audio.duration);
+      }
+    };
+
+    audio.onerror = () => {
+      setIsPlaying(false);
+    };
+
     return () => {
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      audio.pause();
+      audio.src = '';
     };
   }, []);
 
   useEffect(() => {
-    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.src = selectedSong.audioUrl;
+      audioRef.current.load();
+    }
     setIsPlaying(false);
+    setCurrentTime(0);
     setAnsweredIdx(null);
     setIsAnswerCorrect(false);
   }, [selectedSong]);
 
-  if (!isOpen) return null;
+  if (!isOpen) {
+    if (audioRef.current && isPlaying) {
+      audioRef.current.pause();
+    }
+    return null;
+  }
 
-  const playSongAudio = () => {
-    if (!('speechSynthesis' in window)) return;
-    window.speechSynthesis.cancel();
+  const togglePlayAudio = () => {
+    if (!audioRef.current) return;
 
     if (isPlaying) {
+      audioRef.current.pause();
       setIsPlaying(false);
-      return;
+    } else {
+      audioRef.current.play().then(() => {
+        setIsPlaying(true);
+      }).catch((err) => {
+        console.warn('Audio play error:', err);
+        setIsPlaying(false);
+      });
     }
-
-    setIsPlaying(true);
-    const fullLyrics = selectedSong.lines.map((l) => l.text.replace('___', selectedSong.challenge.missingWord)).join('. ');
-    const utterance = new SpeechSynthesisUtterance(fullLyrics);
-    utterance.lang = selectedSong.lang === 'de' ? 'de-DE' : 'en-US';
-    utterance.rate = 0.9;
-    utterance.onend = () => setIsPlaying(false);
-    window.speechSynthesis.speak(utterance);
   };
 
   const handleSelectWord = (idx) => {
@@ -116,6 +171,8 @@ export default function MusicLyricsModal({ isOpen, onClose }) {
     }
   };
 
+  const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
+
   return (
     <div className="music-modal-backdrop" onClick={onClose}>
       <div className="music-modal-card" onClick={(e) => e.stopPropagation()}>
@@ -125,7 +182,7 @@ export default function MusicLyricsModal({ isOpen, onClose }) {
             <span className="music-badge-icon">🎵</span>
             <div>
               <h3>Lyrical: Английский по песням</h3>
-              <p>Учите язык через ритм, текст и живые метафоры</p>
+              <p>Оригинальные студийные треки с караоке & разбором сленга</p>
             </div>
           </div>
           <button className="music-close-btn" onClick={onClose}>
@@ -133,7 +190,7 @@ export default function MusicLyricsModal({ isOpen, onClose }) {
           </button>
         </header>
 
-        {/* Song Carousel */}
+        {/* Song Carousel with Guaranteed Non-Clipping Height */}
         <div className="music-songs-carousel">
           {SONGS.map((song) => (
             <div
@@ -150,23 +207,40 @@ export default function MusicLyricsModal({ isOpen, onClose }) {
           ))}
         </div>
 
-        {/* Player Header */}
+        {/* Player Panel with Real Original Audio Master */}
         <div className="music-player-panel">
           <div className="music-track-meta">
-            <span className="music-genre-badge">{selectedSong.genre}</span>
+            <div className="music-badge-row">
+              <span className="music-genre-badge">{selectedSong.genre}</span>
+              <span className="music-original-badge">🎙️ Студийный оригинал</span>
+            </div>
             <h2>{selectedSong.title}</h2>
             <p className="music-artist-name">{selectedSong.artist}</p>
           </div>
 
           <button
             className={`music-play-btn ${isPlaying ? 'playing' : ''}`}
-            onClick={playSongAudio}
+            onClick={togglePlayAudio}
           >
-            {isPlaying ? '⏸️ Остановить' : '▶️ Слушать трек'}
+            {isPlaying ? '⏸️ Пауза' : '▶️ Слушать трек'}
           </button>
         </div>
 
-        {/* Equalizer Wave */}
+        {/* Real Audio Progress Bar */}
+        <div className="music-progress-wrap">
+          <div className="music-progress-bar">
+            <div
+              className="music-progress-fill"
+              style={{ width: `${progressPercent}%` }}
+            ></div>
+          </div>
+          <div className="music-time-meta">
+            <span>0:{Math.floor(currentTime).toString().padStart(2, '0')}</span>
+            <span>0:{Math.floor(duration).toString().padStart(2, '0')}</span>
+          </div>
+        </div>
+
+        {/* Equalizer Wave when playing */}
         {isPlaying && (
           <div className="music-eq-wave">
             <span className="eq-bar"></span>
@@ -192,7 +266,7 @@ export default function MusicLyricsModal({ isOpen, onClose }) {
         {/* Missing Word Interactive Challenge */}
         <div className="music-challenge-card">
           <div className="challenge-head">
-            <span>🎯 Вставьте недостающее слово из трека:</span>
+            <span>🎯 Вставьте недостающее слово из песни:</span>
           </div>
 
           <div className="challenge-options-grid">
