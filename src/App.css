@@ -218,7 +218,7 @@ input, select, textarea {
   right: 0;
   display: flex;
   justify-content: center;
-  z-index: 1000;
+  z-index: 800; /* Lower than modal backdrops (2500) so modals are never obscured */
   pointer-events: none;
 }
 
@@ -283,3 +283,121 @@ input, select, textarea {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+/* ===== GLOBAL MODAL STACKING & MOBILE SCROLL GUARANTEES ===== */
+/* 1. All modal backdrops and overlays must strictly sit ABOVE the bottom navigation bar */
+[class*="-backdrop"],
+[class*="-overlay"],
+.modal-overlay,
+.modal-backdrop,
+.boss-modal-backdrop,
+.music-modal-backdrop,
+.scanner-modal-backdrop,
+.wordle-modal-backdrop,
+.rush-modal-backdrop,
+.shorts-modal-overlay,
+.smart-deck-overlay,
+.fortune-overlay,
+.accent-coach-backdrop,
+.dialogues-overlay,
+.stories-modal-overlay,
+.pronunciation-modal-overlay,
+.sentence-builder-modal-overlay,
+.duel-modal-backdrop,
+.leagues-modal-backdrop,
+.news-modal-backdrop,
+.shop-modal-overlay,
+.quest-map-overlay,
+.wardrobe-overlay,
+.slang-modal-backdrop,
+.cert-modal-backdrop,
+.cinema-modal-backdrop,
+.handsfree-overlay,
+.word-battle-overlay,
+.smart-reader-overlay,
+.messenger-sim-backdrop,
+.auth-modal-overlay,
+.word-manager-overlay,
+.dictionary-modal-overlay,
+.match-game-overlay,
+.share-achievement-overlay,
+.voice-tutor-overlay,
+.voice-messenger-overlay {
+  z-index: 2500 !important;
+  align-items: flex-start !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  padding-bottom: calc(48px + var(--safe-area-bottom)) !important;
+}
+
+/* 2. All modal content cards must have smooth iOS touch scrolling and bottom breathing room */
+[class*="-modal-card"],
+[class*="-modal-box"],
+[class*="-modal"]:not([class*="-overlay"]):not([class*="-backdrop"]),
+.modal-card,
+.boss-modal-card,
+.music-modal-card,
+.scanner-modal-card,
+.wordle-modal-card,
+.rush-modal-card,
+.shorts-modal-box,
+.smart-deck-modal,
+.fortune-modal,
+.accent-coach-card,
+.dialogues-modal,
+.stories-modal,
+.pronunciation-modal,
+.sentence-builder-modal,
+.duel-modal-card,
+.leagues-modal-card,
+.news-modal-card,
+.shop-modal,
+.quest-map-modal,
+.wardrobe-modal,
+.slang-modal-card,
+.cert-modal-card,
+.cinema-modal-card,
+.handsfree-modal,
+.word-battle-modal,
+.smart-reader-modal,
+.messenger-sim-card,
+.auth-modal-card,
+.word-manager-modal,
+.dictionary-modal-card,
+.match-game-modal,
+.share-achievement-modal,
+.voice-tutor-modal,
+.voice-messenger-modal {
+  margin-top: auto !important;
+  margin-bottom: auto !important;
+  padding-bottom: calc(40px + var(--safe-area-bottom)) !important;
+  max-height: calc(100dvh - 36px) !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  overscroll-behavior-y: contain !important;
+}
+
+/* 3. Ensure last answer option across all quizzes, bosses and challenges is fully scrollable and never obscured */
+.spells-grid,
+.story-quiz-options,
+.cert-options-stack,
+.choices-stack,
+.dialogue-options-list,
+.duel-options-grid,
+.challenge-options-grid,
+.qq-options-grid,
+.quiz-options-col,
+.slang-quiz-options,
+.checkpoint-options,
+.battle-options-grid,
+.rush-options-grid,
+.grammar-options,
+.quiz-options,
+.duo-quiz-options,
+.sim-options,
+.smart-deck-cards-list,
+.dialogue-options-drawer {
+  padding-bottom: 32px !important;
+  margin-bottom: 20px !important;
+}
+
