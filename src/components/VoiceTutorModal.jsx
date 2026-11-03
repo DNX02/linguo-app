@@ -691,23 +691,23 @@ Rules:
               </div>
             )}
 
-            {/* Live Subtitles & Transcripts */}
-            <div className="tutor-transcript-box" ref={scrollRef}>
-              {transcripts.length === 0 ? (
-                <div className="transcript-placeholder">
-                  {status === 'connected'
-                    ? 'Слушаю вас... Говорите свободно в микрофон!'
-                    : `Выберите тему и нажмите «Начать разговор с ${tutor.name}»`}
-                </div>
-              ) : (
-                transcripts.map((msg, i) => (
-                  <div key={i} className={`transcript-bubble ${msg.role}`}>
-                    <span className="bubble-author">{msg.role === 'user' ? 'Вы' : tutor.name}:</span>
-                    <span className="bubble-content">{msg.text}</span>
+            {/* Live Subtitles & Transcripts (only shown during active session) */}
+            {(status === 'connected' || transcripts.length > 0) && (
+              <div className="tutor-transcript-box" ref={scrollRef}>
+                {transcripts.length === 0 ? (
+                  <div className="transcript-placeholder">
+                    Слушаю вас... Говорите свободно в микрофон!
                   </div>
-                ))
-              )}
-            </div>
+                ) : (
+                  transcripts.map((msg, i) => (
+                    <div key={i} className={`transcript-bubble ${msg.role}`}>
+                      <span className="bubble-author">{msg.role === 'user' ? 'Вы' : tutor.name}:</span>
+                      <span className="bubble-content">{msg.text}</span>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
 
             {/* Live Mic Activity & Instant Reply Trigger */}
             {status === 'connected' && (
@@ -784,7 +784,11 @@ Rules:
 
             {/* Call Controls */}
             <div className="tutor-call-controls">
-              {status === 'disconnected' ? (
+              {status === 'connecting' ? (
+                <button className="tutor-start-call-btn connecting" disabled>
+                  ⏳ Подключение к {tutor.name}...
+                </button>
+              ) : status === 'disconnected' ? (
                 <button className="tutor-start-call-btn" onClick={handleStartCall}>
                   📞 Начать разговор с {tutor.name}
                 </button>
