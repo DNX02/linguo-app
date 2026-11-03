@@ -44,6 +44,10 @@ import WordleCrosswordModal from '../components/WordleCrosswordModal';
 import MessengerSimModal from '../components/MessengerSimModal';
 import GrammarBossModal from '../components/GrammarBossModal';
 import WordRushModal from '../components/WordRushModal';
+import ShortsVideoModal from '../components/ShortsVideoModal';
+import LofiFocusPlayer from '../components/LofiFocusPlayer';
+import SmartDeckGeneratorModal from '../components/SmartDeckGeneratorModal';
+import FortuneCookieModal from '../components/FortuneCookieModal';
 import { MASCOT_SKINS } from '../utils/gamification';
 import { speakText } from '../utils/speech';
 import { sounds } from '../utils/sounds';
@@ -196,6 +200,9 @@ export default function Home() {
   const [isMessengerSimOpen, setIsMessengerSimOpen] = useState(false);
   const [isGrammarBossOpen, setIsGrammarBossOpen] = useState(false);
   const [isWordRushOpen, setIsWordRushOpen] = useState(false);
+  const [isShortsOpen, setIsShortsOpen] = useState(false);
+  const [isSmartDeckOpen, setIsSmartDeckOpen] = useState(false);
+  const [isFortuneCookieOpen, setIsFortuneCookieOpen] = useState(false);
   const [mascotSkin, setMascotSkin] = useState(() => gamification.getMascotSkin());
 
   const isMountedRef = useRef(true);
@@ -671,6 +678,51 @@ export default function Home() {
             <small>Аркада на реакцию и выживание</small>
           </div>
         </button>
+
+        <button
+          className="bento-tile shorts"
+          onClick={() => setIsShortsOpen(true)}
+        >
+          <div className="bento-glow shorts-glow" />
+          <div className="bento-icon-col">
+            <span className="bento-big-icon">🎬</span>
+            <span className="bento-badge rose">REELS & SHORTS</span>
+          </div>
+          <div className="bento-text-col">
+            <strong>Linguo Shorts</strong>
+            <small>Клипы из культовых фильмов с квизами</small>
+          </div>
+        </button>
+
+        <button
+          className="bento-tile ai-deck"
+          onClick={() => setIsSmartDeckOpen(true)}
+        >
+          <div className="bento-glow aideck-glow" />
+          <div className="bento-icon-col">
+            <span className="bento-big-icon">✨</span>
+            <span className="bento-badge violet">SMART DECKS</span>
+          </div>
+          <div className="bento-text-col">
+            <strong>Умные AI колоды</strong>
+            <small>IT, сленг, бары, свидания, путешествия</small>
+          </div>
+        </button>
+
+        <button
+          className="bento-tile fortune"
+          onClick={() => setIsFortuneCookieOpen(true)}
+        >
+          <div className="bento-glow fortune-glow" />
+          <div className="bento-icon-col">
+            <span className="bento-big-icon">🥠</span>
+            <span className="bento-badge amber">DAILY GIFT</span>
+          </div>
+          <div className="bento-text-col">
+            <strong>Печенье судьбы</strong>
+            <small>Разломи и забери ежедневные кристаллы</small>
+          </div>
+        </button>
       </section>
 
       {/* ===== THE WINDING DUOLINGO PATH (ДОРОЖКА УРОВНЕЙ) ===== */}
@@ -1053,6 +1105,33 @@ export default function Home() {
           refreshStats();
         }}
       />
+
+      <ShortsVideoModal
+        isOpen={isShortsOpen}
+        onClose={() => {
+          setIsShortsOpen(false);
+          refreshStats();
+        }}
+      />
+
+      <SmartDeckGeneratorModal
+        isOpen={isSmartDeckOpen}
+        onClose={() => {
+          setIsSmartDeckOpen(false);
+          refreshStats();
+        }}
+        onCardsAdded={loadAllCards}
+      />
+
+      <FortuneCookieModal
+        isOpen={isFortuneCookieOpen}
+        onClose={() => {
+          setIsFortuneCookieOpen(false);
+          refreshStats();
+        }}
+      />
+
+      <LofiFocusPlayer />
     </div>
   );
 }

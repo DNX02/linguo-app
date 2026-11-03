@@ -364,6 +364,20 @@ export default function Grammar() {
         </div>
 
         <div className="grammar-exercise-card">
+          <div className="grammar-exercise-header-row">
+            <span className="grammar-exercise-tag">Задание {currentEx + 1}</span>
+            <button
+              className="grammar-listen-sentence-btn"
+              onClick={() => {
+                const answerWord = exercise.options[exercise.correct] || '';
+                const spoken = exercise.sentence.replace('___', answerWord);
+                speakSentence(spoken, activeTopic.language);
+              }}
+              title="Прослушать произношение"
+            >
+              🔊 Озвучить
+            </button>
+          </div>
           <p className="grammar-sentence">
             {exercise.sentence.split('___').map((part, i, arr) => (
               <span key={i}>

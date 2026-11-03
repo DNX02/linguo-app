@@ -322,3 +322,5 @@ export const gamification = {
     }
   },
 };
+
+export default gamification;

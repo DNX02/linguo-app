@@ -112,3 +112,14 @@ class SoundEffects {
 }
 
 export const sounds = new SoundEffects();
+
+export function playSound(type) {
+  if (!sounds) return;
+  try {
+    if (type === 'correct') sounds.playCorrect();
+    else if (type === 'wrong') sounds.playWrong();
+    else if (type === 'tap') sounds.playTap();
+    else sounds.playComplete();
+  } catch (_) {}
+}
+

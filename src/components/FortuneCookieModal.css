@@ -1,0 +1,273 @@
+/* Fortune Cookie Modal Styles */
+
+.fortune-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: fortuneFade 0.25s ease-out;
+}
+
+@keyframes fortuneFade {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.fortune-modal {
+  background: #111827;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 480px;
+  padding: 24px;
+  position: relative;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+  color: #fff;
+  text-align: center;
+}
+
+.fortune-close-btn {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: #9ca3af;
+  font-size: 1.1rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.fortune-close-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+.fortune-badge {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #fbbf24;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+
+.fortune-header h3 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.fortune-header p {
+  margin: 6px 0 16px;
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+/* Stage & Cookie Crack */
+.fortune-stage {
+  min-height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 12px 0;
+}
+
+.fortune-cookie-wrapper {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  user-select: none;
+}
+
+.fortune-cookie-wrapper:hover {
+  transform: scale(1.08);
+}
+
+.fortune-cookie-wrapper.cracking {
+  animation: cookieShake 0.6s ease-in-out;
+}
+
+@keyframes cookieShake {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  20% { transform: scale(1.1) rotate(-8deg); }
+  40% { transform: scale(1.15) rotate(8deg); }
+  60% { transform: scale(1.2) rotate(-6deg); }
+  80% { transform: scale(1.25) rotate(4deg); }
+}
+
+.cookie-half {
+  font-size: 5.5rem;
+  filter: drop-shadow(0 12px 24px rgba(245, 158, 11, 0.35));
+  animation: floatCookie 3s ease-in-out infinite;
+}
+
+@keyframes floatCookie {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.cookie-prompt {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #fbbf24;
+  padding: 8px 18px;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 0.88rem;
+}
+
+/* Revealed Paper Note */
+.fortune-revealed-paper {
+  background: #fef3c7;
+  color: #451a03;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+  position: relative;
+  text-align: center;
+  animation: paperSlideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  width: 100%;
+}
+
+@keyframes paperSlideUp {
+  from { opacity: 0; transform: translateY(24px) scale(0.9); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.paper-ribbon {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #b45309;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+
+.paper-quote {
+  font-size: 1.15rem;
+  font-weight: 700;
+  font-family: Georgia, serif;
+  line-height: 1.4;
+  color: #1e1b4b;
+  margin-bottom: 8px;
+}
+
+.paper-audio-btn {
+  background: rgba(67, 56, 202, 0.1);
+  border: 1px solid rgba(67, 56, 202, 0.2);
+  color: #3730a3;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 12px;
+  transition: all 0.2s;
+}
+
+.paper-audio-btn:hover {
+  background: #4f46e5;
+  color: #fff;
+}
+
+.paper-translation {
+  font-size: 0.95rem;
+  color: #374151;
+  font-style: italic;
+  margin-bottom: 4px;
+}
+
+.paper-author {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-bottom: 14px;
+}
+
+.paper-lesson {
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 0.8rem;
+  color: #1f2937;
+  text-align: left;
+  line-height: 1.35;
+  margin-bottom: 14px;
+}
+
+.paper-lesson strong {
+  display: block;
+  margin-bottom: 3px;
+  color: #111827;
+}
+
+.paper-lesson p {
+  margin: 0;
+}
+
+.fortune-rewards-banner {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+}
+
+.reward-item {
+  background: #111827;
+  color: #fbbf24;
+  font-weight: 800;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 0.88rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Footer */
+.fortune-footer {
+  margin-top: 14px;
+}
+
+.fortune-hint-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.claimed-tag {
+  font-size: 0.8rem;
+  color: #10b981;
+  font-weight: 600;
+}
+
+.fortune-reset-link {
+  background: none;
+  border: none;
+  color: #818cf8;
+  font-size: 0.8rem;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 4px;
+}
+
+.fortune-reset-link:hover {
+  color: #a5b4fc;
+}
