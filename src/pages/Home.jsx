@@ -1120,7 +1120,7 @@ export default function Home() {
           setIsSmartDeckOpen(false);
           refreshStats();
         }}
-        onCardsAdded={loadAllCards}
+        onCardsAdded={refreshStats}
       />
 
       <FortuneCookieModal
