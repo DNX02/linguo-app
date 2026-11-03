@@ -109,6 +109,31 @@ class SoundEffects {
       });
     } catch (_) {}
   }
+
+  playLevelUp() {
+    if (!this.enabled) return;
+    try {
+      this.initContext();
+      if (!this.ctx) return;
+      const notes = [440, 554.37, 659.25, 880]; // A4, C#5, E5, A5 fanfare
+      notes.forEach((freq, idx) => {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+
+        const now = this.ctx.currentTime + idx * 0.09;
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, now);
+
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+
+        osc.start(now);
+        osc.stop(now + 0.35);
+      });
+    } catch (_) {}
+  }
 }
 
 export const sounds = new SoundEffects();

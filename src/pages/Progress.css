@@ -3,6 +3,7 @@
 .progress-page {
   max-width: 480px;
   margin: 0 auto;
+  padding-bottom: calc(var(--nav-height) + var(--safe-area-bottom) + 40px);
   animation: fadeIn 0.25s ease-out;
 }
 
