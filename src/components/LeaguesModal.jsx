@@ -24,22 +24,30 @@ const BOT_PLAYERS = [
 ];
 
 export default function LeaguesModal({ isOpen, onClose }) {
-  const [userProfile, setUserProfile] = useState(gamification.getProfile());
+  const [userProfile, setUserProfile] = useState(() => {
+    try {
+      return gamification?.getProfile ? gamification.getProfile() : { xp: gamification?.getXP ? gamification.getXP() : 0 };
+    } catch (_) {
+      return { xp: 0 };
+    }
+  });
   const [currentLeagueIdx, setCurrentLeagueIdx] = useState(1); // Silver
 
   useEffect(() => {
     if (isOpen) {
-      const p = gamification.getProfile();
-      setUserProfile(p);
-      // Determine league based on user XP
-      let lIdx = 0;
-      for (let i = LEAGUES.length - 1; i >= 0; i--) {
-        if (p.xp >= LEAGUES[i].minXP) {
-          lIdx = i;
-          break;
+      try {
+        const p = gamification?.getProfile ? gamification.getProfile() : { xp: gamification?.getXP ? gamification.getXP() : 0 };
+        setUserProfile(p);
+        // Determine league based on user XP
+        let lIdx = 0;
+        for (let i = LEAGUES.length - 1; i >= 0; i--) {
+          if ((p.xp || 0) >= LEAGUES[i].minXP) {
+            lIdx = i;
+            break;
+          }
         }
-      }
-      setCurrentLeagueIdx(lIdx);
+        setCurrentLeagueIdx(lIdx);
+      } catch (_) {}
     }
   }, [isOpen]);
 

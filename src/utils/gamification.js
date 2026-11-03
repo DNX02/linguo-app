@@ -58,6 +58,16 @@ export const gamification = {
     };
   },
 
+  getProfile() {
+    return {
+      xp: this.getXP(),
+      rank: this.getRank(),
+      gems: this.getGems(),
+      streak: this.getStreak(),
+      mascotSkin: this.getMascotSkin(),
+    };
+  },
+
   // Mistakes Tracking (Слова с ошибками)
   getMistakes() {
     try {
