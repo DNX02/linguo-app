@@ -48,6 +48,10 @@ import ShortsVideoModal from '../components/ShortsVideoModal';
 import LofiFocusPlayer from '../components/LofiFocusPlayer';
 import SmartDeckGeneratorModal from '../components/SmartDeckGeneratorModal';
 import FortuneCookieModal from '../components/FortuneCookieModal';
+import PodcastsModal from '../components/PodcastsModal';
+import GrammarSurgeryModal from '../components/GrammarSurgeryModal';
+import PhrasebookModal from '../components/PhrasebookModal';
+import LightningBlitzModal from '../components/LightningBlitzModal';
 import { MASCOT_SKINS } from '../utils/gamification';
 import { speakText } from '../utils/speech';
 import { sounds } from '../utils/sounds';
@@ -203,6 +207,10 @@ export default function Home() {
   const [isShortsOpen, setIsShortsOpen] = useState(false);
   const [isSmartDeckOpen, setIsSmartDeckOpen] = useState(false);
   const [isFortuneCookieOpen, setIsFortuneCookieOpen] = useState(false);
+  const [isPodcastsOpen, setIsPodcastsOpen] = useState(false);
+  const [isSurgeryOpen, setIsSurgeryOpen] = useState(false);
+  const [isPhrasebookOpen, setIsPhrasebookOpen] = useState(false);
+  const [isBlitzOpen, setIsBlitzOpen] = useState(false);
   const [mascotSkin, setMascotSkin] = useState(() => gamification.getMascotSkin());
 
   const isMountedRef = useRef(true);
@@ -723,6 +731,66 @@ export default function Home() {
             <small>Разломи и забери ежедневные кристаллы</small>
           </div>
         </button>
+
+        <button
+          className="bento-tile podcasts"
+          onClick={() => setIsPodcastsOpen(true)}
+        >
+          <div className="bento-glow podcasts-glow" />
+          <div className="bento-icon-col">
+            <span className="bento-big-icon">🎙️</span>
+            <span className="bento-badge indigo">PODCASTS</span>
+          </div>
+          <div className="bento-text-col">
+            <strong>Аудио-Подкасты</strong>
+            <small>Караоке-субтитры, истории и атмосфера</small>
+          </div>
+        </button>
+
+        <button
+          className="bento-tile surgery"
+          onClick={() => setIsSurgeryOpen(true)}
+        >
+          <div className="bento-glow surgery-glow" />
+          <div className="bento-icon-col">
+            <span className="bento-big-icon">🔬</span>
+            <span className="bento-badge emerald">AI SURGERY</span>
+          </div>
+          <div className="bento-text-col">
+            <strong>Рентген Грамматики</strong>
+            <small>Анатомия фраз, разбор ошибок и Native Polish</small>
+          </div>
+        </button>
+
+        <button
+          className="bento-tile phrasebook"
+          onClick={() => setIsPhrasebookOpen(true)}
+        >
+          <div className="bento-glow phrasebook-glow" />
+          <div className="bento-icon-col">
+            <span className="bento-big-icon">🌍</span>
+            <span className="bento-badge sky">PHRASEBOOK</span>
+          </div>
+          <div className="bento-text-col">
+            <strong>Разговорник 500+</strong>
+            <small>Офлайн фразы, скорая помощь, таможня, отель</small>
+          </div>
+        </button>
+
+        <button
+          className="bento-tile blitz"
+          onClick={() => setIsBlitzOpen(true)}
+        >
+          <div className="bento-glow blitz-glow" />
+          <div className="bento-icon-col">
+            <span className="bento-big-icon">⚡</span>
+            <span className="bento-badge amber">60S BLITZ</span>
+          </div>
+          <div className="bento-text-col">
+            <strong>Молниеносный Блиц</strong>
+            <small>60 секунд на выживание, комбо и рекорды</small>
+          </div>
+        </button>
       </section>
 
       {/* ===== THE WINDING DUOLINGO PATH (ДОРОЖКА УРОВНЕЙ) ===== */}
@@ -1127,6 +1195,38 @@ export default function Home() {
         isOpen={isFortuneCookieOpen}
         onClose={() => {
           setIsFortuneCookieOpen(false);
+          refreshStats();
+        }}
+      />
+
+      <PodcastsModal
+        isOpen={isPodcastsOpen}
+        onClose={() => {
+          setIsPodcastsOpen(false);
+          refreshStats();
+        }}
+      />
+
+      <GrammarSurgeryModal
+        isOpen={isSurgeryOpen}
+        onClose={() => {
+          setIsSurgeryOpen(false);
+          refreshStats();
+        }}
+      />
+
+      <PhrasebookModal
+        isOpen={isPhrasebookOpen}
+        onClose={() => {
+          setIsPhrasebookOpen(false);
+          refreshStats();
+        }}
+      />
+
+      <LightningBlitzModal
+        isOpen={isBlitzOpen}
+        onClose={() => {
+          setIsBlitzOpen(false);
           refreshStats();
         }}
       />

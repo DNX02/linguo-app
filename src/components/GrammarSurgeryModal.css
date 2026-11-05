@@ -1,0 +1,362 @@
+/* Grammar Surgery Modal Styles */
+
+.surgery-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 7, 16, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  z-index: 2500 !important;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 16px 16px calc(48px + var(--safe-area-bottom, 20px));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  animation: fadeIn 0.25s ease-out;
+}
+
+.surgery-modal {
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 26px;
+  width: 100%;
+  max-width: 580px;
+  margin: auto;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.7), 0 0 40px rgba(16, 185, 129, 0.15);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.surgery-header {
+  padding: 18px 22px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.surgery-badge {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #34d399;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  display: block;
+  margin-bottom: 3px;
+}
+
+.surgery-header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #fff, #a7f3d0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.surgery-close {
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: #94a3b8;
+  font-size: 1.1rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.surgery-close:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+/* Presets Strip */
+.surgery-presets-strip {
+  padding: 12px 20px;
+  background: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.presets-label {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.presets-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.presets-row::-webkit-scrollbar {
+  display: none;
+}
+
+.preset-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.preset-pill:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.preset-pill.active {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: #10b981;
+  color: #6ee7b7;
+}
+
+/* Input Sandbox */
+.surgery-input-box {
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.input-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.input-tag {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.surgery-lang-switch {
+  display: flex;
+  gap: 4px;
+}
+
+.lang-opt {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.lang-opt.active {
+  background: #10b981;
+  color: #fff;
+  border-color: #34d399;
+}
+
+.input-row {
+  display: flex;
+  gap: 10px;
+}
+
+.surgery-input-field {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 10px 14px;
+  color: #fff;
+  font-size: 0.92rem;
+  outline: none;
+}
+
+.surgery-input-field:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
+.surgery-analyze-btn {
+  background: linear-gradient(135deg, #10b981, #059669);
+  border: none;
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.88rem;
+  padding: 0 16px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: transform 0.15s, opacity 0.2s;
+  white-space: nowrap;
+}
+
+.surgery-analyze-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.surgery-analyze-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Results Section */
+.surgery-results-scroll {
+  padding: 16px 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 420px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.surgery-card-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.block-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+.tokens-stream {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.token-pill {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px 12px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.token-pill.token-error {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+.token-pill.token-error .token-word {
+  color: #fca5a5;
+  text-decoration: underline wavy #ef4444;
+}
+
+.token-pill.token-error .token-pos {
+  color: #f87171;
+  font-weight: 700;
+}
+
+.token-word {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.token-pos {
+  font-size: 0.72rem;
+  color: #38bdf8;
+}
+
+/* Diagnostics List */
+.diagnostics-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.diag-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 10px 14px;
+  border-radius: 12px;
+}
+
+.diag-icon {
+  font-size: 1rem;
+}
+
+.diag-item p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #cbd5e1;
+  line-height: 1.4;
+}
+
+/* Native Polish Card */
+.surgery-native-card {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(5, 150, 105, 0.12));
+  border: 1.5px solid rgba(16, 185, 129, 0.35);
+  border-radius: 18px;
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.native-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.native-badge {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #34d399;
+  text-transform: uppercase;
+}
+
+.native-audio-btn {
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #6ee7b7;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.native-audio-btn:hover {
+  background: #10b981;
+  color: #fff;
+}
+
+.native-phrase {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #f0fdf4;
+}
+
+.native-tip-text {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #a7f3d0;
+  line-height: 1.35;
+}
