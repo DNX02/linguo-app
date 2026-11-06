@@ -59,22 +59,6 @@ const TUTORS = {
     avatarEmoji: '👨‍🏫',
     accent: 'Немецкий (Берлин)',
   },
-  fr: {
-    id: 'amelie',
-    name: 'Amélie',
-    flag: '🇫🇷',
-    voice: 'Aoede',
-    avatarEmoji: '👩‍🎨',
-    accent: 'Французский (Париж)',
-  },
-  es: {
-    id: 'carlos',
-    name: 'Carlos',
-    flag: '🇪🇸',
-    voice: 'Fenrir',
-    avatarEmoji: '👨‍🎨',
-    accent: 'Испанский (Мадрид)',
-  },
 };
 
 const decodeBuiltinKey = () => {
@@ -91,7 +75,7 @@ const BUILTIN_KEY = decodeBuiltinKey();
 
 export default function VoiceTutorModal({ isOpen, onClose, currentLanguage = 'en' }) {
   const [selectedLang, setSelectedLang] = useState(
-    ['en', 'de', 'fr', 'es'].includes(currentLanguage) ? currentLanguage : 'en'
+    ['en', 'de'].includes(currentLanguage) ? currentLanguage : 'en'
   );
   const [activeScenario, setActiveScenario] = useState('free');
   const [speechPace, setSpeechPace] = useState('normal'); // 'slow' | 'normal'
@@ -121,7 +105,7 @@ export default function VoiceTutorModal({ isOpen, onClose, currentLanguage = 'en
   const tutor = TUTORS[selectedLang] || TUTORS.en;
 
   useEffect(() => {
-    if (['en', 'de', 'fr', 'es'].includes(currentLanguage)) {
+    if (['en', 'de'].includes(currentLanguage)) {
       setSelectedLang(currentLanguage);
     }
   }, [currentLanguage]);
@@ -241,32 +225,6 @@ Regeln:
 4. Sei motivierend und freundlich.`;
     }
 
-    if (selectedLang === 'fr') {
-      return `Tu es Amélie, une tutrice de français chaleureuse, élégante et patiente pour des élèves russophones.
-${scenarioDirective}
-${paceDirective}
-${memorySnippet}
-${correctionRule}
-Règles:
-1. Garde tes réponses courtes (1 à 2 phrases) pour laisser l'élève parler.
-2. Si l'élève fait une faute, utilise le tag [FIX: ...] pour la corriger gentiment.
-3. Tu peux donner de brèves explications en russe si nécessaire, mais parle principalement français.
-4. Sois encourageante et dynamique.`;
-    }
-
-    if (selectedLang === 'es') {
-      return `Eres Carlos, un tutor de español entusiasta, amable y paciente de Madrid para estudiantes rusoparlantes.
-${scenarioDirective}
-${paceDirective}
-${memorySnippet}
-${correctionRule}
-Reglas:
-1. Mantén tus respuestas breves (1-2 oraciones) para que el estudiante hable.
-2. Si el estudiante comete un error, incluye la etiqueta [FIX: ...] para corregirlo amablemente.
-3. Puedes explicar en ruso brevemente si hace falta, pero habla principalmente español.
-4. Sé muy motivador y alegre.`;
-    }
-
     return `You are Emma, an enthusiastic, patient, and warm American English tutor speaking with a Russian native student.
 ${scenarioDirective}
 ${paceDirective}
@@ -384,18 +342,6 @@ Rules:
         { word: 'die Gemütlichkeit', translation: 'уют, душевная атмосфера', level: 'A2' },
         { word: 'die Sehenswürdigkeit', translation: 'достопримечательность', level: 'A2' },
         { word: 'bestellen', translation: 'заказывать', level: 'A1' }
-      ];
-    } else if (selectedLang === 'fr') {
-      extractedWords = [
-        { word: 'le croissant', translation: 'круассан', level: 'A1' },
-        { word: 'délicieux', translation: 'восхитительный / вкусный', level: 'A2' },
-        { word: 'l\'opportunité', translation: 'возможность / шанс', level: 'B1' }
-      ];
-    } else if (selectedLang === 'es') {
-      extractedWords = [
-        { word: 'delicioso', translation: 'очень вкусный', level: 'A2' },
-        { word: 'el viaje', translation: 'путешествие / поездка', level: 'A2' },
-        { word: 'la oportunidad', translation: 'возможность / шанс', level: 'B1' }
       ];
     } else {
       extractedWords = [
@@ -570,18 +516,6 @@ Rules:
                     onClick={() => setSelectedLang('de')}
                   >
                     🇩🇪 Lukas
-                  </button>
-                  <button
-                    className={`tutor-tab-btn ${selectedLang === 'fr' ? 'active' : ''}`}
-                    onClick={() => setSelectedLang('fr')}
-                  >
-                    🇫🇷 Amélie
-                  </button>
-                  <button
-                    className={`tutor-tab-btn ${selectedLang === 'es' ? 'active' : ''}`}
-                    onClick={() => setSelectedLang('es')}
-                  >
-                    🇪🇸 Carlos
                   </button>
                 </div>
 

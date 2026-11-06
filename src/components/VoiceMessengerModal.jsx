@@ -8,8 +8,6 @@ import './VoiceMessengerModal.css';
 const TUTOR_PROFILES = {
   en: { name: 'Emma', flag: '🇺🇸', role: 'Репетитор английского', avatar: '👩‍🏫', lang: 'en' },
   de: { name: 'Lukas', flag: '🇩🇪', role: 'Репетитор немецкого', avatar: '👨‍🏫', lang: 'de' },
-  fr: { name: 'Amélie', flag: '🇫🇷', role: 'Репетитор французского', avatar: '👩‍🎨', lang: 'fr' },
-  es: { name: 'Carlos', flag: '🇪🇸', role: 'Репетитор испанского', avatar: '👨‍🎨', lang: 'es' },
 };
 
 const SAMPLE_REPLIES = {
@@ -21,20 +19,12 @@ const SAMPLE_REPLIES = {
   de: [
     { text: "Hallo! Freut mich sehr, von dir zu hören! Wie geht es dir heute?", ru: "Привет! Очень рад тебя слышать! Как твои дела сегодня?" },
     { text: "Sehr gut gesprochen! Deutsch zu lernen braucht etwas Geduld, aber du machst tolle Fortschritte.", ru: "Очень хорошо сказано! Изучение немецкого требует терпения, но ты делаешь отличные успехи." }
-  ],
-  fr: [
-    { text: "Bonjour! Quel plaisir d'écouter votre message vocal! Comment allez-vous?", ru: "Здравствуйте! Какое удовольствие слушать ваше голосовое сообщение! Как ваши дела?" },
-    { text: "Magnifique accent! Continuez à pratiquer comme ça chaque jour.", ru: "Великолепный акцент! Продолжайте практиковаться так каждый день." }
-  ],
-  es: [
-    { text: "¡Hola! ¡Qué alegría escuchar tu mensaje! ¿Qué planes tienes para hoy?", ru: "Привет! Какая радость услышать твоё сообщение! Какие планы на сегодня?" },
-    { text: "¡Muy bien dicho! El español es un idioma hermoso y estás mejorando rápido.", ru: "Очень хорошо сказано! Испанский — прекрасный язык, и ты быстро прогрессируешь." }
   ]
 };
 
 export default function VoiceMessengerModal({ isOpen, onClose, currentLanguage = 'en' }) {
   const [selectedLang, setSelectedLang] = useState(
-    ['en', 'de', 'fr', 'es'].includes(currentLanguage) ? currentLanguage : 'en'
+    ['en', 'de'].includes(currentLanguage) ? currentLanguage : 'en'
   );
   const [messages, setMessages] = useState([
     {
@@ -182,7 +172,7 @@ export default function VoiceMessengerModal({ isOpen, onClose, currentLanguage =
           </div>
 
           <div className="vm-lang-switcher">
-            {['en', 'de', 'fr', 'es'].map((code) => (
+            {['en', 'de'].map((code) => (
               <button
                 key={code}
                 className={`vm-lang-btn ${selectedLang === code ? 'active' : ''}`}

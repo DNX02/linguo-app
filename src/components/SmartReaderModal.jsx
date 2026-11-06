@@ -25,18 +25,18 @@ const SAMPLE_TEXTS = [
     }
   },
   {
-    title: '🥐 Un matin à Paris (Français)',
-    lang: 'fr',
-    content: 'Le matin à Paris commence toujours avec l\'odeur délicieuse du café frais et des croissants chauds dans les petites boulangeries. Les gens se promènent le long de la Seine en admirant l\'architecture historique.',
+    title: '🏙️ Berlin: Kreative Metropole (Deutsch)',
+    lang: 'de',
+    content: 'Berlin gilt weltweit als pulsierendes Zentrum für zeitgenössische Kunst, innovative Start-ups und faszinierende Architektur. Entlang der Spree verbinden sich historische Bauwerke harmonisch mit modernsten nachhaltigen Glasfassaden.',
     vocab: {
-      matin: { tr: 'утро', lvl: 'A1' },
-      toujours: { tr: 'всегда', lvl: 'A1' },
-      délicieuse: { tr: 'восхитительный / вкусный', lvl: 'A2' },
-      chauds: { tr: 'горячий', lvl: 'A1' },
-      boulangeries: { tr: 'булочные', lvl: 'A2' },
-      promènent: { tr: 'гуляют', lvl: 'A2' },
-      admirant: { tr: 'любуясь', lvl: 'B1' },
-      historique: { tr: 'исторический', lvl: 'A2' },
+      pulsierendes: { tr: 'пульсирующий / бурлящий', lvl: 'B2' },
+      zeitgenössische: { tr: 'современный', lvl: 'B2' },
+      innovative: { tr: 'инновационный', lvl: 'B1' },
+      faszinierende: { tr: 'захватывающий / очаровательный', lvl: 'B2' },
+      verbinden: { tr: 'соединяться / сочетаться', lvl: 'A2' },
+      historische: { tr: 'исторический', lvl: 'A2' },
+      nachhaltigen: { tr: 'устойчивый / экологичный', lvl: 'B2' },
+      Glasfassaden: { tr: 'стеклянные фасады', lvl: 'B1' },
     }
   },
   {

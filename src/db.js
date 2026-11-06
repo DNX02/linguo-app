@@ -42,24 +42,45 @@ export async function getDB() {
 
 /**
  * Ensures the database contains the core vocabulary dataset.
+ * Removes obsolete languages (anything other than 'en' and 'de')
+ * and seeds newly added words.
  */
 async function seedDefaultCards(db) {
   try {
-    const count = await db.count('cards');
-    if (count === 0 && initialWords && initialWords.length > 0) {
-      const tx = db.transaction('cards', 'readwrite');
+    const allExisting = await db.getAll('cards');
+    const existingMap = new Map();
+    const obsoleteIds = [];
+
+    for (const card of allExisting) {
+      if (card.language !== 'en' && card.language !== 'de') {
+        obsoleteIds.push(card.id);
+      } else {
+        existingMap.set(card.id, card);
+      }
+    }
+
+    const tx = db.transaction('cards', 'readwrite');
+    // Delete any non-English/non-German cards
+    for (const obsId of obsoleteIds) {
+      tx.store.delete(obsId);
+    }
+
+    // Seed missing cards from initialWords
+    if (initialWords && initialWords.length > 0) {
       const now = new Date().toISOString();
       for (const w of initialWords) {
-        tx.store.put({
-          ...w,
-          interval: 1,
-          repetitions: 0,
-          easeFactor: 2.5,
-          nextReview: now,
-        });
+        if (!existingMap.has(w.id)) {
+          tx.store.put({
+            ...w,
+            interval: 1,
+            repetitions: 0,
+            easeFactor: 2.5,
+            nextReview: now,
+          });
+        }
       }
-      await tx.done;
     }
+    await tx.done;
   } catch (e) {
     console.warn('Auto-seed cards notice:', e);
   }

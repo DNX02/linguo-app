@@ -19,21 +19,11 @@ const PRONUNCIATION_WORDS = {
     { text: 'Gemütlichkeit', syllables: ['Ge', 'müt', 'lich', 'keit'], ipa: '/ɡəˈmyːtlɪçkaɪt/', translation: 'Уют / душевность', tip: 'Мягкий суффикс «lich» с шипящим придыханием' },
     { text: 'Brötchen', syllables: ['Bröt', 'chen'], ipa: '/ˈbʁøːtçən/', translation: 'Булочка', tip: 'Звук «ö» как в слове «мёд», «chen» — мягкий «хьен»' },
   ],
-  fr: [
-    { text: 'Bonjour', syllables: ['Bon', 'jour'], ipa: '/bɔ̃.ʒuʁ/', translation: 'Здравствуйте', tip: 'Носовой гласный «on» и мягкий горловой «r»' },
-    { text: 'Délicieux', syllables: ['Dé', 'li', 'cieux'], ipa: '/de.li.sjø/', translation: 'Восхитительный / вкусный', tip: 'Звук «eux» произносится с округлёнными губами' },
-    { text: 'Opportunité', syllables: ['Op', 'por', 'tu', 'ni', 'té'], ipa: '/ɔ.pɔʁ.ty.ni.te/', translation: 'Возможность', tip: 'Чёткий чистый звук «é» на конце' },
-  ],
-  es: [
-    { text: 'Gracias', syllables: ['Gra', 'cias'], ipa: '/ˈɡɾa.sjas/', translation: 'Спасибо', tip: 'Один быстрый удар кончика языка на звуке «r»' },
-    { text: 'Delicioso', syllables: ['De', 'li', 'cio', 'so'], ipa: '/de.liˈsjo.so/', translation: 'Очень вкусный', tip: 'Ударение на третий слог: de-li-CIO-so' },
-    { text: 'Oportunidad', syllables: ['O', 'por', 'tu', 'ni', 'dad'], ipa: '/o.poɾ.tu.niˈdad/', translation: 'Возможность', tip: 'Конечная «d» звучит очень мягко и приглушённо' },
-  ],
 };
 
 export default function PronunciationModal({ isOpen, onClose, currentLanguage = 'en' }) {
   const [selectedLang, setSelectedLang] = useState(
-    ['en', 'de', 'fr', 'es'].includes(currentLanguage) ? currentLanguage : 'en'
+    ['en', 'de'].includes(currentLanguage) ? currentLanguage : 'en'
   );
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isListening, setIsListening] = useState(false);
@@ -229,8 +219,6 @@ export default function PronunciationModal({ isOpen, onClose, currentLanguage = 
           {[
             { id: 'en', flag: '🇺🇸', name: 'English' },
             { id: 'de', flag: '🇩🇪', name: 'Deutsch' },
-            { id: 'fr', flag: '🇫🇷', name: 'Français' },
-            { id: 'es', flag: '🇪🇸', name: 'Español' },
           ].map((l) => (
             <button
               key={l.id}

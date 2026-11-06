@@ -350,15 +350,16 @@ export default function Home() {
     <div className="duo-home-container">
       {/* ===== DUOLINGO TOP STATS HUD ===== */}
       <header className="duo-top-hud">
-        {/* Language Flag Switcher */}
+        {/* Language Flag Switcher (EN & DE) */}
         <div className="duo-flag-pill">
-          {['en', 'de', 'fr', 'es'].map((code) => {
-            const flag = code === 'en' ? '🇺🇸' : code === 'de' ? '🇩🇪' : code === 'fr' ? '🇫🇷' : '🇪🇸';
+          {['en', 'de'].map((code) => {
+            const flag = code === 'en' ? '🇺🇸' : '🇩🇪';
             return (
               <button
                 key={code}
                 className={`duo-flag-btn ${language === code ? 'active' : ''}`}
                 onClick={() => handleLanguageChange(code)}
+                title={code === 'en' ? 'English (US)' : 'Deutsch'}
               >
                 {flag}
               </button>
