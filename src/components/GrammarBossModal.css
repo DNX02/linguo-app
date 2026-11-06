@@ -104,7 +104,7 @@
 .boss-pill-btn.active {
   background: #dc2626;
   color: #fff;
-  border-color: #ef4444;
+  border-color: var(--danger, #f43f5e);
   box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
 }
 
@@ -158,7 +158,7 @@
 
 .boss-hp-fill {
   height: 100%;
-  background: linear-gradient(90deg, #ef4444, #f97316);
+  background: linear-gradient(90deg, var(--danger, #f43f5e), #f97316);
   border-radius: 6px;
   transition: width 0.3s ease;
 }
@@ -189,7 +189,7 @@
 }
 
 .player-rpg-hud strong {
-  color: #34d399;
+  color: var(--success-light, #4ade80);
 }
 
 .player-hp-bar {
@@ -202,7 +202,7 @@
 
 .player-hp-fill {
   height: 100%;
-  background: #10b981;
+  background: var(--success, #22c55e);
   border-radius: 6px;
   transition: width 0.3s;
 }
@@ -249,7 +249,7 @@
 .spell-cast-btn:active {
   transform: scale(0.98);
   background: rgba(239, 68, 68, 0.3);
-  border-color: #ef4444;
+  border-color: var(--danger, #f43f5e);
 }
 
 /* Result Screens */
@@ -273,7 +273,7 @@
 }
 
 .boss-defeat-box h2 {
-  color: #f87171;
+  color: var(--danger-light, #fb7185);
   margin: 0;
 }
 
@@ -303,7 +303,7 @@
 .boss-rematch-btn {
   width: 100%;
   margin-top: 10px;
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: linear-gradient(135deg, var(--success, #22c55e), #059669);
   border: none;
   border-radius: 14px;
   color: #fff;
@@ -314,5 +314,5 @@
 }
 
 .boss-rematch-btn.retry {
-  background: linear-gradient(135deg, #dc2626, #ef4444);
+  background: linear-gradient(135deg, #dc2626, var(--danger, #f43f5e));
 }

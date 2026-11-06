@@ -211,9 +211,9 @@
 
 .cert-start-btn {
   width: 100%;
-  background: #58cc02;
+  background: var(--accent, #7c83ff);
   border: none;
-  border-bottom: 4px solid #46a302;
+  border-bottom: 4px solid var(--accent-vibrant, #6366f1);
   color: #fff;
   font-weight: 800;
   font-size: 1.05rem;
@@ -239,7 +239,7 @@
 
 .cert-exam-progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #58cc02, #f59e0b);
+  background: linear-gradient(90deg, var(--accent, #7c83ff), #f59e0b);
   border-radius: 99px;
   transition: width 0.3s ease;
 }
@@ -252,8 +252,8 @@
 }
 
 .cert-domain-chip {
-  background: rgba(99, 102, 241, 0.15);
-  border: 1px solid rgba(99, 102, 241, 0.3);
+  background: rgba(124, 131, 255, 0.15);
+  border: 1px solid rgba(124, 131, 255, 0.3);
   color: #c7d2fe;
   font-size: 0.76rem;
   font-weight: 800;
@@ -323,10 +323,10 @@
 }
 
 .cert-option-btn.selected {
-  background: rgba(99, 102, 241, 0.2);
-  border-color: #6366f1;
+  background: rgba(124, 131, 255, 0.2);
+  border-color: var(--accent, #7c83ff);
   color: #fff;
-  box-shadow: 0 0 16px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 0 16px rgba(124, 131, 255, 0.3);
 }
 
 .opt-letter {
@@ -343,7 +343,7 @@
 }
 
 .cert-option-btn.selected .opt-letter {
-  background: #6366f1;
+  background: var(--accent, #7c83ff);
   color: #fff;
 }
 
@@ -354,9 +354,9 @@
 
 .cert-submit-answer-btn {
   width: 100%;
-  background: #58cc02;
+  background: var(--accent, #7c83ff);
   border: none;
-  border-bottom: 4px solid #46a302;
+  border-bottom: 4px solid var(--accent-vibrant, #6366f1);
   color: #fff;
   font-weight: 800;
   font-size: 1rem;
@@ -477,7 +477,7 @@
 .cert-grade-big {
   font-size: 1.7rem;
   font-weight: 900;
-  color: #58cc02;
+  color: var(--accent, #7c83ff);
   text-shadow: 0 0 10px rgba(88, 204, 2, 0.4);
 }
 
@@ -565,9 +565,9 @@
 
 .cert-share-btn {
   flex: 1.5;
-  background: #58cc02;
+  background: var(--accent, #7c83ff);
   border: none;
-  border-bottom: 4px solid #46a302;
+  border-bottom: 4px solid var(--accent-vibrant, #6366f1);
   color: #fff;
   font-weight: 800;
   font-size: 0.95rem;

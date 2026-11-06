@@ -2,8 +2,8 @@
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.86);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: var(--glass-blur, blur(40px) saturate(180%));
+  -webkit-backdrop-filter: var(--glass-blur, blur(40px) saturate(180%));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -209,7 +209,7 @@
 }
 
 .item-buy-btn {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: linear-gradient(135deg, var(--accent, #7c83ff), #8b5cf6);
   border: none;
   color: #fff;
   font-weight: 700;
@@ -234,7 +234,7 @@
   left: 50%;
   transform: translateX(-50%);
   background: #1e1b4b;
-  border: 1px solid #818cf8;
+  border: 1px solid var(--accent-light, #a4adff);
   color: #fff;
   font-weight: 700;
   font-size: 0.88rem;

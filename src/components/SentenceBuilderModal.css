@@ -66,7 +66,7 @@
 
 .builder-progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #6366f1, #a855f7);
+  background: linear-gradient(90deg, var(--accent, #7c83ff), #a855f7);
   transition: width 0.3s ease;
 }
 
@@ -90,7 +90,7 @@
   display: block;
   font-size: 0.78rem;
   text-transform: uppercase;
-  color: #a5b4fc;
+  color: var(--accent-light, #a4adff);
   font-weight: 600;
   margin-bottom: 0.5rem;
 }
@@ -123,7 +123,7 @@
 }
 
 .builder-slot-area.slot-wrong {
-  border-color: #ef4444;
+  border-color: var(--danger, #f43f5e);
   background: rgba(239, 68, 68, 0.08);
 }
 
@@ -160,13 +160,13 @@
 }
 
 .chip-available:hover {
-  background: rgba(99, 102, 241, 0.2);
-  border-color: #6366f1;
+  background: rgba(124, 131, 255, 0.2);
+  border-color: var(--accent, #7c83ff);
   transform: translateY(-2px);
 }
 
 .chip-selected {
-  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  background: linear-gradient(135deg, var(--accent-vibrant, #6366f1), var(--accent, #7c83ff));
   color: #fff;
   box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
 }
@@ -210,7 +210,7 @@
   width: 100%;
   padding: 0.9rem;
   border-radius: 14px;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: linear-gradient(135deg, var(--accent, #7c83ff), #8b5cf6);
   border: none;
   color: #fff;
   font-weight: 700;

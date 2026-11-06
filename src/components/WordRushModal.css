@@ -140,7 +140,7 @@
 .rush-timer-pill {
   background: rgba(239, 68, 68, 0.15);
   border: 1px solid rgba(239, 68, 68, 0.3);
-  color: #f87171;
+  color: var(--danger-light, #fb7185);
   font-weight: 800;
   font-size: 0.85rem;
   padding: 6px 12px;
@@ -157,7 +157,7 @@
 .rush-score-pill {
   background: rgba(16, 185, 129, 0.15);
   border: 1px solid rgba(16, 185, 129, 0.3);
-  color: #34d399;
+  color: var(--success-light, #4ade80);
   font-weight: 800;
   font-size: 0.85rem;
   padding: 6px 12px;

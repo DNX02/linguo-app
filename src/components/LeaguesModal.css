@@ -130,8 +130,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(16, 185, 129, 0.15));
-  border: 1.5px solid rgba(99, 102, 241, 0.4);
+  background: linear-gradient(135deg, rgba(124, 131, 255, 0.2), rgba(16, 185, 129, 0.15));
+  border: 1.5px solid rgba(124, 131, 255, 0.4);
   border-radius: 18px;
   padding: 14px 18px;
 }
@@ -160,7 +160,7 @@
 }
 
 .standing-left p {
-  color: #a5b4fc;
+  color: var(--accent-light, #a4adff);
   font-size: 0.76rem;
   margin: 2px 0 0;
 }
@@ -172,7 +172,7 @@
 }
 
 .standing-xp strong {
-  color: #34d399;
+  color: var(--success-light, #4ade80);
   font-size: 1.25rem;
   font-weight: 900;
 }
@@ -198,13 +198,13 @@
 }
 
 .leagues-zone-header.promotion {
-  color: #34d399;
+  color: var(--success-light, #4ade80);
   background: rgba(16, 185, 129, 0.1);
   border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
 .leagues-zone-header.demotion {
-  color: #f87171;
+  color: var(--danger-light, #fb7185);
   background: rgba(239, 68, 68, 0.1);
   border: 1px solid rgba(239, 68, 68, 0.2);
   margin-top: 6px;
@@ -228,17 +228,17 @@
 }
 
 .league-row.in-promo-zone {
-  border-left: 3px solid #10b981;
+  border-left: 3px solid var(--success, #22c55e);
 }
 
 .league-row.in-demo-zone {
-  border-left: 3px solid #ef4444;
+  border-left: 3px solid var(--danger, #f43f5e);
 }
 
 .league-row.is-current-user {
-  background: rgba(99, 102, 241, 0.2);
-  border: 1.5px solid #6366f1;
-  box-shadow: 0 0 16px rgba(99, 102, 241, 0.25);
+  background: rgba(124, 131, 255, 0.2);
+  border: 1.5px solid var(--accent, #7c83ff);
+  box-shadow: 0 0 16px rgba(124, 131, 255, 0.25);
 }
 
 .rank-col {
@@ -281,7 +281,7 @@
   font-size: 0.65rem;
   font-weight: 900;
   color: #fff;
-  background: #6366f1;
+  background: var(--accent, #7c83ff);
   padding: 2px 6px;
   border-radius: 6px;
 }

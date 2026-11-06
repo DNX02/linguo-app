@@ -156,7 +156,7 @@
 }
 
 .diff-легкий {
-  color: #34d399 !important;
+  color: var(--success-light, #4ade80) !important;
   background: rgba(16, 185, 129, 0.15);
 }
 
@@ -166,7 +166,7 @@
 }
 
 .diff-эксперт {
-  color: #f87171 !important;
+  color: var(--danger-light, #fb7185) !important;
   background: rgba(239, 68, 68, 0.15);
 }
 
@@ -263,11 +263,11 @@
 }
 
 .hp-bar-fill.player {
-  background: linear-gradient(90deg, #10b981, #34d399);
+  background: linear-gradient(90deg, var(--success, #22c55e), var(--success-light, #4ade80));
 }
 
 .hp-bar-fill.opp {
-  background: linear-gradient(90deg, #ef4444, #f87171);
+  background: linear-gradient(90deg, var(--danger, #f43f5e), var(--danger-light, #fb7185));
 }
 
 .hp-text {
@@ -301,12 +301,12 @@
 }
 
 .log-msg.player {
-  color: #34d399;
+  color: var(--success-light, #4ade80);
   background: rgba(16, 185, 129, 0.15);
 }
 
 .log-msg.bot {
-  color: #f87171;
+  color: var(--danger-light, #fb7185);
   background: rgba(239, 68, 68, 0.15);
 }
 
@@ -367,14 +367,14 @@
 
 .duel-opt-btn.opt-correct {
   background: rgba(16, 185, 129, 0.3);
-  border-color: #10b981;
-  color: #34d399;
+  border-color: var(--success, #22c55e);
+  color: var(--success-light, #4ade80);
 }
 
 .duel-opt-btn.opt-wrong {
   background: rgba(239, 68, 68, 0.3);
-  border-color: #ef4444;
-  color: #f87171;
+  border-color: var(--danger, #f43f5e);
+  color: var(--danger-light, #fb7185);
 }
 
 .duel-opt-btn.opt-dim {
@@ -429,7 +429,7 @@
 .duel-rematch-btn {
   margin-top: 10px;
   width: 100%;
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: linear-gradient(135deg, var(--success, #22c55e), #059669);
   border: none;
   border-radius: 16px;
   color: #fff;

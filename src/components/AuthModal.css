@@ -68,7 +68,7 @@
 .auth-error {
   background: rgba(239, 68, 68, 0.15);
   border: 1px solid rgba(239, 68, 68, 0.3);
-  color: #f87171;
+  color: var(--danger-light, #fb7185);
   padding: 10px 14px;
   border-radius: 10px;
   font-size: 13px;
@@ -112,7 +112,7 @@
 }
 
 .auth-submit-btn {
-  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+  background: linear-gradient(135deg, #8b5cf6, var(--accent, #7c83ff));
   color: white;
   border: none;
   border-radius: 12px;

@@ -115,7 +115,7 @@
 .news-category-pill {
   font-size: 0.72rem;
   font-weight: 800;
-  color: #34d399;
+  color: var(--success-light, #4ade80);
   background: rgba(16, 185, 129, 0.12);
   padding: 3px 8px;
   border-radius: 8px;
@@ -168,7 +168,7 @@
 .news-back-to-list-btn {
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #a5b4fc;
+  color: var(--accent-light, #a4adff);
   font-size: 0.82rem;
   font-weight: 700;
   padding: 6px 14px;
@@ -186,8 +186,8 @@
 .news-level-badge {
   font-size: 0.72rem;
   font-weight: 800;
-  color: #6366f1;
-  background: rgba(99, 102, 241, 0.15);
+  color: var(--accent, #7c83ff);
+  background: rgba(124, 131, 255, 0.15);
   padding: 2px 8px;
   border-radius: 6px;
 }
@@ -252,7 +252,7 @@
 }
 
 .para-listen-btn:active {
-  background: #10b981;
+  background: var(--success, #22c55e);
 }
 
 .para-ru-text {
@@ -322,6 +322,6 @@
 
 .vocab-save-btn.saved {
   background: rgba(16, 185, 129, 0.2);
-  border-color: #10b981;
-  color: #34d399;
+  border-color: var(--success, #22c55e);
+  color: var(--success-light, #4ade80);
 }

@@ -116,7 +116,7 @@
 }
 
 .dict-search-input:focus {
-  border-color: #6366f1;
+  border-color: var(--accent, #7c83ff);
 }
 
 .dict-clear-btn {
@@ -157,7 +157,7 @@
 }
 
 .dict-toggle.active {
-  background: #6366f1;
+  background: var(--accent, #7c83ff);
   color: #fff;
 }
 
@@ -193,9 +193,9 @@
 }
 
 .dict-cat-pill.active {
-  background: rgba(99, 102, 241, 0.2);
-  border-color: #6366f1;
-  color: #818cf8;
+  background: rgba(124, 131, 255, 0.2);
+  border-color: var(--accent, #7c83ff);
+  color: var(--accent-light, #a4adff);
 }
 
 .dict-list {
@@ -220,7 +220,7 @@
 }
 
 .dict-card:hover {
-  border-color: rgba(99, 102, 241, 0.3);
+  border-color: rgba(124, 131, 255, 0.3);
 }
 
 .dict-card-top {
@@ -236,9 +236,9 @@
 }
 
 .dict-audio-btn {
-  background: rgba(99, 102, 241, 0.15);
+  background: rgba(124, 131, 255, 0.15);
   border: none;
-  color: #a5b4fc;
+  color: var(--accent-light, #a4adff);
   font-size: 0.9rem;
   width: 30px;
   height: 30px;
@@ -252,7 +252,7 @@
 
 .dict-audio-btn:active, .dict-audio-btn.playing {
   transform: scale(1.2);
-  background: #6366f1;
+  background: var(--accent, #7c83ff);
 }
 
 .dict-card-badge {
@@ -302,7 +302,7 @@
 }
 
 .dict-status-pill {
-  color: #10b981;
+  color: var(--success, #22c55e);
   font-weight: 500;
 }
 
@@ -320,7 +320,7 @@
 
 .dict-reset-btn {
   margin-top: 12px;
-  background: #6366f1;
+  background: var(--accent, #7c83ff);
   border: none;
   color: #fff;
   padding: 8px 16px;
@@ -366,7 +366,7 @@
 
 .dict-slow-btn.active {
   background: rgba(16, 185, 129, 0.2);
-  border-color: #10b981;
+  border-color: var(--success, #22c55e);
 }
 
 .dict-audio-slow-btn {

@@ -1,54 +1,99 @@
-/* ===== Professional Design System (Linguo 2.0) ===== */
+/* ============================================================
+   Linguo Premium Design System — 2025 Glass Edition
+   Apple HIG + Stripe-inspired glassmorphism, refined palette,
+   fluid micro-interactions, premium typography.
+   ============================================================ */
 
 :root {
-  --bg-primary: #090d16;
-  --bg-secondary: #0f172a;
-  --bg-card: rgba(20, 27, 45, 0.72);
-  --bg-card-hover: rgba(28, 38, 64, 0.85);
-  --card-border: rgba(255, 255, 255, 0.09);
-  --card-border-glow: rgba(99, 102, 241, 0.4);
+  /* ── Surfaces ── */
+  --bg-primary: #050816;
+  --bg-secondary: #0a0f1e;
+  --bg-card: rgba(15, 20, 40, 0.55);
+  --bg-card-hover: rgba(22, 30, 58, 0.72);
+  --bg-elevated: rgba(20, 28, 52, 0.6);
+  --card-border: rgba(255, 255, 255, 0.07);
+  --card-border-hover: rgba(255, 255, 255, 0.14);
+  --card-border-glow: rgba(124, 131, 255, 0.35);
 
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
+  /* ── Typography ── */
+  --text-primary: #f0f2f8;
+  --text-secondary: #8892b0;
+  --text-muted: #5a6380;
+  --text-accent: #a4adff;
 
-  --accent: #6366f1;
-  --accent-light: #818cf8;
-  --accent-glow: rgba(99, 102, 241, 0.35);
+  /* ── Accent Palette ── */
+  --accent: #7c83ff;
+  --accent-vibrant: #6366f1;
+  --accent-light: #a4adff;
+  --accent-glow: rgba(124, 131, 255, 0.25);
+  --accent-surface: rgba(124, 131, 255, 0.08);
 
-  --success: #10b981;
-  --success-light: #34d399;
-  --danger: #ef4444;
+  /* ── Semantic ── */
+  --success: #22c55e;
+  --success-light: #4ade80;
+  --success-glow: rgba(34, 197, 94, 0.2);
+  --danger: #f43f5e;
+  --danger-light: #fb7185;
   --warning: #f59e0b;
+  --warning-light: #fbbf24;
 
-  --radius-xl: 24px;
-  --radius-lg: 18px;
-  --radius-md: 14px;
-  --radius-sm: 10px;
+  /* ── Radii ── */
+  --radius-2xl: 28px;
+  --radius-xl: 22px;
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+  --radius-xs: 6px;
 
-  --nav-height: 64px;
+  /* ── Spacing ── */
+  --nav-height: 60px;
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
   --safe-area-top: env(safe-area-inset-top, 0px);
+
+  /* ── Glass ── */
+  --glass-blur: blur(40px) saturate(180%);
+  --glass-bg: rgba(10, 15, 30, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.08);
+
+  /* ── Shadows ── */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 40px rgba(124, 131, 255, 0.12);
+
+  /* ── Transitions ── */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 0.15s;
+  --duration-normal: 0.25s;
+  --duration-slow: 0.4s;
 }
 
 /* ===== Alternative Themes ===== */
 body[data-theme="oled"] {
   --bg-primary: #000000;
-  --bg-secondary: #080808;
-  --bg-card: rgba(14, 14, 14, 0.85);
-  --bg-card-hover: rgba(24, 24, 24, 0.95);
-  --card-border: rgba(255, 255, 255, 0.12);
+  --bg-secondary: #050505;
+  --bg-card: rgba(10, 10, 14, 0.8);
+  --bg-card-hover: rgba(18, 18, 24, 0.9);
+  --bg-elevated: rgba(14, 14, 20, 0.7);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --glass-bg: rgba(4, 4, 8, 0.85);
 }
 
 body[data-theme="light"] {
-  --bg-primary: #f8fafc;
-  --bg-secondary: #f1f5f9;
-  --bg-card: rgba(255, 255, 255, 0.85);
-  --bg-card-hover: rgba(255, 255, 255, 1);
-  --card-border: rgba(0, 0, 0, 0.08);
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #94a3b8;
+  --bg-primary: #f7f8fc;
+  --bg-secondary: #eef0f6;
+  --bg-card: rgba(255, 255, 255, 0.7);
+  --bg-card-hover: rgba(255, 255, 255, 0.9);
+  --bg-elevated: rgba(255, 255, 255, 0.6);
+  --card-border: rgba(0, 0, 0, 0.06);
+  --card-border-hover: rgba(0, 0, 0, 0.1);
+  --text-primary: #0c0e1a;
+  --text-secondary: #4a5068;
+  --text-muted: #8892b0;
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(0, 0, 0, 0.06);
 }
 
 /* ===== Global Reset ===== */
@@ -66,17 +111,19 @@ html {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   background: var(--bg-primary);
-  background-image: 
-    radial-gradient(circle at 15% 10%, rgba(99, 102, 241, 0.12) 0%, transparent 45%),
-    radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.08) 0%, transparent 45%);
+  background-image:
+    radial-gradient(ellipse 60% 50% at 10% 5%, rgba(124, 131, 255, 0.1) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 90% 90%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 30% at 50% 50%, rgba(34, 197, 94, 0.04) 0%, transparent 50%);
   background-attachment: fixed;
   color: var(--text-primary);
   min-height: 100dvh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
 }
 
 a {
@@ -113,24 +160,27 @@ input, select, textarea {
   position: relative;
 }
 
-/* ===== Sleek iOS Top Bar ===== */
+/* ============================================================
+   TOP BAR — Frosted Glass with Ambient Glow
+   ============================================================ */
 .app-top-bar {
   position: sticky;
   top: 0;
   left: 0;
   right: 0;
-  height: calc(56px + var(--safe-area-top));
+  height: calc(52px + var(--safe-area-top));
   padding-top: var(--safe-area-top);
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: 18px;
+  padding-right: 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(9, 13, 22, 0.82);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-bottom: 1px solid var(--glass-border);
   z-index: 900;
+  transition: background var(--duration-normal) var(--ease-smooth);
 }
 
 .app-brand {
@@ -141,84 +191,93 @@ input, select, textarea {
 }
 
 .app-brand-logo {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #6366f1, #4338ca);
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, #7c83ff 0%, #5b5bd6 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+  box-shadow: 0 2px 12px rgba(124, 131, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transition: transform var(--duration-fast) var(--ease-spring);
+}
+
+.app-brand:active .app-brand-logo {
+  transform: scale(0.92);
 }
 
 .app-logo-emoji {
-  font-size: 1.15rem;
+  font-size: 1.05rem;
 }
 
 .app-brand-text {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
 }
 
 .app-name {
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-weight: 800;
-  letter-spacing: -0.02em;
-  background: linear-gradient(135deg, #ffffff 60%, #cbd5e1 100%);
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #ffffff 40%, #a4adff 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .app-badge {
-  font-size: 0.62rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  padding: 2px 6px;
-  border-radius: 6px;
-  background: linear-gradient(135deg, #f59e0b, #d97706);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 2px 7px;
+  border-radius: var(--radius-xs);
+  background: linear-gradient(135deg, #f59e0b, #e17a00);
   color: #fff;
-  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+  box-shadow: 0 1px 6px rgba(245, 158, 11, 0.25);
 }
 
 .app-settings-btn {
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--accent-surface);
+  border: 1px solid var(--card-border);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
-  transition: all 0.2s ease;
+  font-size: 0.95rem;
+  transition: all var(--duration-fast) var(--ease-spring);
 }
 
 .app-settings-btn:active, .app-settings-btn.active {
-  background: rgba(99, 102, 241, 0.25);
-  border-color: #6366f1;
-  transform: rotate(45deg);
+  background: rgba(124, 131, 255, 0.2);
+  border-color: var(--accent);
+  transform: rotate(60deg) scale(0.9);
 }
 
-/* ===== Main Content Area ===== */
+/* ============================================================
+   MAIN CONTENT AREA
+   ============================================================ */
 .main-content {
   flex: 1;
-  padding: 16px 16px calc(var(--nav-height) + var(--safe-area-bottom) + 32px);
+  padding: 12px 16px calc(var(--nav-height) + var(--safe-area-bottom) + 28px);
   max-width: 520px;
   width: 100%;
   margin: 0 auto;
-  animation: fadeIn 0.25s ease-out;
+  animation: pageEnter var(--duration-normal) var(--ease-out);
 }
 
-/* ===== Floating Island Bottom Navigation ===== */
+/* ============================================================
+   BOTTOM NAVIGATION — Floating Glass Capsule
+   ============================================================ */
 .bottom-nav {
   position: fixed;
-  bottom: calc(12px + var(--safe-area-bottom));
+  bottom: calc(10px + var(--safe-area-bottom));
   left: 0;
   right: 0;
   display: flex;
   justify-content: center;
-  z-index: 800; /* Lower than modal backdrops (2500) so modals are never obscured */
+  z-index: 800;
   pointer-events: none;
 }
 
@@ -226,14 +285,17 @@ input, select, textarea {
   pointer-events: auto;
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 6px 10px;
-  background: rgba(16, 23, 40, 0.88);
-  backdrop-filter: blur(28px) saturate(200%);
-  -webkit-backdrop-filter: blur(28px) saturate(200%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 36px;
-  box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  gap: 2px;
+  padding: 5px 8px;
+  background: rgba(8, 12, 28, 0.82);
+  backdrop-filter: blur(32px) saturate(200%);
+  -webkit-backdrop-filter: blur(32px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 40px;
+  box-shadow:
+    0 12px 40px -8px rgba(0, 0, 0, 0.6),
+    0 0 0 0.5px rgba(255, 255, 255, 0.05),
+    0 0 60px -20px rgba(124, 131, 255, 0.08);
 }
 
 .nav-item {
@@ -241,51 +303,101 @@ input, select, textarea {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 3px;
-  padding: 6px 14px;
-  border-radius: 24px;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  gap: 2px;
+  padding: 7px 14px;
+  border-radius: 28px;
+  transition: all var(--duration-normal) var(--ease-out);
   position: relative;
 }
 
 .nav-icon {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   line-height: 1;
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform var(--duration-fast) var(--ease-spring);
 }
 
 .nav-label {
-  font-size: 0.68rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-  transition: color 0.2s ease;
+  font-size: 0.64rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: color var(--duration-fast) var(--ease-smooth);
+  letter-spacing: 0.01em;
 }
 
 .nav-item--active {
-  background: rgba(99, 102, 241, 0.2);
+  background: var(--accent-surface);
 }
 
 .nav-item--active .nav-icon {
-  transform: scale(1.15);
+  transform: scale(1.12) translateY(-1px);
 }
 
 .nav-item--active .nav-label {
-  color: #a5b4fc;
+  color: var(--accent-light);
   font-weight: 700;
 }
 
-/* Animations */
+/* Active dot indicator under icon */
+.nav-item--active::after {
+  content: '';
+  position: absolute;
+  bottom: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 6px var(--accent-glow);
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
 
-/* ===== GLOBAL MODAL STACKING & MOBILE SCROLL GUARANTEES ===== */
-/* 1. All modal backdrops and overlays must strictly sit ABOVE the bottom navigation bar */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* ============================================================
+   GLOBAL MODAL STACKING & MOBILE SCROLL GUARANTEES
+   ============================================================ */
+
+/* 1. All modal backdrops/overlays above bottom nav */
 [class*="-backdrop"],
 [class*="-overlay"],
 .modal-overlay,
@@ -322,7 +434,11 @@ input, select, textarea {
 .match-game-overlay,
 .share-achievement-overlay,
 .voice-tutor-overlay,
-.voice-messenger-overlay {
+.voice-messenger-overlay,
+.podcasts-overlay,
+.surgery-overlay,
+.phrasebook-overlay,
+.blitz-overlay {
   z-index: 2500 !important;
   align-items: flex-start !important;
   overflow-y: auto !important;
@@ -330,7 +446,7 @@ input, select, textarea {
   padding-bottom: calc(48px + var(--safe-area-bottom)) !important;
 }
 
-/* 2. All modal content cards must have smooth iOS touch scrolling and bottom breathing room */
+/* 2. Modal content cards: iOS touch scroll + bottom breathing room */
 [class*="-modal-card"],
 [class*="-modal-box"],
 [class*="-modal"]:not([class*="-overlay"]):not([class*="-backdrop"]),
@@ -377,7 +493,7 @@ input, select, textarea {
   overscroll-behavior-y: contain !important;
 }
 
-/* 3. Ensure last answer option across all quizzes, bosses and challenges is fully scrollable and never obscured */
+/* 3. Quiz options: last option always reachable */
 .spells-grid,
 .story-quiz-options,
 .cert-options-stack,
@@ -400,4 +516,3 @@ input, select, textarea {
   padding-bottom: 32px !important;
   margin-bottom: 20px !important;
 }
-

@@ -2,8 +2,8 @@
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: var(--glass-blur, blur(40px) saturate(180%));
+  -webkit-backdrop-filter: var(--glass-blur, blur(40px) saturate(180%));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12,7 +12,9 @@
 }
 
 .tutor-modal {
-  background: #0f121d;
+  background: var(--glass-bg, rgba(10, 15, 30, 0.72));
+  backdrop-filter: var(--glass-blur, blur(40px) saturate(180%));
+  -webkit-backdrop-filter: var(--glass-blur, blur(40px) saturate(180%));
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 28px;
   width: 100%;
@@ -22,7 +24,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.8), 0 0 40px rgba(99, 102, 241, 0.15);
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.8), 0 0 40px rgba(124, 131, 255, 0.15);
 }
 
 .tutor-header {
@@ -115,7 +117,7 @@
 }
 
 .step-row a {
-  color: #818cf8;
+  color: var(--accent-light, #a4adff);
   font-weight: 600;
   text-decoration: underline;
 }
@@ -124,7 +126,7 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: #6366f1;
+  background: var(--accent, #7c83ff);
   color: #fff;
   font-weight: 800;
   font-size: 0.75rem;
@@ -151,11 +153,11 @@
 }
 
 .tutor-key-form input:focus {
-  border-color: #6366f1;
+  border-color: var(--accent, #7c83ff);
 }
 
 .tutor-key-btn {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: linear-gradient(135deg, var(--accent, #7c83ff), #8b5cf6);
   border: none;
   color: #fff;
   font-weight: 700;
@@ -203,8 +205,8 @@
 }
 
 .tutor-tab-btn.active {
-  background: rgba(99, 102, 241, 0.25);
-  border-color: #6366f1;
+  background: rgba(124, 131, 255, 0.25);
+  border-color: var(--accent, #7c83ff);
   color: #fff;
 }
 
@@ -274,8 +276,8 @@
   width: 96px;
   height: 96px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #818cf8, #4f46e5 65%, #1e1b4b);
-  box-shadow: 0 0 32px rgba(99, 102, 241, 0.4);
+  background: radial-gradient(circle at 35% 30%, var(--accent-light, #a4adff), var(--accent-vibrant, #6366f1) 65%, #1e1b4b);
+  box-shadow: 0 0 32px rgba(124, 131, 255, 0.4);
   position: relative;
   display: flex;
   align-items: center;
@@ -285,7 +287,7 @@
 }
 
 .tutor-face-orb.in-call {
-  box-shadow: 0 0 50px rgba(99, 102, 241, 0.7), 0 0 80px rgba(168, 85, 247, 0.4);
+  box-shadow: 0 0 50px rgba(124, 131, 255, 0.7), 0 0 80px rgba(168, 85, 247, 0.4);
 }
 
 .avatar-face {
@@ -405,7 +407,7 @@
 }
 
 .tutor-error-reset-btn {
-  background: #ef4444;
+  background: var(--danger, #f43f5e);
   color: #fff;
   border: none;
   font-weight: 700;
@@ -451,8 +453,8 @@
 
 .transcript-bubble.user {
   align-self: flex-end;
-  background: rgba(99, 102, 241, 0.3);
-  border: 1px solid rgba(99, 102, 241, 0.4);
+  background: rgba(124, 131, 255, 0.3);
+  border: 1px solid rgba(124, 131, 255, 0.4);
   color: #e0e7ff;
 }
 
@@ -466,7 +468,7 @@
 .bubble-author {
   font-size: 0.72rem;
   font-weight: 700;
-  color: #a5b4fc;
+  color: var(--accent-light, #a4adff);
 }
 
 /* Live Hints Drawer (💡 Что сказать) */
@@ -531,7 +533,7 @@
 }
 
 .tutor-start-call-btn {
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: linear-gradient(135deg, var(--success, #22c55e), #059669);
   border: none;
   color: #fff;
   font-weight: 800;
@@ -620,7 +622,7 @@
 
 .tutor-mute-btn.muted {
   background: rgba(239, 68, 68, 0.25);
-  border-color: #ef4444;
+  border-color: var(--danger, #f43f5e);
 }
 
 .tutor-hangup-btn {
@@ -752,8 +754,8 @@
 }
 
 .report-add-btn {
-  background: rgba(99, 102, 241, 0.2);
-  border: 1px solid rgba(99, 102, 241, 0.4);
+  background: rgba(124, 131, 255, 0.2);
+  border: 1px solid rgba(124, 131, 255, 0.4);
   color: #c7d2fe;
   font-size: 0.74rem;
   font-weight: 700;
@@ -769,7 +771,7 @@
 }
 
 .report-continue-btn {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: linear-gradient(135deg, var(--accent, #7c83ff), #8b5cf6);
   border: none;
   color: #fff;
   font-weight: 800;
@@ -842,7 +844,7 @@
 }
 
 .lmb-wrong s {
-  color: #ef4444;
+  color: var(--danger, #f43f5e);
   font-weight: 600;
 }
 
@@ -871,8 +873,8 @@
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: var(--glass-blur, blur(40px) saturate(180%));
+  -webkit-backdrop-filter: var(--glass-blur, blur(40px) saturate(180%));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -881,7 +883,9 @@
 }
 
 .tutor-modal-content {
-  background: #0f121d;
+  background: var(--glass-bg, rgba(10, 15, 30, 0.72));
+  backdrop-filter: var(--glass-blur, blur(40px) saturate(180%));
+  -webkit-backdrop-filter: var(--glass-blur, blur(40px) saturate(180%));
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 28px;
   width: 100%;
@@ -891,7 +895,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.8), 0 0 40px rgba(99, 102, 241, 0.15);
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.8), 0 0 40px rgba(124, 131, 255, 0.15);
 }
 
 .tutor-modal-header {
@@ -956,8 +960,8 @@
 }
 
 .tutor-instant-reply-btn {
-  background: rgba(99, 102, 241, 0.2);
-  border: 1px solid rgba(99, 102, 241, 0.4);
+  background: rgba(124, 131, 255, 0.2);
+  border: 1px solid rgba(124, 131, 255, 0.4);
   color: #c7d2fe;
   font-size: 0.78rem;
   font-weight: 700;
@@ -968,7 +972,7 @@
 }
 
 .tutor-instant-reply-btn:hover {
-  background: rgba(99, 102, 241, 0.35);
+  background: rgba(124, 131, 255, 0.35);
   transform: translateY(-1px);
 }
 
@@ -997,11 +1001,11 @@
 }
 
 .tutor-quick-input-field:focus {
-  border-color: #6366f1;
+  border-color: var(--accent, #7c83ff);
 }
 
 .tutor-quick-send-btn {
-  background: #6366f1;
+  background: var(--accent, #7c83ff);
   border: none;
   color: #fff;
   width: 36px;
@@ -1035,7 +1039,7 @@
 
 .hint-card.interactive:hover {
   background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(99, 102, 241, 0.5);
+  border-color: rgba(124, 131, 255, 0.5);
 }
 
 .hint-card.interactive:active {
@@ -1049,8 +1053,8 @@
 .hint-send-badge {
   font-size: 0.7rem;
   font-weight: 700;
-  color: #818cf8;
-  background: rgba(99, 102, 241, 0.15);
+  color: var(--accent-light, #a4adff);
+  background: rgba(124, 131, 255, 0.15);
   padding: 3px 8px;
   border-radius: 8px;
   white-space: nowrap;

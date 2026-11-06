@@ -25,12 +25,12 @@
 
 .lofi-float-pill:hover {
   transform: translateY(-2px);
-  border-color: rgba(99, 102, 241, 0.6);
-  box-shadow: 0 10px 28px rgba(99, 102, 241, 0.3);
+  border-color: rgba(124, 131, 255, 0.6);
+  box-shadow: 0 10px 28px rgba(124, 131, 255, 0.3);
 }
 
 .lofi-float-pill.playing {
-  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  background: linear-gradient(135deg, var(--accent-vibrant, #6366f1), #7c3aed);
   border-color: rgba(255, 255, 255, 0.3);
   box-shadow: 0 0 20px rgba(124, 58, 237, 0.5);
   animation: lofiPulse 3s infinite ease-in-out;
@@ -181,12 +181,12 @@
 
 .lofi-card:hover {
   background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(99, 102, 241, 0.3);
+  border-color: rgba(124, 131, 255, 0.3);
 }
 
 .lofi-card.active {
   background: linear-gradient(135deg, rgba(79, 70, 229, 0.25), rgba(124, 58, 237, 0.25));
-  border-color: #6366f1;
+  border-color: var(--accent, #7c83ff);
 }
 
 .lofi-card-icon {
@@ -230,7 +230,7 @@
 
 .lofi-slider {
   flex: 1;
-  accent-color: #6366f1;
+  accent-color: var(--accent, #7c83ff);
   height: 6px;
   border-radius: 4px;
   cursor: pointer;

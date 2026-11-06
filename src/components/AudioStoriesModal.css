@@ -300,14 +300,14 @@
 
 .story-quiz-opt.opt-correct {
   background: rgba(16, 185, 129, 0.25);
-  border-color: #10b981;
-  color: #34d399;
+  border-color: var(--success, #22c55e);
+  color: var(--success-light, #4ade80);
 }
 
 .story-quiz-opt.opt-wrong {
   background: rgba(239, 68, 68, 0.25);
-  border-color: #ef4444;
-  color: #f87171;
+  border-color: var(--danger, #f43f5e);
+  color: var(--danger-light, #fb7185);
 }
 
 .story-quiz-opt.opt-dim {
@@ -324,11 +324,11 @@
 }
 
 .story-quiz-feedback.success {
-  color: #34d399;
+  color: var(--success-light, #4ade80);
   background: rgba(16, 185, 129, 0.15);
 }
 
 .story-quiz-feedback.fail {
-  color: #f87171;
+  color: var(--danger-light, #fb7185);
   background: rgba(239, 68, 68, 0.15);
 }

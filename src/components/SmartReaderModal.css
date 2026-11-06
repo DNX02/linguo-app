@@ -2,8 +2,8 @@
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.86);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: var(--glass-blur, blur(40px) saturate(180%));
+  -webkit-backdrop-filter: var(--glass-blur, blur(40px) saturate(180%));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -84,7 +84,7 @@
 
 .sample-pill.active {
   background: rgba(16, 185, 129, 0.2);
-  border-color: #10b981;
+  border-color: var(--success, #22c55e);
   color: #6ee7b7;
 }
 
@@ -147,7 +147,7 @@
 
 .reader-token.A1, .reader-token.A2 {
   color: #6ee7b7;
-  border-bottom-color: #10b981;
+  border-bottom-color: var(--success, #22c55e);
 }
 
 .reader-token.B1 {
@@ -179,7 +179,7 @@
 }
 
 .inspector-lvl-badge {
-  background: rgba(99, 102, 241, 0.2);
+  background: rgba(124, 131, 255, 0.2);
   color: #c7d2fe;
   font-size: 0.7rem;
   font-weight: 800;
@@ -215,7 +215,7 @@
 }
 
 .inspector-add-btn {
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: linear-gradient(135deg, var(--success, #22c55e), #059669);
   border: none;
   color: #fff;
   font-weight: 800;
@@ -238,7 +238,7 @@
   left: 50%;
   transform: translateX(-50%);
   background: #064e3b;
-  border: 1px solid #10b981;
+  border: 1px solid var(--success, #22c55e);
   color: #fff;
   font-weight: 700;
   font-size: 0.88rem;

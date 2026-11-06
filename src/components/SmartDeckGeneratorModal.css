@@ -41,7 +41,7 @@
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
-  color: #818cf8;
+  color: var(--accent-light, #a4adff);
   letter-spacing: 0.05em;
   margin-bottom: 4px;
 }
@@ -101,9 +101,9 @@
 }
 
 .lang-pill.active {
-  background: #4f46e5;
+  background: var(--accent-vibrant, #6366f1);
   color: #fff;
-  border-color: #6366f1;
+  border-color: var(--accent, #7c83ff);
 }
 
 /* Themes Carousel */
@@ -140,9 +140,9 @@
 }
 
 .theme-chip.active {
-  background: rgba(99, 102, 241, 0.2);
-  border-color: #6366f1;
-  color: #a5b4fc;
+  background: rgba(124, 131, 255, 0.2);
+  border-color: var(--accent, #7c83ff);
+  color: var(--accent-light, #a4adff);
 }
 
 /* Custom Prompt Box */
@@ -164,11 +164,11 @@
 }
 
 .smart-deck-custom-box input:focus {
-  border-color: #6366f1;
+  border-color: var(--accent, #7c83ff);
 }
 
 .smart-deck-gen-btn {
-  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  background: linear-gradient(135deg, var(--accent-vibrant, #6366f1), #7c3aed);
   border: none;
   color: #fff;
   padding: 0 16px;
@@ -266,9 +266,9 @@
 }
 
 .smart-deck-add-btn {
-  background: rgba(99, 102, 241, 0.15);
-  border: 1px solid rgba(99, 102, 241, 0.35);
-  color: #a5b4fc;
+  background: rgba(124, 131, 255, 0.15);
+  border: 1px solid rgba(124, 131, 255, 0.35);
+  color: var(--accent-light, #a4adff);
   padding: 6px 12px;
   border-radius: 10px;
   font-size: 0.8rem;
@@ -279,7 +279,7 @@
 }
 
 .smart-deck-add-btn:hover:not(:disabled) {
-  background: #4f46e5;
+  background: var(--accent-vibrant, #6366f1);
   color: #fff;
 }
 
@@ -298,7 +298,7 @@
 
 .smart-deck-add-all-btn {
   width: 100%;
-  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  background: linear-gradient(135deg, var(--accent-vibrant, #6366f1), #7c3aed);
   border: none;
   color: #fff;
   padding: 12px;

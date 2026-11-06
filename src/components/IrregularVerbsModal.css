@@ -98,8 +98,8 @@
 }
 
 .iv-tab-btn.active, .iv-mode-btn.active {
-  background: #6366f1;
-  border-color: #6366f1;
+  background: var(--accent, #7c83ff);
+  border-color: var(--accent, #7c83ff);
   color: #fff;
 }
 
@@ -144,8 +144,8 @@
 }
 
 .iv-v1 { color: #f8fafc; }
-.iv-v2 { color: #818cf8; }
-.iv-v3 { color: #34d399; }
+.iv-v2 { color: var(--accent-light, #a4adff); }
+.iv-v3 { color: var(--success-light, #4ade80); }
 .iv-arrow { color: #64748b; font-size: 0.75rem; }
 
 .iv-trans {
@@ -155,8 +155,8 @@
 }
 
 .iv-speak-btn {
-  background: rgba(99, 102, 241, 0.15);
-  border: 1px solid rgba(99, 102, 241, 0.3);
+  background: rgba(124, 131, 255, 0.15);
+  border: 1px solid rgba(124, 131, 255, 0.3);
   color: #fff;
   width: 36px;
   height: 36px;
@@ -172,7 +172,7 @@
 
 .iv-speak-btn:active {
   transform: scale(1.15);
-  background: #6366f1;
+  background: var(--accent, #7c83ff);
 }
 
 /* Quiz Screen */
@@ -196,8 +196,8 @@
 }
 
 .iv-quiz-badge {
-  background: rgba(99, 102, 241, 0.2);
-  color: #a5b4fc;
+  background: rgba(124, 131, 255, 0.2);
+  color: var(--accent-light, #a4adff);
   padding: 3px 10px;
   border-radius: 8px;
   font-size: 0.75rem;
@@ -251,15 +251,15 @@
 }
 
 .iv-opt-btn.correct {
-  border-color: #10b981;
+  border-color: var(--success, #22c55e);
   background: rgba(16, 185, 129, 0.25);
-  color: #34d399;
+  color: var(--success-light, #4ade80);
 }
 
 .iv-opt-btn.wrong {
-  border-color: #ef4444;
+  border-color: var(--danger, #f43f5e);
   background: rgba(239, 68, 68, 0.25);
-  color: #f87171;
+  color: var(--danger-light, #fb7185);
 }
 
 .iv-opt-btn.dim {
@@ -273,7 +273,7 @@
 
 .iv-next-btn {
   width: 100%;
-  background: #6366f1;
+  background: var(--accent, #7c83ff);
   color: #fff;
   padding: 12px;
   border-radius: 12px;

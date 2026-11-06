@@ -21,7 +21,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 26px;
   padding: 22px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(99, 102, 241, 0.15);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(124, 131, 255, 0.15);
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -43,10 +43,10 @@
 
 .scanner-badge-icon {
   font-size: 2rem;
-  background: rgba(99, 102, 241, 0.2);
+  background: rgba(124, 131, 255, 0.2);
   border-radius: 14px;
   padding: 6px;
-  border: 1px solid rgba(99, 102, 241, 0.3);
+  border: 1px solid rgba(124, 131, 255, 0.3);
 }
 
 .scanner-title-box h3 {
@@ -103,10 +103,10 @@
 }
 
 .scanner-scene-tab.active {
-  background: #6366f1;
+  background: var(--accent, #7c83ff);
   color: #fff;
-  border-color: #4f46e5;
-  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+  border-color: var(--accent-vibrant, #6366f1);
+  box-shadow: 0 4px 14px rgba(124, 131, 255, 0.4);
 }
 
 /* Stage */
@@ -170,16 +170,16 @@
 }
 
 .scanner-object-pin.active-pin .pin-label {
-  background: #6366f1;
-  border-color: #818cf8;
+  background: var(--accent, #7c83ff);
+  border-color: var(--accent-light, #a4adff);
   color: #fff;
-  box-shadow: 0 0 12px rgba(99, 102, 241, 0.6);
+  box-shadow: 0 0 12px rgba(124, 131, 255, 0.6);
 }
 
 /* Detail Card */
 .scanner-detail-card {
   background: rgba(255, 255, 255, 0.04);
-  border: 1.5px solid rgba(99, 102, 241, 0.3);
+  border: 1.5px solid rgba(124, 131, 255, 0.3);
   border-radius: 18px;
   padding: 16px;
   display: flex;
@@ -202,14 +202,14 @@
 }
 
 .scanner-phonetic {
-  color: #a5b4fc;
+  color: var(--accent-light, #a4adff);
   font-size: 0.8rem;
   font-weight: 600;
 }
 
 .scanner-audio-btn {
-  background: rgba(99, 102, 241, 0.2);
-  border: 1px solid rgba(99, 102, 241, 0.4);
+  background: rgba(124, 131, 255, 0.2);
+  border: 1px solid rgba(124, 131, 255, 0.4);
   color: #fff;
   width: 36px;
   height: 36px;
@@ -224,7 +224,7 @@
 
 .scanner-audio-btn:active {
   transform: scale(0.92);
-  background: #6366f1;
+  background: var(--accent, #7c83ff);
 }
 
 .scanner-trans {
@@ -238,7 +238,7 @@
 }
 
 .scanner-save-vocab-btn {
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: linear-gradient(135deg, var(--success, #22c55e), #059669);
   color: #fff;
   border: none;
   border-radius: 14px;
@@ -251,8 +251,8 @@
 
 .scanner-save-vocab-btn.saved {
   background: rgba(16, 185, 129, 0.2);
-  border: 1px solid #10b981;
-  color: #34d399;
+  border: 1px solid var(--success, #22c55e);
+  color: var(--success-light, #4ade80);
 }
 
 .scanner-placeholder-tip {

@@ -105,7 +105,7 @@
 }
 
 .puzzle-mode-tab.active {
-  background: #10b981;
+  background: var(--success, #22c55e);
   color: #fff;
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
 }
@@ -172,7 +172,7 @@
 }
 
 .wordle-tile.correct {
-  background: #10b981;
+  background: var(--success, #22c55e);
   border-color: #059669;
   color: #fff;
 }
@@ -200,14 +200,14 @@
 
 .wordle-result-banner.won {
   background: rgba(16, 185, 129, 0.2);
-  color: #34d399;
-  border: 1px solid #10b981;
+  color: var(--success-light, #4ade80);
+  border: 1px solid var(--success, #22c55e);
 }
 
 .wordle-result-banner.lost {
   background: rgba(239, 68, 68, 0.2);
-  color: #f87171;
-  border: 1px solid #ef4444;
+  color: var(--danger-light, #fb7185);
+  border: 1px solid var(--danger, #f43f5e);
 }
 
 /* Keyboard */
@@ -239,14 +239,14 @@
 
 .key-btn:active {
   transform: scale(0.92);
-  background: #10b981;
+  background: var(--success, #22c55e);
 }
 
 .key-wide {
   min-width: 48px;
   font-size: 0.75rem;
-  background: rgba(99, 102, 241, 0.25);
-  border-color: rgba(99, 102, 241, 0.4);
+  background: rgba(124, 131, 255, 0.25);
+  border-color: rgba(124, 131, 255, 0.4);
 }
 
 /* Crossword */
@@ -314,8 +314,8 @@
 
 .crossword-success-banner {
   background: rgba(16, 185, 129, 0.2);
-  border: 1px solid #10b981;
-  color: #34d399;
+  border: 1px solid var(--success, #22c55e);
+  color: var(--success-light, #4ade80);
   padding: 10px 18px;
   border-radius: 12px;
   font-weight: 800;

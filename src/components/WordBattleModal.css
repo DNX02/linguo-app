@@ -91,11 +91,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #6366f1;
+  border: 2px solid var(--accent, #7c83ff);
 }
 
 .combatant-avatar.bot {
-  border-color: #ef4444;
+  border-color: var(--danger, #f43f5e);
 }
 
 .combatant-name {
@@ -139,7 +139,7 @@
 }
 
 .battle-start-btn {
-  background: linear-gradient(135deg, #ef4444, #dc2626);
+  background: linear-gradient(135deg, var(--danger, #f43f5e), #dc2626);
   border: none;
   color: #fff;
   font-weight: 800;
@@ -184,7 +184,7 @@
 
 .combatant-hud.hit {
   transform: scale(0.95);
-  border-color: #ef4444;
+  border-color: var(--danger, #f43f5e);
   background: rgba(239, 68, 68, 0.2);
 }
 
@@ -211,11 +211,11 @@
 }
 
 .hp-bar-fill.player {
-  background: linear-gradient(90deg, #22c55e, #10b981);
+  background: linear-gradient(90deg, #22c55e, var(--success, #22c55e));
 }
 
 .hp-bar-fill.bot {
-  background: linear-gradient(90deg, #ef4444, #f97316);
+  background: linear-gradient(90deg, var(--danger, #f43f5e), #f97316);
 }
 
 .battle-timer-ring {
@@ -231,7 +231,7 @@
 
 .battle-combo-badge {
   align-self: center;
-  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  background: linear-gradient(135deg, #f59e0b, var(--danger, #f43f5e));
   color: #fff;
   font-weight: 900;
   font-size: 0.95rem;
@@ -297,7 +297,7 @@
 
 .battle-opt-btn.wrong {
   background: rgba(239, 68, 68, 0.3);
-  border-color: #ef4444;
+  border-color: var(--danger, #f43f5e);
   color: #fca5a5;
 }
 

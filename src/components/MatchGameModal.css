@@ -66,15 +66,15 @@
 }
 
 .match-timer {
-  background: rgba(99, 102, 241, 0.2);
-  color: #818cf8;
+  background: rgba(124, 131, 255, 0.2);
+  color: var(--accent-light, #a4adff);
   padding: 4px 10px;
   border-radius: 10px;
 }
 
 .match-timer.critical {
   background: rgba(239, 68, 68, 0.25);
-  color: #f87171;
+  color: var(--danger-light, #fb7185);
   animation: pulse 0.8s infinite alternate;
 }
 
@@ -128,21 +128,21 @@
 }
 
 .match-card-btn.selected {
-  border-color: #6366f1;
-  background: rgba(99, 102, 241, 0.25);
-  box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
+  border-color: var(--accent, #7c83ff);
+  background: rgba(124, 131, 255, 0.25);
+  box-shadow: 0 0 12px rgba(124, 131, 255, 0.4);
 }
 
 .match-card-btn.matched {
-  border-color: #10b981;
+  border-color: var(--success, #22c55e);
   background: rgba(16, 185, 129, 0.2);
-  color: #34d399;
+  color: var(--success-light, #4ade80);
   opacity: 0.4;
   transform: scale(0.96);
 }
 
 .match-card-btn.wrong {
-  border-color: #ef4444;
+  border-color: var(--danger, #f43f5e);
   background: rgba(239, 68, 68, 0.3);
   animation: shake 0.3s ease;
 }
@@ -179,7 +179,7 @@
 .match-xp-badge {
   background: rgba(16, 185, 129, 0.2);
   border: 1px solid rgba(16, 185, 129, 0.4);
-  color: #34d399;
+  color: var(--success-light, #4ade80);
   font-weight: 700;
   padding: 6px 16px;
   border-radius: 20px;
@@ -194,7 +194,7 @@
 
 .match-btn-play {
   flex: 1;
-  background: #6366f1;
+  background: var(--accent, #7c83ff);
   color: #fff;
   border: none;
   border-radius: 12px;

@@ -172,7 +172,7 @@
 .music-original-badge {
   font-size: 0.68rem;
   font-weight: 800;
-  color: #34d399;
+  color: var(--success-light, #4ade80);
   background: rgba(16, 185, 129, 0.15);
   border: 1px solid rgba(16, 185, 129, 0.3);
   padding: 2px 7px;
@@ -347,14 +347,14 @@
 
 .challenge-opt-btn.opt-correct {
   background: rgba(16, 185, 129, 0.3);
-  border-color: #10b981;
-  color: #34d399;
+  border-color: var(--success, #22c55e);
+  color: var(--success-light, #4ade80);
 }
 
 .challenge-opt-btn.opt-wrong {
   background: rgba(239, 68, 68, 0.3);
-  border-color: #ef4444;
-  color: #f87171;
+  border-color: var(--danger, #f43f5e);
+  color: var(--danger-light, #fb7185);
 }
 
 .challenge-opt-btn.opt-dim {
@@ -371,12 +371,12 @@
 
 .challenge-feedback.success {
   background: rgba(16, 185, 129, 0.15);
-  color: #34d399;
+  color: var(--success-light, #4ade80);
 }
 
 .challenge-feedback.fail {
   background: rgba(239, 68, 68, 0.15);
-  color: #f87171;
+  color: var(--danger-light, #fb7185);
 }
 
 .music-idiom-box {

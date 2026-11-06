@@ -82,8 +82,8 @@
 }
 
 .pronounce-lang-btn.active {
-  background: rgba(99, 102, 241, 0.25);
-  border-color: #6366f1;
+  background: rgba(124, 131, 255, 0.25);
+  border-color: var(--accent, #7c83ff);
   color: #fff;
   font-weight: 700;
 }
@@ -106,7 +106,7 @@
   font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
-  color: #818cf8;
+  color: var(--accent-light, #a4adff);
   letter-spacing: 0.05em;
 }
 
@@ -159,9 +159,9 @@
 }
 
 .syllable-pill.poor {
-  color: #ef4444;
+  color: var(--danger, #f43f5e);
   background: rgba(239, 68, 68, 0.18);
-  border: 1px solid #ef4444;
+  border: 1px solid var(--danger, #f43f5e);
 }
 
 .pronounce-custom-form {
@@ -182,7 +182,7 @@
 }
 
 .pronounce-custom-form button {
-  background: #6366f1;
+  background: var(--accent, #7c83ff);
   border: none;
   color: #fff;
   padding: 0.65rem 1rem;
@@ -223,8 +223,8 @@
 }
 
 .pronounce-listen-btn {
-  background: rgba(99, 102, 241, 0.15);
-  border: 1px solid rgba(99, 102, 241, 0.4);
+  background: rgba(124, 131, 255, 0.15);
+  border: 1px solid rgba(124, 131, 255, 0.4);
   color: #c7d2fe;
   padding: 0.65rem 1.4rem;
   border-radius: 12px;
@@ -235,7 +235,7 @@
 }
 
 .pronounce-listen-btn:hover {
-  background: rgba(99, 102, 241, 0.3);
+  background: rgba(124, 131, 255, 0.3);
   transform: translateY(-1px);
 }
 
@@ -251,7 +251,7 @@
   width: 100%;
   padding: 1.1rem;
   border-radius: 16px;
-  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  background: linear-gradient(135deg, var(--accent-vibrant, #6366f1), var(--accent, #7c83ff));
   border: none;
   color: #fff;
   cursor: pointer;
@@ -264,7 +264,7 @@
 }
 
 .pronounce-mic-btn.listening {
-  background: linear-gradient(135deg, #ef4444, #dc2626);
+  background: linear-gradient(135deg, var(--danger, #f43f5e), #dc2626);
   box-shadow: 0 0 24px rgba(239, 68, 68, 0.6);
   animation: pulseMic 1.5s infinite;
 }

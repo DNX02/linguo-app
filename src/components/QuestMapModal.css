@@ -2,8 +2,8 @@
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.86);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: var(--glass-blur, blur(40px) saturate(180%));
+  -webkit-backdrop-filter: var(--glass-blur, blur(40px) saturate(180%));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -21,7 +21,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.85), 0 0 40px rgba(99, 102, 241, 0.18);
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.85), 0 0 40px rgba(124, 131, 255, 0.18);
 }
 
 .quest-header {
@@ -103,20 +103,20 @@
 }
 
 .quest-node-orb.completed {
-  background: linear-gradient(135deg, #10b981, #059669);
-  border: 4px solid #34d399;
+  background: linear-gradient(135deg, var(--success, #22c55e), #059669);
+  border: 4px solid var(--success-light, #4ade80);
 }
 
 .quest-node-orb.active {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  border: 4px solid #a5b4fc;
+  background: linear-gradient(135deg, var(--accent, #7c83ff), #8b5cf6);
+  border: 4px solid var(--accent-light, #a4adff);
   animation: orbPulse 1.8s infinite;
 }
 
 @keyframes orbPulse {
-  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.6); }
-  70% { transform: scale(1.06); box-shadow: 0 0 0 16px rgba(99, 102, 241, 0); }
-  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(124, 131, 255, 0.6); }
+  70% { transform: scale(1.06); box-shadow: 0 0 0 16px rgba(124, 131, 255, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(124, 131, 255, 0); }
 }
 
 .quest-node-orb.locked {
@@ -170,7 +170,7 @@
 }
 
 .qq-badge {
-  background: rgba(99, 102, 241, 0.2);
+  background: rgba(124, 131, 255, 0.2);
   color: #c7d2fe;
   font-size: 0.76rem;
   font-weight: 800;
@@ -219,7 +219,7 @@
 
 .qq-opt-btn.wrong {
   background: rgba(239, 68, 68, 0.25);
-  border-color: #ef4444;
+  border-color: var(--danger, #f43f5e);
   color: #fca5a5;
 }
 
@@ -229,7 +229,7 @@
 
 .quest-next-btn {
   width: 100%;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: linear-gradient(135deg, var(--accent, #7c83ff), #8b5cf6);
   border: none;
   color: #fff;
   font-weight: 800;
@@ -288,7 +288,7 @@
 }
 
 .quest-continue-btn {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: linear-gradient(135deg, var(--accent, #7c83ff), #8b5cf6);
   border: none;
   color: #fff;
   font-weight: 800;

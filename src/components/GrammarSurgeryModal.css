@@ -41,7 +41,7 @@
 .surgery-badge {
   font-size: 0.75rem;
   font-weight: 800;
-  color: #34d399;
+  color: var(--success-light, #4ade80);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   display: block;
@@ -125,7 +125,7 @@
 
 .preset-pill.active {
   background: rgba(16, 185, 129, 0.2);
-  border-color: #10b981;
+  border-color: var(--success, #22c55e);
   color: #6ee7b7;
 }
 
@@ -165,9 +165,9 @@
 }
 
 .lang-opt.active {
-  background: #10b981;
+  background: var(--success, #22c55e);
   color: #fff;
-  border-color: #34d399;
+  border-color: var(--success-light, #4ade80);
 }
 
 .input-row {
@@ -187,12 +187,12 @@
 }
 
 .surgery-input-field:focus {
-  border-color: #10b981;
+  border-color: var(--success, #22c55e);
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
 }
 
 .surgery-analyze-btn {
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: linear-gradient(135deg, var(--success, #22c55e), #059669);
   border: none;
   color: #fff;
   font-weight: 800;
@@ -259,11 +259,11 @@
 
 .token-pill.token-error .token-word {
   color: #fca5a5;
-  text-decoration: underline wavy #ef4444;
+  text-decoration: underline wavy var(--danger, #f43f5e);
 }
 
 .token-pill.token-error .token-pos {
-  color: #f87171;
+  color: var(--danger-light, #fb7185);
   font-weight: 700;
 }
 
@@ -326,7 +326,7 @@
 .native-badge {
   font-size: 0.75rem;
   font-weight: 800;
-  color: #34d399;
+  color: var(--success-light, #4ade80);
   text-transform: uppercase;
 }
 
@@ -343,7 +343,7 @@
 }
 
 .native-audio-btn:hover {
-  background: #10b981;
+  background: var(--success, #22c55e);
   color: #fff;
 }
 

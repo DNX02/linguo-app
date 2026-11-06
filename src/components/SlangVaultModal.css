@@ -376,7 +376,7 @@
 
 .sqb-opt-btn.wrong {
   background: rgba(239, 68, 68, 0.15);
-  border-color: #ef4444;
+  border-color: var(--danger, #f43f5e);
   color: #fca5a5;
 }
 

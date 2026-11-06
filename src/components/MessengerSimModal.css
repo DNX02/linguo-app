@@ -59,7 +59,7 @@
 
 .chat-status {
   font-size: 0.72rem;
-  color: #34d399;
+  color: var(--success-light, #4ade80);
   display: block;
   margin-top: 2px;
 }
@@ -225,8 +225,8 @@
 
 .chat-finished-banner {
   background: rgba(16, 185, 129, 0.2);
-  border: 1px solid #10b981;
-  color: #34d399;
+  border: 1px solid var(--success, #22c55e);
+  color: var(--success-light, #4ade80);
   padding: 12px;
   border-radius: 14px;
   font-size: 0.88rem;

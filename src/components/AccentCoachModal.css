@@ -21,7 +21,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 26px;
   padding: 22px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(99, 102, 241, 0.15);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(124, 131, 255, 0.15);
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -43,10 +43,10 @@
 
 .accent-badge-icon {
   font-size: 2rem;
-  background: rgba(99, 102, 241, 0.2);
+  background: rgba(124, 131, 255, 0.2);
   border-radius: 14px;
   padding: 6px;
-  border: 1px solid rgba(99, 102, 241, 0.3);
+  border: 1px solid rgba(124, 131, 255, 0.3);
 }
 
 .accent-title-wrap h3 {
@@ -105,9 +105,9 @@
 }
 
 .accent-lang-tab.active {
-  background: #6366f1;
+  background: var(--accent, #7c83ff);
   color: #fff;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 4px 12px rgba(124, 131, 255, 0.4);
 }
 
 /* Challenge target */
@@ -130,9 +130,9 @@
 .accent-level-pill {
   font-size: 0.7rem;
   font-weight: 800;
-  color: #6366f1;
-  background: rgba(99, 102, 241, 0.15);
-  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: var(--accent, #7c83ff);
+  background: rgba(124, 131, 255, 0.15);
+  border: 1px solid rgba(124, 131, 255, 0.3);
   padding: 2px 8px;
   border-radius: 6px;
 }
@@ -140,7 +140,7 @@
 .accent-focus-pill {
   font-size: 0.72rem;
   font-weight: 700;
-  color: #a5b4fc;
+  color: var(--accent-light, #a4adff);
 }
 
 .accent-phrase-row {
@@ -162,8 +162,8 @@
   width: 40px;
   height: 40px;
   border-radius: 12px;
-  background: rgba(99, 102, 241, 0.2);
-  border: 1px solid rgba(99, 102, 241, 0.4);
+  background: rgba(124, 131, 255, 0.2);
+  border: 1px solid rgba(124, 131, 255, 0.4);
   color: #fff;
   font-size: 1.1rem;
   cursor: pointer;
@@ -176,7 +176,7 @@
 
 .accent-audio-btn:active {
   transform: scale(0.92);
-  background: #6366f1;
+  background: var(--accent, #7c83ff);
 }
 
 .accent-tip-box {
@@ -215,14 +215,14 @@
   justify-content: center;
   gap: 10px;
   padding: 16px;
-  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  background: linear-gradient(135deg, var(--accent-vibrant, #6366f1), var(--accent, #7c83ff));
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 18px;
   color: #fff;
   font-size: 0.95rem;
   font-weight: 800;
   cursor: pointer;
-  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 8px 24px rgba(124, 131, 255, 0.4);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -231,7 +231,7 @@
 }
 
 .accent-mic-btn.listening {
-  background: linear-gradient(135deg, #dc2626, #ef4444);
+  background: linear-gradient(135deg, #dc2626, var(--danger, #f43f5e));
   box-shadow: 0 8px 24px rgba(239, 68, 68, 0.5);
   animation: pulseMic 1.2s infinite;
 }
@@ -252,7 +252,7 @@
 .wave-bar {
   width: 4px;
   height: 100%;
-  background: #f87171;
+  background: var(--danger-light, #fb7185);
   border-radius: 4px;
   animation: waveMotion 0.8s ease-in-out infinite alternate;
 }
@@ -315,7 +315,7 @@
 .accent-score-num {
   font-size: 1.45rem;
   font-weight: 900;
-  color: #34d399;
+  color: var(--success-light, #4ade80);
 }
 
 .accent-score-label {
@@ -368,7 +368,7 @@
   color: #fca5a5;
   background: rgba(239, 68, 68, 0.18);
   border: 1px solid rgba(239, 68, 68, 0.3);
-  text-decoration: underline wavy #ef4444;
+  text-decoration: underline wavy var(--danger, #f43f5e);
 }
 
 .accent-user-transcript {
@@ -400,8 +400,8 @@
 }
 
 .accent-nav-btn.primary {
-  background: #6366f1;
-  border-color: #4f46e5;
+  background: var(--accent, #7c83ff);
+  border-color: var(--accent-vibrant, #6366f1);
 }
 
 .accent-nav-btn:disabled {

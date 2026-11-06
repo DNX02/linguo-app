@@ -179,7 +179,7 @@
 
 .mascot-active-pill {
   display: inline-block;
-  background: #58cc02;
+  background: var(--accent, #7c83ff);
   color: #fff;
   font-size: 0.72rem;
   font-weight: 800;
@@ -212,7 +212,7 @@
 }
 
 .skin-card.equipped {
-  border-color: #58cc02;
+  border-color: var(--accent, #7c83ff);
   background: rgba(88, 204, 2, 0.1);
 }
 
@@ -233,7 +233,7 @@
   position: absolute;
   top: -4px;
   right: -4px;
-  background: #58cc02;
+  background: var(--accent, #7c83ff);
   color: #fff;
   font-size: 0.6rem;
   font-weight: 900;
@@ -268,7 +268,7 @@
 .skin-status-tag.active {
   font-size: 0.75rem;
   font-weight: 800;
-  color: #58cc02;
+  color: var(--accent, #7c83ff);
 }
 
 .skin-equip-btn {
@@ -298,7 +298,7 @@
   display: flex;
   align-items: center;
   gap: 0.85rem;
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(99, 102, 241, 0.1));
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(124, 131, 255, 0.1));
   border: 1px solid rgba(245, 158, 11, 0.3);
   border-radius: 18px;
   padding: 1rem;
@@ -368,7 +368,7 @@
 
 .quest-progress-bar {
   height: 100%;
-  background: linear-gradient(90deg, #58cc02, #38bdf8);
+  background: linear-gradient(90deg, var(--accent, #7c83ff), #38bdf8);
   border-radius: 99px;
 }
 
@@ -406,13 +406,13 @@
 }
 
 .quest-claim-btn.ready {
-  background: #58cc02;
+  background: var(--accent, #7c83ff);
   color: #fff;
-  border-bottom: 2px solid #46a302;
+  border-bottom: 2px solid var(--accent-vibrant, #6366f1);
 }
 
 .quest-claimed-lbl {
   font-size: 0.74rem;
-  color: #58cc02;
+  color: var(--accent, #7c83ff);
   font-weight: 800;
 }

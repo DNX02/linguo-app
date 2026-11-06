@@ -186,7 +186,7 @@
 }
 
 .paper-audio-btn:hover {
-  background: #4f46e5;
+  background: var(--accent-vibrant, #6366f1);
   color: #fff;
 }
 
@@ -254,14 +254,14 @@
 
 .claimed-tag {
   font-size: 0.8rem;
-  color: #10b981;
+  color: var(--success, #22c55e);
   font-weight: 600;
 }
 
 .fortune-reset-link {
   background: none;
   border: none;
-  color: #818cf8;
+  color: var(--accent-light, #a4adff);
   font-size: 0.8rem;
   cursor: pointer;
   text-decoration: underline;
@@ -269,5 +269,5 @@
 }
 
 .fortune-reset-link:hover {
-  color: #a5b4fc;
+  color: var(--accent-light, #a4adff);
 }
