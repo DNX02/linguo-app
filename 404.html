@@ -12,24 +12,31 @@
     <link rel="icon" type="image/png" href="./favicon.ico" />
     <title>Linguo — Учи языки</title>
     <script>
-      // Immediate Cache-Buster & SW Purge: ensures browser loads fresh UI instantly
-      const LINGUO_VER = '3.5.0-pro-duo';
-      if (localStorage.getItem('linguo_app_ver') !== LINGUO_VER) {
+      // Immediate Cache-Buster & SW Purge: ensures browser loads fresh UI instantly on any device
+      const LINGUO_VER = '6.0.0-pro-ultimate-fix';
+      const prevVer = localStorage.getItem('linguo_app_ver');
+      if (prevVer !== LINGUO_VER) {
         localStorage.setItem('linguo_app_ver', LINGUO_VER);
         if ('caches' in window) {
-          caches.keys().then((names) => {
-            names.forEach((name) => caches.delete(name));
-          });
-        }
-        if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.getRegistrations().then((regs) => {
-            regs.forEach((r) => r.unregister());
-          });
+          caches.keys().then((names) => Promise.all(names.map((name) => caches.delete(name))))
+            .then(() => {
+              if ('serviceWorker' in navigator) {
+                return navigator.serviceWorker.getRegistrations().then((regs) =>
+                  Promise.all(regs.map((r) => r.unregister()))
+                );
+              }
+            })
+            .then(() => {
+              if (prevVer) {
+                // If the user had an older version cached, reload to fetch newest version
+                window.location.reload(true);
+              }
+            });
         }
       }
     </script>
-    <script type="module" crossorigin src="./assets/index-CPYosDZo.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-DiBS9WDn.css">
+    <script type="module" crossorigin src="./assets/index-BD1X2tTc.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-EjLfcoUE.css">
   <link rel="manifest" href="./manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="./registerSW.js"></script></head>
   <body>
     <div id="root"></div>
