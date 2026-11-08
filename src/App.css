@@ -264,7 +264,9 @@ input, select, textarea {
   max-width: 520px;
   width: 100%;
   margin: 0 auto;
-  animation: pageEnter var(--duration-normal) var(--ease-out);
+  position: relative;
+  /* Note: animation intentionally omitted on .main-content to avoid creating
+     an unwanted stacking context and containing block for position:fixed modals */
 }
 
 /* ============================================================
@@ -279,6 +281,23 @@ input, select, textarea {
   justify-content: center;
   z-index: 800;
   pointer-events: none;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.22s ease, visibility 0.22s ease;
+}
+
+/* Fully hide bottom navigation bar whenever any modal or lesson quiz is active */
+.bottom-nav--hidden,
+body.modal-open .bottom-nav,
+body:has([class*="-overlay"]) .bottom-nav,
+body:has([class*="-backdrop"]) .bottom-nav,
+body:has(.boss-modal-backdrop) .bottom-nav,
+body:has(.tutor-modal-overlay) .bottom-nav,
+body:has(.duo-lesson-overlay) .bottom-nav,
+body:has(.blitz-overlay) .bottom-nav,
+body:has(.iv-overlay) .bottom-nav {
+  transform: translateY(140px) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
 }
 
 .bottom-nav-inner {
@@ -397,7 +416,7 @@ input, select, textarea {
    GLOBAL MODAL STACKING & MOBILE SCROLL GUARANTEES
    ============================================================ */
 
-/* 1. All modal backdrops/overlays above bottom nav */
+/* 1. All modal backdrops/overlays above bottom nav with unified touch architecture */
 [class*="-backdrop"],
 [class*="-overlay"],
 .modal-overlay,
@@ -438,15 +457,17 @@ input, select, textarea {
 .podcasts-overlay,
 .surgery-overlay,
 .phrasebook-overlay,
-.blitz-overlay {
-  z-index: 2500 !important;
-  align-items: flex-start !important;
-  overflow-y: auto !important;
-  -webkit-overflow-scrolling: touch !important;
-  padding-bottom: calc(48px + var(--safe-area-bottom)) !important;
+.blitz-overlay,
+.duo-lesson-overlay {
+  z-index: 10000 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important; /* Backdrop never scrolls - avoids iOS nested scroll lock */
+  padding: 8px 10px calc(14px + env(safe-area-inset-bottom, 12px)) 10px !important;
 }
 
-/* 2. Modal content cards: iOS touch scroll + bottom breathing room */
+/* 2. Modal content cards: Single dedicated scroll container + bottom clearance */
 [class*="-modal-card"],
 [class*="-modal-box"],
 [class*="-modal"]:not([class*="-overlay"]):not([class*="-backdrop"]),
@@ -483,22 +504,52 @@ input, select, textarea {
 .match-game-modal,
 .share-achievement-modal,
 .voice-tutor-modal,
-.voice-messenger-modal {
-  margin-top: auto !important;
-  margin-bottom: auto !important;
-  padding-bottom: calc(40px + var(--safe-area-bottom)) !important;
-  max-height: calc(100dvh - 36px) !important;
+.voice-messenger-modal,
+.blitz-modal,
+.duo-lesson-container {
+  width: 100% !important;
+  max-width: 520px !important;
+  max-height: calc(100dvh - 24px) !important;
+  display: flex !important;
+  flex-direction: column !important;
   overflow-y: auto !important;
   -webkit-overflow-scrolling: touch !important;
   overscroll-behavior-y: contain !important;
+  padding-bottom: calc(44px + env(safe-area-inset-bottom, 24px)) !important;
 }
 
-/* 3. Quiz options: last option always reachable */
+/* 3. Modal cards with inner flex scroll containers (Voice Tutor, Lesson Quiz, Irregular Verbs) */
+.tutor-modal-content,
+.duo-lesson-container,
+.iv-modal {
+  overflow: hidden !important; /* Allow the dedicated inner body to scroll smoothly */
+  padding-bottom: 0 !important;
+}
+
+.tutor-call-container,
+.lesson-question-body,
+.iv-table-container,
+.dialogue-messages-box,
+.surgery-results-scroll,
+.podcasts-episodes-list,
+.phrasebook-cards-scroll {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  overscroll-behavior-y: contain !important;
+  padding-bottom: calc(44px + env(safe-area-inset-bottom, 24px)) !important;
+}
+
+/* 4. Quiz & Battle Option Lists: Guarantee the last option is ALWAYS 100% reachable */
 .spells-grid,
 .story-quiz-options,
+.cert-options-grid,
 .cert-options-stack,
+.cinema-options-grid,
 .choices-stack,
 .dialogue-options-list,
+.dialogue-options-drawer,
 .duel-options-grid,
 .challenge-options-grid,
 .qq-options-grid,
@@ -512,7 +563,13 @@ input, select, textarea {
 .duo-quiz-options,
 .sim-options,
 .smart-deck-cards-list,
-.dialogue-options-drawer {
-  padding-bottom: 32px !important;
-  margin-bottom: 20px !important;
+.lesson-opts-stack,
+.blitz-opts-grid,
+.chat-options-list,
+.lyrics-challenge-options,
+.quest-opts-grid,
+.shorts-quiz-options,
+.story-line-options {
+  padding-bottom: calc(40px + env(safe-area-inset-bottom, 20px)) !important;
+  margin-bottom: 24px !important;
 }

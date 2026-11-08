@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, NavLink, useLocation, useNavigate } from 'react-router-dom';
 
 import Home from './pages/Home';
@@ -19,8 +19,29 @@ const navItems = [
 export default function App() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [hasModalOpen, setHasModalOpen] = useState(false);
 
   const isSettings = location.pathname === '/settings';
+
+  // Monitor DOM for active modals so bottom nav automatically hides and never overlaps modal options
+  useEffect(() => {
+    const modalSelector =
+      '.boss-modal-backdrop, .tutor-modal-overlay, .duo-lesson-overlay, .blitz-overlay, .iv-overlay, [class*="-overlay"], [class*="-backdrop"]';
+
+    const checkModal = () => {
+      const active = !!document.querySelector(modalSelector);
+      setHasModalOpen(active);
+      document.body.classList.toggle('modal-open', active);
+    };
+
+    checkModal();
+    const observer = new MutationObserver(checkModal);
+    observer.observe(document.body, { childList: true, subtree: true });
+    return () => {
+      observer.disconnect();
+      document.body.classList.remove('modal-open');
+    };
+  }, []);
 
   return (
     <div className="app">
@@ -58,8 +79,8 @@ export default function App() {
         </Routes>
       </main>
 
-      {/* Floating Island Bottom Navigation */}
-      <nav className="bottom-nav">
+      {/* Floating Island Bottom Navigation - hidden when any modal is open */}
+      <nav className={`bottom-nav ${hasModalOpen ? 'bottom-nav--hidden' : ''}`} aria-hidden={hasModalOpen}>
         <div className="bottom-nav-inner">
           {navItems.map((item) => (
             <NavLink

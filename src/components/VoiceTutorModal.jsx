@@ -16,29 +16,29 @@ const SCENARIOS = [
 
 const SCENARIO_HINTS = {
   free: [
-    { en: "I'm having a great day, thanks! How about you?", de: "Mir geht es super, danke! Und dir?", fr: "Je passe une excellente journée, et vous?", es: "¡Estoy teniendo un gran día! ¿Y tú?", ru: "У меня отличный день, спасибо! А как у тебя?" },
-    { en: "Could you tell me a little about your favorite hobbies?", de: "Was sind deine Lieblingshobbys?", fr: "Quels sont vos passe-temps favoris?", es: "¿Cuáles son tus pasatiempos favoritos?", ru: "Расскажи немного о своих любимых хобби?" },
-    { en: "I'm learning this language to travel and communicate freely.", de: "Ich lerne Deutsch, um zu reisen und mich frei zu unterhalten.", fr: "J'apprends cette langue pour voyager librement.", es: "Estoy aprendiendo este idioma para viajar libremente.", ru: "Я учу язык для путешествий и свободного общения." }
+    { en: "I'm having a great day, thanks! How about you?", de: "Mir geht es super, danke! Und dir?", ru: "У меня отличный день, спасибо! А как у тебя?" },
+    { en: "Could you tell me a little about your favorite hobbies?", de: "Was sind deine Lieblingshobbys?", ru: "Расскажи немного о своих любимых хобби?" },
+    { en: "I'm learning this language to travel and communicate freely.", de: "Ich lerne Deutsch, um zu reisen und mich frei zu unterhalten.", ru: "Я учу язык для путешествий и свободного общения." }
   ],
   cafe: [
-    { en: "Hi! Can I please get an iced latte with oat milk?", de: "Hallo! Einen Eiskaffee mit Hafermilch, bitte.", fr: "Bonjour! Un café au lait s'il vous plaît.", es: "¡Hola! Un café con leche de avena, por favor.", ru: "Привет! Можно мне айс-латте с овсяным молоком?" },
-    { en: "Is there anything you recommend for dessert today?", de: "Was kannst du heute als Nachtisch empfehlen?", fr: "Que me recommandez-vous comme dessert?", es: "¿Qué me recomiendas de postre hoy?", ru: "Что ты порекомендуешь на десерт сегодня?" },
-    { en: "I will pay by card. Can I have the receipt, please?", de: "Ich zahle mit Karte. Kann ich den Beleg haben?", fr: "Je vais payer par carte. Le reçu, s'il vous plaît.", es: "Pagaré con tarjeta. ¿Me da el recibo?", ru: "Я оплачу картой. Можно чек, пожалуйста?" }
+    { en: "Hi! Can I please get an iced latte with oat milk?", de: "Hallo! Einen Eiskaffee mit Hafermilch, bitte.", ru: "Привет! Можно мне айс-латте с овсяным молоком?" },
+    { en: "Is there anything you recommend for dessert today?", de: "Was kannst du heute als Nachtisch empfehlen?", ru: "Что ты порекомендуешь на десерт сегодня?" },
+    { en: "I will pay by card. Can I have the receipt, please?", de: "Ich zahle mit Karte. Kann ich den Beleg haben?", ru: "Я оплачу картой. Можно чек, пожалуйста?" }
   ],
   airport: [
-    { en: "I am traveling for vacation and staying for two weeks.", de: "Ich reise für den Urlaub und bleibe zwei Wochen.", fr: "Je voyage pour les vacances et je reste deux semaines.", es: "Viajo por vacaciones y me quedo dos semanas.", ru: "Я приехал в отпуск на две недели." },
-    { en: "Here is my passport and hotel reservation confirmation.", de: "Hier sind mein Reisepass und die Hotelreservierung.", fr: "Voici mon passeport et ma réservation d'hôtel.", es: "Aquí tiene mi pasaporte y la reserva de hotel.", ru: "Вот мой паспорт и подтверждение брони отеля." },
-    { en: "I do not have anything to declare.", de: "Ich habe nichts zu verzollen.", fr: "Je n'ai rien à déclarer.", es: "No tengo nada que declarar.", ru: "Мне нечего декларировать." }
+    { en: "I am traveling for vacation and staying for two weeks.", de: "Ich reise für den Urlaub und bleibe zwei Wochen.", ru: "Я приехал в отпуск на две недели." },
+    { en: "Here is my passport and hotel reservation confirmation.", de: "Hier sind mein Reisepass und die Hotelreservierung.", ru: "Вот мой паспорт и подтверждение брони отеля." },
+    { en: "I do not have anything to declare.", de: "Ich habe nichts zu verzollen.", ru: "Мне нечего декларировать." }
   ],
   interview: [
-    { en: "I have over three years of experience in project management.", de: "Ich habe über drei Jahre Erfahrung im Projektmanagement.", fr: "J'ai plus de trois ans d'expérience en gestion.", es: "Tengo más de tres años de experiencia en gestión.", ru: "У меня более трёх лет опыта в управлении проектами." },
-    { en: "My biggest strength is quick problem solving under pressure.", de: "Meine größte Stärke ist schnelles Problemlösen.", fr: "Mon point fort est la résolution rapide de problèmes.", es: "Mi mayor fortaleza es resolver problemas bajo presión.", ru: "Моя главная сила — быстрое решение задач под давлением." },
-    { en: "What are the next steps in your hiring process?", de: "Was sind die nächsten Schritte im Bewerbungsprozess?", fr: "Quelles sont les prochaines étapes du recrutement?", es: "¿Cuáles son los siguientes pasos del proceso?", ru: "Каковы следующие этапы найма?" }
+    { en: "I have over three years of experience in project management.", de: "Ich habe über drei Jahre Erfahrung im Projektmanagement.", ru: "У меня более трёх лет опыта в управлении проектами." },
+    { en: "My biggest strength is quick problem solving under pressure.", de: "Meine größte Stärke ist schnelles Problemlösen.", ru: "Моя главная сила — быстрое решение задач под давлением." },
+    { en: "What are the next steps in your hiring process?", de: "Was sind die nächsten Schritte im Bewerbungsprozess?", ru: "Каковы следующие этапы найма?" }
   ],
   hotel: [
-    { en: "Good evening, I have a reservation under my name.", de: "Guten Abend, ich habe eine Reservierung auf meinen Namen.", fr: "Bonsoir, j'ai une réservation à mon nom.", es: "Buenas noches, tengo una reserva a mi nombre.", ru: "Добрый вечер, у меня бронь на моё имя." },
-    { en: "Could you tell me what time breakfast is served tomorrow?", de: "Um wie viel Uhr gibt es morgen Frühstück?", fr: "À quelle heure le petit-déjeuner est-il servi?", es: "¿A qué hora se sirve el desayuno mañana?", ru: "Подскажите, во сколько завтра подают завтрак?" },
-    { en: "Could I please get an extra keycard and Wi-Fi password?", de: "Kann ich bitte eine zweite Schlüsselkarte und das WLAN-Passwort haben?", fr: "Puis-je avoir une carte supplémentaire et le mot de passe Wi-Fi?", es: "¿Me da una tarjeta extra y la clave del Wi-Fi?", ru: "Можно мне дополнительную ключ-карту и пароль от Wi-Fi?" }
+    { en: "Good evening, I have a reservation under my name.", de: "Guten Abend, ich habe eine Reservierung auf meinen Namen.", ru: "Добрый вечер, у меня бронь на моё имя." },
+    { en: "Could you tell me what time breakfast is served tomorrow?", de: "Um wie viel Uhr gibt es morgen Frühstück?", ru: "Подскажите, во сколько завтра подают завтрак?" },
+    { en: "Could I please get an extra keycard and Wi-Fi password?", de: "Kann ich bitte eine zweite Schlüsselkarte und das WLAN-Passwort haben?", ru: "Можно мне дополнительную ключ-карту и пароль от Wi-Fi?" }
   ]
 };
 

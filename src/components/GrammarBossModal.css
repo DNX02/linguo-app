@@ -3,16 +3,15 @@
 .boss-modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(6, 6, 18, 0.88);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  z-index: 2500;
+  background: rgba(6, 6, 18, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  z-index: 10000 !important;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 16px 16px calc(36px + env(safe-area-inset-bottom, 20px)) 16px;
+  overflow: hidden; /* Overlay does not scroll - avoids iOS nested scroll conflict */
+  padding: 10px 10px calc(16px + env(safe-area-inset-bottom, 16px)) 10px;
   animation: fadeIn 0.25s ease-out;
 }
 
@@ -21,14 +20,14 @@
   max-width: 520px;
   margin: auto;
   background: linear-gradient(150deg, #1f1122 0%, #0d0612 100%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 26px;
-  padding: 22px 22px calc(36px + env(safe-area-inset-bottom, 20px)) 22px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(239, 68, 68, 0.2);
+  padding: 18px 18px calc(48px + env(safe-area-inset-bottom, 24px)) 18px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(239, 68, 68, 0.25);
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  max-height: calc(100dvh - 40px);
+  gap: 12px;
+  max-height: calc(100dvh - 24px);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-y: contain;
@@ -112,12 +111,12 @@
 .boss-arena-stage {
   background: rgba(0, 0, 0, 0.35);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
-  padding: 20px;
+  border-radius: 18px;
+  padding: 12px 14px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 8px;
   position: relative;
 }
 
@@ -125,13 +124,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
   width: 100%;
 }
 
 .boss-avatar-big {
-  font-size: 4.5rem;
-  filter: drop-shadow(0 6px 16px rgba(239, 68, 68, 0.5));
+  font-size: 3.2rem;
+  filter: drop-shadow(0 4px 12px rgba(239, 68, 68, 0.5));
   animation: floatMonster 2.5s ease-in-out infinite alternate;
 }
 
@@ -212,25 +211,27 @@
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 18px;
-  padding: 16px;
+  padding: 14px 14px 24px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .boss-q-text {
   color: #fff;
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 800;
   margin: 0;
   text-align: center;
+  line-height: 1.35;
 }
 
 .spells-grid {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding-bottom: 28px;
+  padding-bottom: 36px !important;
+  margin-bottom: 12px;
 }
 
 .spell-cast-btn {
